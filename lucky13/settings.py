@@ -111,11 +111,13 @@ AUTHENTICATION_BACKENDS = (
  
  'django.contrib.auth.backends.ModelBackend',
 )
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = '/auth/login/google-oauth2/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY ='1023798537770-b1ll120var51q75mqvu4u74hih3cmvob.apps.googleusercontent.com'  #Paste CLient Key
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '2t580U5kLvCFV9qab9ypo6IX' #Paste Secret Key
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
