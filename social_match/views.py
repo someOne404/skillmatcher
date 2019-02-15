@@ -4,10 +4,4 @@ from django.http import HttpResponse
 
 
 def index(request):
-	if request.user.is_authenticated:
-		response = HttpResponse("Hello, logged in")
-	else:
-		return render(request, './social_match/index.html')
-	return response
-
-	
+	return render(request, './social_match/index.html')
