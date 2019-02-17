@@ -110,7 +110,8 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.github.GithubOAuth2',  # for Github authentication
     'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
 
-    'django.contrib.auth.backends.ModelBackend',
+    #'django.contrib.auth.backends.ModelBackend',   # don't let inactive users login
+    'django.contrib.auth.backends.AllowAllUsersModelBackend',   # let inactive users login
 )
 LOGIN_URL = '/auth/login/google-oauth2/'
 LOGIN_REDIRECT_URL = '/'
