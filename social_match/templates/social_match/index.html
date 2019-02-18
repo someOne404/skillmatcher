@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Lucky 13's Social Matching Platform!</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="jumbotron">
+        <h1>Lucky 13's Social Matching Platform!</h1>
+        {% if user.is_authenticated %}
+            <p>Logged in as {{ user.username }}</p>
+            <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+
+            <br><br>
+            <h6>Currently active users:</h6>
+            {% if user_list %}
+                {% for user in user_list %}
+                    {{ user.email }}<br>
+                {% endfor %}
+            {% endif %}
+
+            <br><br>
+            <h6>Change status:</h6>
+            <p>You are currently {{ user.is_active|yesno:"active, inactive" }}.</p>
+            <form action="{% url 'social_match:index' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Change status" name="change_status">
+            </form>
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
+                Login
+            </a>
+        {% endif %}
+    </div>
+
+    <div class="container-fluid">
+        {% for post in posts %}
+        <div>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+            <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>

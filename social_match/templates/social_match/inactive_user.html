@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Lucky 13's Social Matching Platform!</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="jumbotron">
+        <h1>Lucky 13's Social Matching Platform!</h1>
+        <p>You are currently inactive.</p>
+
+    </div>
+
+    <div class="container-fluid">
+        {% for post in posts %}
+        <div>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.content }}</p>
+            <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+
+</html>
