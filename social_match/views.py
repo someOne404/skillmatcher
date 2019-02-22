@@ -3,7 +3,10 @@ from django.http import HttpResponse
 from django.views import generic
 # from .models import Post
 
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 def index(request):
     template_name = './social_match/index.html'

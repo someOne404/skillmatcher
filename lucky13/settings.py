@@ -120,6 +120,8 @@ SOCIAL_AUTH_INACTIVE_USER_URL = '/inactive_user/'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1023798537770-b1ll120var51q75mqvu4u74hih3cmvob.apps.googleusercontent.com'  # Paste CLient Key
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '2t580U5kLvCFV9qab9ypo6IX'  # Paste Secret Key
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_USER_MODEL = 'social_match.User'
+AUTH_USER_MODEL = 'social_match.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
