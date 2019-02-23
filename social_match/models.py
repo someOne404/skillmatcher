@@ -5,6 +5,48 @@ import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
+class Major(models.Model):
+	name = models.CharField(max_length=50)
+	def __str__(self):
+		return self.name
+
+
+class Minor(models.Model):
+	name = models.CharField(max_length=50)
+	def __str__(self):
+		return self.name
+
+
+class Course(models.Model):
+	department = models.CharField(max_length=10) # abbreviation of department, usually found with course number
+	number = models.IntegerField(validators=[MaxValueValidator(9999), MinValueValidator(100)])
+	name = models.CharField(max_length=200)
+	def __str__(self):
+		return "{} {}".format(self.department, self.number)
+
+
+class Skill(models.Model):
+	name = models.CharField(max_length=50)
+	def __str__(self):
+		return self.name
+
+
+class Interest(models.Model):
+	name = models.CharField(max_length=50)
+	def __str__(self):
+		return self.name
+
+
+class Activity(models.Model):
+	name = models.CharField(max_length=200)
+
+	def __str__(self):
+		return self.name
+
+	class Meta:
+		verbose_name_plural = "Activities" # this appears on the admin menu
+
+
 # helper functions to get correct graduation year options
 def current_year():
 	return datetime.date.today().year
@@ -44,3 +86,15 @@ class User(AbstractUser):
 	graduation_year = models.PositiveIntegerField(default=current_year()+4, validators=[min_value_current_year, max_value_in_four_years])
 
 	picture = models.ImageField(blank=True, upload_to='images/')
+
+	majors = models.ManyToManyField(Major, blank=True)
+	minors = models.ManyToManyField(Minor, blank=True)
+	skills = models.ManyToManyField(Skill, blank=True)
+	interests = models.ManyToManyField(Interest, blank=True)
+	courses = models.ManyToManyField(Course, blank=True)
+	activities = models.ManyToManyField(Activity, blank=True)
+
+	# potential saved users/friends field can be added later (ManyToManyField or ForeignKey)
+	# consider using django-friendship or other open source apps to implement relationships between Users
+
+	# posts (like a blog) can be added here as a ManyToManyField, referencing a separate Post model
