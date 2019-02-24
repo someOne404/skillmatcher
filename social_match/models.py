@@ -67,6 +67,7 @@ def graduation_check(sender, user, request, **kwargs):
         if inactive_date < today:
             user.status_active=False
             user.is_active=False
+            user.save()
 
 
 user_logged_in.connect(graduation_check)
