@@ -120,6 +120,8 @@ SOCIAL_AUTH_INACTIVE_USER_URL = '/inactive_user/'
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1023798537770-b1ll120var51q75mqvu4u74hih3cmvob.apps.googleusercontent.com'  # Paste CLient Key
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '2t580U5kLvCFV9qab9ypo6IX'  # Paste Secret Key
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_USER_MODEL = 'social_match.User'
+AUTH_USER_MODEL = 'social_match.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -139,6 +141,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Settings for where to store images (e.g. profile pics)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Activate Django-Heroku
 django_heroku.settings(locals())
