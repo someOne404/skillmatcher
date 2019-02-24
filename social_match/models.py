@@ -61,6 +61,9 @@ def max_value_in_four_years(value):
 
 
 class User(AbstractUser):
+	# define adjustable status (is_active is always true)
+	status_active = models.BooleanField(default=True)
+
 	phone_regex = RegexValidator(regex=r'^\+\d{8,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 	phone = models.CharField(validators=[phone_regex], max_length=16, blank=True)
 

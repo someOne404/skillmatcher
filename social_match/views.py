@@ -14,10 +14,10 @@ def index(request):
 
     if 'change_status' in request.POST:
         current_user = request.user
-        current_user.is_active = not current_user.is_active
+        current_user.status_active = not current_user.status_active
         current_user.save()
 
-    user_list = User.objects.filter(is_active=True)
+    user_list = User.objects.filter(status_active=True, is_superuser=False)
     context = {'user_list': user_list}
     return render(request, template_name, context)
 
