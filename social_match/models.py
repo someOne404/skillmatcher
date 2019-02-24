@@ -3,8 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
-from huey import crontab
-from huey.contrib.djhuey import periodic_task
+from django.contrib.auth.signals import user_logged_in
 
 class Major(models.Model):
 	name = models.CharField(max_length=50)
@@ -61,16 +60,16 @@ def max_value_in_four_years(value):
 	return MaxValueValidator(current_year()+4)(value)
 
 # user automatically made permanently inactive on day 1 of month after graduation month
-@periodic_task(crontab(day='0 0 * * *')) # Check daily at midnight
-def graduation_check():
-    user_list = User.objects.filter(is_active=True, is_superuser=False)
+def graduation_check(sender, user, request, **kwargs):
     today = datetime.date.today()
-    for user in range(len(user_list)):
+    if not user.is_superuser:
         inactive_date = datetime.date(user.graduation_year, user.graduation_month+1, 1)
         if inactive_date < today:
             user.status_active=False
             user.is_active=False
-    print('blah')
+
+
+user_logged_in.connect(graduation_check)
 
 class User(AbstractUser):
 	# define adjustable status (is_active is always true)

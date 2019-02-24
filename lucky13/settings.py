@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_match',
     'social_django',
-    'huey.contrib.djhuey',
 ]
 
 MIDDLEWARE = [
