@@ -18,3 +18,8 @@ class UserModelTest(TestCase):
 	def test_create_user(self):
 		u = self.create_test_user()
 		self.assertTrue(isinstance(u, User))
+
+
+#class SearchingTest(TestCase):
+
+	#def test_first_name(self):

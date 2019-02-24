@@ -13,7 +13,7 @@
   </form>
   <ul>
   {% for user in filter.qs %}
-    <li>{{ user.first_name }} - {{ user.last_name }}</li>
+    <li>{{ user.first_name }} {{ user.last_name }} - {{user.email}} - {{user.phone}} - {{user.class_standing}} - {{user.graduation_year}}</li>
   {% endfor %}
   </ul>
     {% endblock %}
