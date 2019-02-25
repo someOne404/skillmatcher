@@ -1,63 +1,120 @@
+{% extends 'social_match/base.html' %}
+{% block content %}
 <!doctype html>
 <html lang="en">
 
-<head>
+<!-- <head>
     <meta charset="utf-8">
 
     <title>Lucky 13's Social Matching Platform!</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
         crossorigin="anonymous">
-</head>
+</head> -->
 
 <body>
-    <div class="jumbotron">
-        <h1>Lucky 13's Social Matching Platform!</h1>
-        {% if user.is_authenticated %}
-            <p>Logged in as {{ user.username }}</p>
-            <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a>
+    {% if user.is_authenticated %}
+    <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
+        <a class="navbar-brand" href="#">Lucky 13's Social Matcher</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+            aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Search</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My Posts</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> Profile </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
+                        <a class="dropdown-item" href="#">Logged in as {{ user.username }}</a>
+                        <a class="dropdown-item"  href="{% url 'logout' %}">Log out</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+            
 
-            <br><br>
-            <h6>Currently active users:</h6>
-            {% if user_list %}
-                {% for user in user_list %}
-                    {{ user.email }}<br>
-                {% endfor %}
-            {% endif %}
+    {% comment %} <p>Logged in as {{ user.username }}</p> {% endcomment %}
+    {% comment %} <a class="btn btn-primary" href="{% url 'logout' %}">Logout</a> {% endcomment %}
 
-            <br><br>
-            <h6>Change status:</h6>
-            <p>This is just for demo - use user.status_active to include only active users in search results<br>
-            You are currently {{ user.status_active|yesno:"active, inactive" }}.</p>
-            <form action="{% url 'social_match:index' %}" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Change status" name="change_status">
-            </form>
+    <br><br>
+    <h6>Currently active users:</h6>
+    {% if user_list %}
+    {% for user in user_list %}
+    {{ user.email }}<br>
+    {% endfor %}
 
-            <br><br>
-            <h6>Search for users:</h6>
-            <form action="{% url 'social_match:search' %}" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Search" name="search">
-            </form>
+    {% endif %}
 
-            {% if posts %}
-                {% for post in posts %}
-                <div>
-                    <h2>{{ post.title }}</h2>
-                    <p>{{ post.content }}</p>
-                    <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
-                </div>
-                {% endfor %}
-            {% endif %}
+    <br><br>
+    <h6>Change status:</h6>
+    <p>This is just for demo - use user.status_active to include only active users in search results<br>
+        You are currently {{ user.status_active|yesno:"active, inactive" }}.</p>
+    <form action="{% url 'social_match:index' %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Change status" name="change_status">
+    </form>
 
-        {% else %}
-            <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
-                Login
-            </a>
-        {% endif %}
+    <br><br>
+    <h6>Search for users:</h6>
+    <form action="{% url 'social_match:search' %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Search" name="search">
+    </form>
+
+    {% if posts %}
+    {% for post in posts %}
+    <div>
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
+        <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
     </div>
+    {% endfor %}
+    {% endif %}
+
+    {% else %}
+    <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
+        <a class="navbar-brand" href="#">Lucky 13's Social Matcher</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-555"
+            aria-controls="navbarSupportedContent-555" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About Us
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <a class="btn btn-link" href="{% url 'social:begin' 'google-oauth2' %}">
+        Login
+    </a>
+            </ul>
+        </div>
+    </nav>
+
+
+    {% comment %} <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
+        Login
+    </a> {% endcomment %}
+    {% endif %}
 
 </body>
 
 </html>
+{% endblock %}

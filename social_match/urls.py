@@ -4,6 +4,6 @@ from . import views
 
 app_name = 'social_match'
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.home, name='index'),
     url(r'^search/$', views.search, name='search'),
 ]
