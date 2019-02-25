@@ -4,7 +4,6 @@ from django.core.validators import RegexValidator
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-
 class Major(models.Model):
 	name = models.CharField(max_length=50)
 	def __str__(self):
@@ -59,8 +58,10 @@ def min_value_current_year(value):
 def max_value_in_four_years(value):
 	return MaxValueValidator(current_year()+4)(value)
 
-
 class User(AbstractUser):
+	# define adjustable status (is_active is always true)
+	status_active = models.BooleanField(default=True)
+
 	phone_regex = RegexValidator(regex=r'^\+\d{8,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
 	phone = models.CharField(validators=[phone_regex], max_length=16, blank=True)
 

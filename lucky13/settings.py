@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'social_match',
-    'social_django'
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -128,7 +128,7 @@ AUTH_USER_MODEL = 'social_match.User'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'EST'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 

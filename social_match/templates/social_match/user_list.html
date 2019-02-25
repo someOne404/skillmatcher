@@ -6,7 +6,9 @@
   </form>
   <ul>
   {% for user in filter.qs %}
-    <li>{{ user.first_name }} {{ user.last_name }} - {{user.email}} - {{user.phone}} - {{user.class_standing}} - {{user.graduation_year}}</li>
+      {% if user.status_active and not user.is_superuser %}
+        <li>{{ user.first_name }} {{ user.last_name }} - {{user.email}} - {{user.phone}} - {{user.class_standing}} - {{user.graduation_year}}</li>
+      {% endif %}
   {% endfor %}
   </ul>
     {% endblock %}

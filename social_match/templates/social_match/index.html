@@ -27,11 +27,30 @@
 
             <br><br>
             <h6>Change status:</h6>
-            <p>You are currently {{ user.is_active|yesno:"active, inactive" }}.</p>
+            <p>This is just for demo - use user.status_active to include only active users in search results<br>
+            You are currently {{ user.status_active|yesno:"active, inactive" }}.</p>
             <form action="{% url 'social_match:index' %}" method="post">
                 {% csrf_token %}
                 <input type="submit" value="Change status" name="change_status">
             </form>
+
+            <br><br>
+            <h6>Search for users:</h6>
+            <form action="{% url 'social_match:search' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Search" name="search">
+            </form>
+
+            {% if posts %}
+                {% for post in posts %}
+                <div>
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.content }}</p>
+                    <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
+                </div>
+                {% endfor %}
+            {% endif %}
+
         {% else %}
             <a class="btn btn-primary" href="{% url 'social:begin' 'google-oauth2' %}">
                 Login
@@ -39,15 +58,6 @@
         {% endif %}
     </div>
 
-    <div class="container-fluid">
-        {% for post in posts %}
-        <div>
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.content }}</p>
-            <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
-        </div>
-        {% endfor %}
-    </div>
 </body>
 
 </html>
