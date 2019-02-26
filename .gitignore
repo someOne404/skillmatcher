@@ -15,6 +15,7 @@
 .idea/*
 venv/*
 myvenv/*
+proj
 .vscode/*
 
 # Generated files
