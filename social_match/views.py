@@ -5,12 +5,17 @@ from django.views import generic
 
 from django.contrib.auth.models import User
 from .filters import UserFilter
+from .forms import PostForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 def base(request):
     template_name = './social_match/base.html'
+    return render(request, template_name)
+
+def about(request):
+    template_name = './social_match/about.html'
     return render(request, template_name)
 
 def home(request):
@@ -30,11 +35,16 @@ def search(request):
     user_filter = UserFilter(request.GET, queryset=user_list)
     return render(request, './social_match/search.html', {'filter': user_filter})
 
+def createpost(request):
+    template_name = './social_match/createpost.html'
+    form = PostForm()
+    return render(request,template_name, {'form': form})
+
 def profile(request):
     template_name = './social_match/profile.html'
     return render(request,template_name)
 
 def posts(request):
-    template_name = './social_match/posts.html'
+    template_name = './social_match/posts.html'    
     return render(request,template_name)
 

@@ -1,0 +1,12 @@
+{% extends 'social_match/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+<div>
+    Create Your Own Post!
+    <form method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
