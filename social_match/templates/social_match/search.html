@@ -1,0 +1,21 @@
+{% extends 'social_match/base.html' %}
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<form method="get">
+  {{ filter.form.as_p }}
+  <button type="submit">Search</button>
+</form>
+<ul>
+
+
+  {% for user in filter.qs %}
+  {% if user.status_active and not user.is_superuser %}
+  <li>{{ user.first_name }} {{ user.last_name }} - {{user.email}} - {{user.phone}} - {{user.class_standing}} -
+    {{user.graduation_year}}</li>
+  {% endif %}
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

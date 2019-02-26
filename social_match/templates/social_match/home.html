@@ -1,0 +1,53 @@
+{% extends 'social_match/base.html' %}
+{% block content %}
+<!doctype html>
+<html lang="en">
+
+<!-- <head>
+    <meta charset="utf-8">
+
+    <title>Lucky 13's Social Matching Platform!</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+</head> -->
+
+<body>
+    {% if user.is_authenticated %}
+
+    <br><br>
+    <h6>Currently active users:</h6>
+    {% if user_list %}
+    {% for user in user_list %}
+    {{ user.email }}<br>
+    {% endfor %}
+
+    {% endif %}
+
+    <br><br>
+    <h6>Change status:</h6>
+    <p>This is just for demo - use user.status_active to include only active users in search results<br>
+        You are currently {{ user.status_active|yesno:"active, inactive" }}.</p>
+    <form action="{% url 'social_match:home' %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Change status" name="change_status">
+    </form>
+
+    <br><br>
+
+
+    {% if posts %}
+    {% for post in posts %}
+    <div>
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
+        <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endif %}
+
+</body>
+
+</html>
+{% endblock %}
