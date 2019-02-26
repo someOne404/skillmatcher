@@ -1,21 +1,59 @@
 {% extends 'social_match/base.html' %}
+{% load widget_tweaks %}
 {% block content %}
 
 {% if user.is_authenticated %}
+  <form method="get">
+    <div class="well">
+      <h4 style="margin-top: 0">Filter</h4>
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.first_name.label_tag }}
+          {% render_field filter.form.first_name class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.last_name.label_tag }}
+          {% render_field filter.form.last_name class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.email.label_tag }}
+          {% render_field filter.form.email class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.phone.label_tag }}
+          {% render_field filter.form.phone class="form-control" %}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span class="glyphicon glyphicon-search"></span> Search
+      </button>
+    </div>
+  </form>
 
-<form method="get">
-  {{ filter.form.as_p }}
-  <button type="submit">Search</button>
-</form>
-<ul>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Phone</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in filter.qs %}
+        <tr>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone}}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No data</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-
-  {% for user in filter.qs %}
-  {% if user.status_active and not user.is_superuser %}
-  <li>{{ user.first_name }} {{ user.last_name }} - {{user.email}} - {{user.phone}} - {{user.class_standing}} -
-    {{user.graduation_year}}</li>
-  {% endif %}
-  {% endfor %}
-</ul>
-{% endif %}
+{% endif%}
 {% endblock %}
