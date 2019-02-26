@@ -24,6 +24,42 @@
           {% render_field filter.form.phone class="form-control" %}
         </div>
       </div>
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.class_standing.label_tag }}
+          {% render_field filter.form.class_standing class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.graduation_year.label_tag }}
+          {% render_field filter.form.graduation_year class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.majors.label_tag }}
+          {% render_field filter.form.majors class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.minors.label_tag }}
+          {% render_field filter.form.minors class="form-control" %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.courses.label_tag }}
+          {% render_field filter.form.courses class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.skills.label_tag }}
+          {% render_field filter.form.skills class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.interests.label_tag }}
+          {% render_field filter.form.interests class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.activities.label_tag }}
+          {% render_field filter.form.activities class="form-control" %}
+        </div>
+      </div>
       <button type="submit" class="btn btn-primary">
         <span class="glyphicon glyphicon-search"></span> Search
       </button>
