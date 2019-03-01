@@ -42,6 +42,12 @@ def createpost(request):
 
 def profile(request):
     template_name = './social_match/profile.html'
+
+    if 'change_status' in request.POST:
+        current_user = request.user
+        current_user.status_active = not current_user.status_active
+        current_user.save()
+
     return render(request,template_name)
 
 def posts(request):

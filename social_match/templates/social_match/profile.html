@@ -2,7 +2,14 @@
 {% block content %}
 {% if user.is_authenticated %}
 <div>
-    Your Profile
+    Your Profile<br>
+
+    You are currently {{ user.status_active|yesno:"active, inactive" }}.</p>
+    <form action="{% url 'social_match:profile' %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Change status" name="change_status">
+    </form>
+
 </div>
 {% endif %}
 {% endblock %}

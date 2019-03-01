@@ -94,8 +94,9 @@ class User(AbstractUser):
 	activities = models.ManyToManyField(Activity, blank=True)
 
 
-	def __str__(self):
-		return self.status_active
+	#def __str__(self):			# error in admin
+	#	self.username # computing ID
+
 	# potential saved users/friends field can be added later (ManyToManyField or ForeignKey)
 	# consider using django-friendship or other open source apps to implement relationships between Users
 

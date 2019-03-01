@@ -10,5 +10,9 @@ class UserFilter(django_filters.FilterSet):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'phone', 'class_standing', 'graduation_year',
-                  'majors','minors', 'courses', 'skills', 'interests', 'activities']
+                  'majors', 'minors', 'courses', 'skills', 'interests', 'activities']
 
+    @property
+    def qs(self):
+        parent = super(UserFilter, self).qs
+        return parent.filter(status_active=True, is_superuser=False)
