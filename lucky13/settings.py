@@ -148,8 +148,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-STATICFILES_STORAGE = 'lucky13.storage.WhiteNoiseStaticFilesStorage'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Settings for where to store images (e.g. profile pics)
