@@ -23,18 +23,6 @@
 
     {% endif %}
 
-    <br><br>
-    <h6>Change status:</h6>
-    <p>This is just for demo - use user.status_active to include only active users in search results<br>
-        You are currently {{ user.status_active|yesno:"active, inactive" }}.</p>
-    <form action="{% url 'social_match:home' %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Change status" name="change_status">
-    </form>
-
-    <br><br>
-
-
     {% if posts %}
     {% for post in posts %}
     <div>
