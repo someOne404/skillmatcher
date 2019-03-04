@@ -146,7 +146,7 @@ class SearchingTest(TestCase):
         user_list_filter = User.objects.filter(first_name="Test2")
         self.assertFalse(u1 in user_list_filter)
 
-    def test_search_by_first_name2(self):
+    def test_search_by_first_name3(self):
         u1 = self.create_test_user1()
         user_list_filter = User.objects.filter(first_name="")
         self.assertFalse(u1 in user_list_filter)
