@@ -165,3 +165,7 @@ class SearchingTest(TestCase):
         u1 = self.create_test_user1()
         user_list_filter = User.objects.filter(email="test1@virginia.edu")
         self.assertTrue(u1 in user_list_filter)
+
+    def test_non_existent_user(self):
+        user_list_filter = User.objects.filter(email="nonexistent@virginia.edu")
+        self.assertFalse(user_list_filter.exists())
