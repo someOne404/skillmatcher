@@ -5,12 +5,21 @@ from django.views import generic
 
 from django.contrib.auth.models import User
 from .filters import UserFilter
+from .forms import PostForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-def index(request):
-    template_name = './social_match/index.html'
+def base(request):
+    template_name = './social_match/base.html'
+    return render(request, template_name)
+
+def about(request):
+    template_name = './social_match/about.html'
+    return render(request, template_name)
+
+def home(request):
+    template_name = './social_match/home.html'
 
     if 'change_status' in request.POST:
         current_user = request.user
@@ -24,5 +33,24 @@ def index(request):
 def search(request):
     user_list = User.objects.all()
     user_filter = UserFilter(request.GET, queryset=user_list)
-    return render(request, './social_match/user_list.html', {'filter': user_filter})
+    return render(request, './social_match/search.html', {'filter': user_filter})
+
+def createpost(request):
+    template_name = './social_match/createpost.html'
+    form = PostForm()
+    return render(request,template_name, {'form': form})
+
+def profile(request):
+    template_name = './social_match/profile.html'
+
+    if 'change_status' in request.POST:
+        current_user = request.user
+        current_user.status_active = not current_user.status_active
+        current_user.save()
+
+    return render(request,template_name)
+
+def posts(request):
+    template_name = './social_match/posts.html'    
+    return render(request,template_name)
 

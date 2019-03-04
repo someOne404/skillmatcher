@@ -1,0 +1,95 @@
+{% extends 'social_match/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+{% if user.is_authenticated %}
+  <form method="get">
+    <div class="well">
+      <h4 style="margin-top: 0">Search</h4>
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.first_name.label_tag }}
+          {% render_field filter.form.first_name class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.last_name.label_tag }}
+          {% render_field filter.form.last_name class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.email.label_tag }}
+          {% render_field filter.form.email class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.phone.label_tag }}
+          {% render_field filter.form.phone class="form-control" %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.class_standing.label_tag }}
+          {% render_field filter.form.class_standing class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.graduation_year.label_tag }}
+          {% render_field filter.form.graduation_year class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.majors.label_tag }}
+          {% render_field filter.form.majors class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.minors.label_tag }}
+          {% render_field filter.form.minors class="form-control" %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.courses.label_tag }}
+          {% render_field filter.form.courses class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.skills.label_tag }}
+          {% render_field filter.form.skills class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.interests.label_tag }}
+          {% render_field filter.form.interests class="form-control" %}
+        </div>
+        <div class="form-group col-sm-4 col-md-3">
+          {{ filter.form.activities.label_tag }}
+          {% render_field filter.form.activities class="form-control" %}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <span class="glyphicon glyphicon-search"></span> Search
+      </button>
+    </div>
+  </form>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Email</th>
+        <th>Phone</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in filter.qs %}
+        <tr>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.last_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone}}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No data</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endif%}
+{% endblock %}

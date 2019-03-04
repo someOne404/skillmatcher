@@ -9,12 +9,10 @@ class Major(models.Model):
 	def __str__(self):
 		return self.name
 
-
 class Minor(models.Model):
 	name = models.CharField(max_length=50)
 	def __str__(self):
 		return self.name
-
 
 class Course(models.Model):
 	department = models.CharField(max_length=10) # abbreviation of department, usually found with course number
@@ -95,7 +93,20 @@ class User(AbstractUser):
 	courses = models.ManyToManyField(Course, blank=True)
 	activities = models.ManyToManyField(Activity, blank=True)
 
+
+	#def __str__(self):			# error in admin
+	#	self.username # computing ID
+
 	# potential saved users/friends field can be added later (ManyToManyField or ForeignKey)
 	# consider using django-friendship or other open source apps to implement relationships between Users
 
 	# posts (like a blog) can be added here as a ManyToManyField, referencing a separate Post model
+
+class Post(models.Model):
+	headline = models.CharField(max_length=50, blank=True)
+	message = models.CharField(max_length=500, blank=True)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	date = models.DateTimeField('date borrowed', blank=True)
+
+	def __str__(self):
+		return " Posted " + self.headline
