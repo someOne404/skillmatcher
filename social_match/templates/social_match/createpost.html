@@ -4,8 +4,19 @@
 <div>
     Create Your Own Post!
     <form method="POST">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
+        </br>
+
+        <div>
+            Headline:
+            {{ form.headline }}
+        </div>
+        <div>
+            Message:
+            {{ form.message }}
+        </div>
+        </br>
+
+        <button type="submit">Submit</button>
     </form>
 </div>
 {% endif %}

@@ -107,6 +107,6 @@ class Post(models.Model):
 	message = models.CharField(max_length=500, blank=True)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.DateTimeField('date borrowed', blank=True)
-
+	
 	def __str__(self):
 		return " Posted " + self.headline

@@ -14,25 +14,42 @@
 <body>
     {% if user.is_authenticated %}
 
-    <br><br>
-    <h6>Currently active users:</h6>
-    {% if user_list %}
-    {% for user in user_list %}
-    {{ user.email }}<br>
-    {% endfor %}
 
-    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h1>All Posts:</h1>
+                <!-- Posts -->
+                {% if post_list %}
+                {% for post in post_list %}
+                <div class="card" style="width: 35rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Headline: {{ post.headline }}</h5>
+                        <p class="card-text">Message: {{ post.message }}</p>
+                        <p>Posted by:<a href="/" class="primary">{{post.user}}</a> on {{post.date}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="col-sm">
+                <!-- Users -->
+                <h1>Currently Active Users:</h1>
+                {% if user_list %}
+                {% for user in user_list %}
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.email }}<br>
+                        </h5>
+                    </div>
+                </div>
+                {% endfor %}
 
-    {% if posts %}
-    {% for post in posts %}
-    <div>
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.content }}</p>
-        <p>Posted by {{ post.user.username }} | {{ post.date }}</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    {% endfor %}
-    {% endif %}
-    {% endif %}
 
 </body>
 

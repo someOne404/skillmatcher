@@ -13,5 +13,5 @@ urlpatterns = [
         template_name='social_match/search.html'), name='search'),
     path('createpost/', views.createpost, name='createpost'),
     path('profile/', views.profile, name='profile'),
-    path('posts/', views.posts, name='posts'),
+    path('myposts/', views.myposts, name='myposts'),
 ]

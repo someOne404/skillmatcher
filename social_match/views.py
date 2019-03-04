@@ -2,13 +2,15 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from django.urls import reverse
-# from .models import Post
+from .models import Post
 
 from django.contrib.auth.models import User
 from .filters import UserFilter
 from .forms import PostForm, ProfileForm
 
 from django.contrib.auth import get_user_model
+import datetime
+
 User = get_user_model()
 
 def base(request):
@@ -22,7 +24,9 @@ def about(request):
 def home(request):
     template_name = './social_match/home.html'
     user_list = User.objects.filter(status_active=True, is_superuser=False)
-    context = {'user_list': user_list}
+    post_list = Post.objects.all()
+
+    context = {'user_list': user_list, 'post_list':post_list}
     return render(request, template_name, context)
 
 def search(request):
@@ -33,6 +37,19 @@ def search(request):
 def createpost(request):
     template_name = './social_match/createpost.html'
     form = PostForm()
+
+    if request.method == 'POST':
+       form = PostForm(request.POST)
+       if form.is_valid():
+            headline = form.cleaned_data["headline"]
+            message = form.cleaned_data["message"]
+            p = Post(headline = headline, message=message, user=request.user, date=datetime.datetime.now())
+            p.save()
+            return render(request, './social_match/home.html')
+
+    else:
+        form = PostForm()
+
     return render(request,template_name, {'form': form})
 
 def profile(request):
@@ -60,9 +77,11 @@ def profile(request):
         'activities': user.activities,
     })
 
-    return render(request, template_name, {'user': user, 'form': ProfileForm})
+    return render(request, template_name, {'user': user, 'form': ProfileForm})    
 
-def posts(request):
-    template_name = './social_match/posts.html'    
-    return render(request,template_name)
+def myposts(request):
+    template_name = './social_match/myposts.html'
+    return render(request, template_name)
+
+
 
