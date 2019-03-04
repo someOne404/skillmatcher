@@ -1,5 +1,6 @@
 {% load static %}
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,10 +22,12 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.min.js"></script>
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.3/js/mdb.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
 </head>
 
 <body>
-    <div class="wrapper">
+
+    <div>
         {% if user.is_authenticated %}
         <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
             <a class="navbar-brand" href="{% url 'social_match:home' %}">Lucky 13's Social Matcher</a>
@@ -87,14 +90,58 @@
     {% block content %}
 
     {% endblock %}
+    <div class="footer">
+        <footer class="page-footer font-small orange lighten-1">
 
+            <!-- Footer Links -->
+            <div class="container-fluid text-center text-md-left">
 
-  <footer class="page-footer font-small orange lighten-1">
-    <div class="container">
-      <div class="text-center">&copy; 2019 Copyright <a href="#"> Lucky 13</a></div>
+{#                <!-- Grid row -->#}
+{#                <div class="row">#}
+{##}
+{#                    <!-- Grid column -->#}
+{#                    <div class="col-md-6 mt-md-0 mt-3">#}
+{##}
+{#                        <!-- Content -->#}
+{#                        <h5>Lucky 13's Social Matcher</h5>#}
+{#                        <p>Here you can use rows and columns here to organize your footer content.</p>#}
+{##}
+{#                    </div>#}
+{#                    <!-- Grid column -->#}
+{##}
+{#                    <hr class="clearfix w-100 d-md-none pb-3">#}
+{##}
+{#                    <!-- Grid column -->#}
+{#                    <div class="col-md-3 mb-md-0 mb-3">#}
+{##}
+{#                        <!-- Links -->#}
+{#                        <ul class="list-unstyled">#}
+{#                            <li>#}
+{#                                <a href="#!"> Home</a>#}
+{#                            </li>#}
+{#                            <li>#}
+{#                                <a href="#!">About Us</a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{##}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#                <!-- Grid row -->#}
+
+            </div>
+            <!-- Footer Links -->
+
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">&copy; 2019 Copyright:
+                <a href="#"> Lucky 13</a>
+            </div>
+            <!-- Copyright -->
+
+        </footer>
     </div>
-  </footer>
 
 
 </body>
+
 </html>
