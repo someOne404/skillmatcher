@@ -124,6 +124,44 @@ class ProfileTest(TestCase):
         self.assertTrue(user.status_active)
 
 
-#class SearchingTest(TestCase):
+class SearchingTest(TestCase):
 
-    #def test_first_name(self):
+    def create_test_user1(self):
+        return User.objects.create(
+            first_name="Test",
+            last_name="User1",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='test1@virginia.edu',
+        )
+
+    def test_search_by_first_name(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(first_name="Test")
+        self.assertTrue(u1 in user_list_filter)
+
+    def test_search_by_last_name(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(last_name="User2")
+        self.assertFalse(u1 in user_list_filter)
+
+    def test_search_by_phone(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(phone="+1234567890")
+        self.assertTrue(u1 in user_list_filter)
+
+    def test_search_by_class_standing(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(class_standing=User.second_year)
+        self.assertFalse(u1 in user_list_filter)
+
+    def test_search_by_graduation_year(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(graduation_year=2019)
+        self.assertTrue(u1 in user_list_filter)
+
+    def test_search_by_email(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(email="test1@virginia.edu")
+        self.assertTrue(u1 in user_list_filter)
