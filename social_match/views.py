@@ -41,11 +41,12 @@ def createpost(request):
     if request.method == 'POST':
        form = PostForm(request.POST)
        if form.is_valid():
+            instance = form.save(commit=False)
             headline = form.cleaned_data["headline"]
             message = form.cleaned_data["message"]
             p = Post(headline = headline, message=message, user=request.user, date=datetime.datetime.now())
             p.save()
-            return render(request, './social_match/home.html')
+            instance.save()
 
     else:
         form = PostForm()
