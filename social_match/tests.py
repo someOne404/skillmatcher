@@ -141,31 +141,76 @@ class SearchingTest(TestCase):
         user_list_filter = User.objects.filter(first_name="Test")
         self.assertTrue(u1 in user_list_filter)
 
+    def test_search_by_first_name2(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(first_name="Test2")
+        self.assertFalse(u1 in user_list_filter)
+
+    def test_search_by_first_name2(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(first_name="")
+        self.assertFalse(u1 in user_list_filter)
+
     def test_search_by_last_name(self):
         u1 = self.create_test_user1()
         user_list_filter = User.objects.filter(last_name="User2")
         self.assertFalse(u1 in user_list_filter)
+
+    def test_search_by_last_name2(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(last_name="User1")
+        self.assertTrue(u1 in user_list_filter)
 
     def test_search_by_phone(self):
         u1 = self.create_test_user1()
         user_list_filter = User.objects.filter(phone="+1234567890")
         self.assertTrue(u1 in user_list_filter)
 
+    def test_search_by_phone2(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(phone="+1234567899")
+        self.assertFalse(u1 in user_list_filter)
+
+    def test_search_by_phone3(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(phone="+911")
+        self.assertFalse(u1 in user_list_filter)
+
     def test_search_by_class_standing(self):
         u1 = self.create_test_user1()
         user_list_filter = User.objects.filter(class_standing=User.second_year)
         self.assertFalse(u1 in user_list_filter)
+
+    def test_search_by_class_standing2(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(class_standing=User.first_year)
+        self.assertTrue(u1 in user_list_filter)
 
     def test_search_by_graduation_year(self):
         u1 = self.create_test_user1()
         user_list_filter = User.objects.filter(graduation_year=2019)
         self.assertTrue(u1 in user_list_filter)
 
+    def test_search_by_graduation_year2(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(graduation_year=2020)
+        self.assertFalse(u1 in user_list_filter)
+
     def test_search_by_email(self):
         u1 = self.create_test_user1()
         user_list_filter = User.objects.filter(email="test1@virginia.edu")
         self.assertTrue(u1 in user_list_filter)
 
+    def test_search_by_email2(self):
+        u1 = self.create_test_user1()
+        user_list_filter = User.objects.filter(email="not_test1@virginia.edu")
+        self.assertFalse(u1 in user_list_filter)
+
     def test_non_existent_user(self):
         user_list_filter = User.objects.filter(email="nonexistent@virginia.edu")
         self.assertFalse(user_list_filter.exists())
+
+    # def test_search_by_major(self):
+    #     u1 = self.create_test_user1()
+    #     user_list_filter = User.objects.filter(major='Computer Science')
+    #     self.assertTrue(u1 in user_list_filter)
