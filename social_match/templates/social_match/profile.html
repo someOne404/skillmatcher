@@ -1,15 +1,92 @@
 {% extends 'social_match/base.html' %}
+{% load static %}
 {% block content %}
 {% if user.is_authenticated %}
-<div>
-    Your Profile<br>
 
-    You are currently {{ user.status_active|yesno:"active, inactive" }}.</p>
-    <form action="{% url 'social_match:profile' %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Change status" name="change_status">
-    </form>
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-md-4 col-sm-12 mb-3">
+                {% if user.picture %}
+                    <img height='256' width='256' src="{{ user.picture.url }}">
+                {% else %}
+                    <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+{#                    <i class="fas fa-user fa-10x img-thumbnail"></i>#}
+                {% endif %}
+            </div>
+            <div class="col-md-8 col-sm-12 mb-3">
+                <h4 class="display-4">{{ user.first_name }} {{ user.last_name }}</h4>
+                <h5>{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</h5>
+                <h5>Majors:
+                    {% for major in user.majors.all %}
+                        {% if forloop.last %}
+                            <a class='link' href="#">{{ major.name }}</a>
+                        {% else %}
+                            <a class='link' href="#">{{ major.name }}</a>,
+                        {% endif %}
+                    {% endfor %}
+                </h5>
+                <h5>Minors:
+                    {% for minor in user.minors.all %}
+                        {% if forloop.last %}
+                            <a class='link' href="#">{{ minor.name }}</a>
+                        {% else %}
+                            <a class='link' href="#">{{ minor.name }}</a>,
+                        {% endif %}
+                    {% endfor %}
+                </h5>
+                <h5>Courses:
+                    {% for course in user.courses.all %}
+                        {% if forloop.last %}
+                            <a class='link' href="#">{{ course.name }}</a>
+                        {% else %}
+                            <a class='link' href="#">{{ course.name }}</a>,
+                        {% endif %}
+                    {% endfor %}
+                </h5>
+                <h5>Skills:
+                    {% for skill in user.skills.all %}
+                        {% if forloop.last %}
+                            <a class='link' href="#">{{ skill.name }}</a>
+                        {% else %}
+                            <a class='link' href="#">{{ skill.name }}</a>,
+                        {% endif %}
+                    {% endfor %}
+                </h5>
+                <h5>Interests:
+                    {% for interest in user.interests.all %}
+                        {% if forloop.last %}
+                            <a class='link' href="#">{{ interest.name }}</a>
+                        {% else %}
+                            <a class='link' href="#">{{ interest.name }}</a>,
+                        {% endif %}
+                    {% endfor %}
+                </h5>
+                <h5>Activities:
+                    {% for activity in user.activities.all %}
+                        {% if forloop.last %}
+                            <a class='link' href="#">{{ activity.name }}</a>
+                        {% else %}
+                            <a class='link' href="#">{{ activity.name }}</a>,
+                        {% endif %}
+                    {% endfor %}
+                </h5>
 
-</div>
+                <hr>
+
+                <h5>Email: {{ user.email }}</h5>
+                <h5>Phone number: {{ user.phone }}</h5>
+
+                <hr>
+
+                <h5>You are currently {{ user.status_active|yesno:"active, inactive" }}.</h5>
+                <form action="{% url 'social_match:profile' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Change status" name="change_status">
+                </form>
+
+            </div>
+        </div>
+    </div>
+
 {% endif %}
 {% endblock %}

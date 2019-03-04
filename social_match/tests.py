@@ -83,7 +83,7 @@ class SecurityTest(TestCase):
         response = self.client.get('/posts', follow=True)
         self.assertEquals(page_ideal.content, response.content)
 
-        template = './social_match/profile.html'  # profile
+        template = './social_match/home.html'  # profile
         page_ideal = render(None, template)
         response = self.client.get('/profile', follow=True)
         self.assertEquals(page_ideal.content, response.content)
