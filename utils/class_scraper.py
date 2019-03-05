@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 from requests import get
+import json
 
 
 class Course:
@@ -12,7 +13,7 @@ class Course:
 		return "{}|{}|{}".format(self.number, self.name, self.department)
 	def json(self):
 		json_template = "{{\"model\": \"social_match.course\",\"pk\": {},\"fields\": {{\"department\": \"{}\",\"number\": {},\"name\": \"{}\"}}}}"
-		return json_template.format(self.pk, self.department, self.number, self.name)
+		return json_template.format(self.pk, self.department, self.number, self.name.replace("\"", "\\\""))
 
 # full catalog url
 url = "https://rabi.phys.virginia.edu/mySIS/CC2/CS.html"
@@ -53,7 +54,7 @@ for i in range(len(class_nums)):
 	course = Course(name=class_name, department=class_dept, number=class_num, pk=i+1)
 	classes.append(course)
 
-with open('initial_data.json', 'w') as file:
+with open('../social_match/fixtures/class_data.json', 'w') as file:
 	file.write("[")
 	for c in classes[:-1]:
 		file.write(c.json()+',')
