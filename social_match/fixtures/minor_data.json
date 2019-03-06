@@ -1,0 +1,275 @@
+[
+  {
+    "model": "social_match.minor",
+    "pk": 1,
+    "fields": {
+      "name": "African American & African Studies"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 2,
+    "fields": {
+      "name": "American Sign Language Minor"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 3,
+    "fields": {
+      "name": "Anthropology"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 4,
+    "fields": {
+      "name": "Archaeology"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 5,
+    "fields": {
+      "name": "Art History"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 6,
+    "fields": {
+      "name": "Art, Studio"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 7,
+    "fields": {
+      "name": "Asian Pacific-American Studies"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 8,
+    "fields": {
+      "name": "Astronomy"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 9,
+    "fields": {
+      "name": "Bioethics"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 10,
+    "fields": {
+      "name": "Biology"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 11,
+    "fields": {
+      "name": "Chemistry"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 12,
+    "fields": {
+      "name": "Classics"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 13,
+    "fields": {
+      "name": "Comparative Literature"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 14,
+    "fields": {
+      "name": "Computer Science"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 15,
+    "fields": {
+      "name": "Dance Minor"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 16,
+    "fields": {
+      "name": "Drama"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 17,
+    "fields": {
+      "name": "East Asian Studies"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 18,
+    "fields": {
+      "name": "Economics"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 19,
+    "fields": {
+      "name": "English"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 20,
+    "fields": {
+      "name": "Environmental Sciences"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 21,
+    "fields": {
+      "name": "French"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 22,
+    "fields": {
+      "name": "German"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 23,
+    "fields": {
+      "name": "Global Culture and Commerce"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 24,
+    "fields": {
+      "name": "Global Studies in Education"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 25,
+    "fields": {
+      "name": "History"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 26,
+    "fields": {
+      "name": "Italian"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 27,
+    "fields": {
+      "name": "Latin American Studies"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 28,
+    "fields": {
+      "name": "Linguistics"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 29,
+    "fields": {
+      "name": "Mathematics"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 30,
+    "fields": {
+      "name": "Philosophy"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 31,
+    "fields": {
+      "name": "Physics"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 32,
+    "fields": {
+      "name": "Politics"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 33,
+    "fields": {
+      "name": "Portuguese"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 34,
+    "fields": {
+      "name": "Psychology"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 35,
+    "fields": {
+      "name": "Religious Studies"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 36,
+    "fields": {
+      "name": "Sociology"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 37,
+    "fields": {
+      "name": "South Asian Studies"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 38,
+    "fields": {
+      "name": "Spanish"
+    }
+  },
+  {
+    "model": "social_match.minor",
+    "pk": 39,
+    "fields": {
+      "name": "Women, Gender & Sexuality"
+    }
+  }
+]
