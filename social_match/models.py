@@ -95,7 +95,7 @@ class User(AbstractUser):
 
 
 	def __str__(self):			# error in admin
-		return str(self.status_active) # computing ID
+		return str(self.username) # computing ID
 
 	# potential saved users/friends field can be added later (ManyToManyField or ForeignKey)
 	# consider using django-friendship or other open source apps to implement relationships between Users
@@ -106,7 +106,7 @@ class Post(models.Model):
 	headline = models.CharField(max_length=50, blank=True)
 	message = models.CharField(max_length=500, blank=True)
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
-	date = models.DateTimeField('date borrowed', blank=True)
+	date = models.DateTimeField('date posted', blank=True)
 	
 	def __str__(self):
-		return " Posted " + self.headline
+		return self.headline

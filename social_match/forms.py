@@ -5,7 +5,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('headline', 'message', 'user', 'date')
+        fields = ('headline', 'message')
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

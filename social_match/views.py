@@ -9,7 +9,7 @@ from .filters import UserFilter
 from .forms import PostForm, ProfileForm
 
 from django.contrib.auth import get_user_model
-import datetime
+from datetime import datetime
 
 User = get_user_model()
 
@@ -36,21 +36,17 @@ def search(request):
 
 def createpost(request):
     template_name = './social_match/createpost.html'
-    form = PostForm()
 
     if request.method == 'POST':
        form = PostForm(request.POST)
        if form.is_valid():
            post = form.save(commit=False)
            post.user = request.user
+           post.date = datetime.now()
            post.save()
 
-           headline = form.cleaned_data["headline"]
-           message = form.cleaned_data["message"]
-           p = Post(headline = headline, message=message, user=request.user, date=datetime.datetime.now())
-           p.save()
-
-           form = PostForm()
+           #add some kind of confirmation that post has been created
+           return HttpResponseRedirect('/createpost')
            
     else:
         form = PostForm()
