@@ -23,7 +23,10 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ post.headline }}</h5>
                         <p class="card-text">{{ post.message }}</p>
-                        <p>Posted by: <a href="/" class="primary">{{post.user}}</a> on {{post.date}}</p>
+                        <p>Posted by: <a href="/" class="primary">{{post.user}}</a> on {{post.date}}<br>
+                        {% if post.post_edited %}
+                        Last edited on: {{post.date_edited}}
+                        {% endif %}</p>
                     </div>
                 </div>
                 {% endfor %}
