@@ -2,10 +2,15 @@ from django import forms
 from .models import *
 
 class PostForm(forms.ModelForm):
-
     class Meta:
         model = Post
         fields = ('headline', 'message')
+
+class EditPostForm(forms.ModelForm):
+    post_active = forms.BooleanField(required=False)
+    class Meta:
+        model = Post
+        fields = {'headline', 'message', 'post_active'}
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

@@ -1,12 +1,7 @@
 {% extends 'social_match/base.html' %}
 {% block content %}
-{% if user.is_authenticated %}
 <div>
-    {% if confirmation %}
-        {{confirmation}} Create another:
-    {% else %}
-        Create a post!
-    {% endif %}
+    Edit your post!
     <form method="POST">{% csrf_token %}
         </br>
 
@@ -18,10 +13,13 @@
             Message:
             {{ form.message }}
         </div>
+        <div>
+            Archived:
+            {{ form.post_active }}
+        </div>
         </br>
 
-        <button type="submit">Submit</button>
+        <button type="submit">Save Changes</button>
     </form>
 </div>
-{% endif %}
 {% endblock %}

@@ -1,10 +1,11 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from social_match.models import *
 from social_match.filters import *
-from django.urls import reverse
 from django.shortcuts import render
-import requests
-import socket
+from django.urls import reverse
+
+from django.utils import timezone
+import datetime
 
 # Create your tests here.
 class UserModelTest(TestCase):
@@ -66,7 +67,24 @@ class UserModelTest(TestCase):
         self.assertQuerysetEqual(user_filter.qs, user_list_ideal, transform=lambda x: x)
 
 class SecurityTest(TestCase):
+    def create_test_user(self):
+        return User.objects.create(
+            first_name="Test",
+            last_name="User",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='test@virginia.edu',
+        )
 
+    def create_post(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user
+        time = timezone.now()
+        return Post.objects.create(headline=headline, message=message, user=user, date=time)
+
+    # tests
     def test_pages_are_secure(self): # add to this test when more secure pages are created
         template = './social_match/home.html'   # home
         page_ideal = render(None, template)
@@ -78,7 +96,7 @@ class SecurityTest(TestCase):
         response = self.client.get('/createpost', follow=True)
         self.assertEquals(page_ideal.content, response.content)
 
-        template = './social_match/myposts.html'  # posts
+        template = './social_match/home.html'  # posts
         page_ideal = render(None, template)
         response = self.client.get('/myposts', follow=True)
         self.assertEquals(page_ideal.content, response.content)
@@ -92,6 +110,13 @@ class SecurityTest(TestCase):
         page_ideal = render(None, template)
         response = self.client.get('/search', follow=True)
         self.assertEquals(page_ideal.content, response.content)
+
+        template = './social_match/myposts.html'  # myposts
+        page_ideal = render(None, template)
+        response = self.client.get('/myposts', follow=True)
+        self.assertEquals(page_ideal.content, response.content)
+
+        #editposts
 
 class ProfileTest(TestCase):
 
@@ -214,3 +239,96 @@ class SearchingTest(TestCase):
     #     u1 = self.create_test_user1()
     #     user_list_filter = User.objects.filter(major='Computer Science')
     #     self.assertTrue(u1 in user_list_filter)
+
+def create_post(headline, message, user, days):
+    """
+    Create a post with the given 'post_headline', 'post_message', and published
+    the given numbers of 'days' offset to now (negative for posts published
+    in the past, positive for posts that have yet to be published).
+    """
+    time = timezone.now() + datetime.timedelta(days=days)
+    Post.objects.create(headline=headline, message=message, user=user, date=time)
+
+def create_many_posts(headline, message, user, num_posts):
+    for i in range(num_posts):
+        create_post(headline, message, user, (-1*num_posts))
+
+class PostTest(TestCase):
+    def create_test_user(self):
+        return User.objects.create(
+            first_name="Test",
+            last_name="User",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='test@virginia.edu',
+        )
+
+    # tests
+    def test_no_posts(self):
+        response = self.client.get(reverse('social_match:home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.context['post_list'], [])
+
+    def test_past_post(self):
+        headline = 'Past post'
+        message = 'should appear in home page'
+        user = self.create_test_user()
+        create_post(headline=headline, message=message, user=user, days=-30)
+        response = self.client.get(reverse('social_match:home'))
+        self.assertQuerysetEqual(
+            response.context['post_list'],
+            ['<Post: Past post>']
+        )
+
+    def test_current_post(self):
+        headline = 'posted today'
+        message = 'should appear in home page'
+        user = self.create_test_user()
+        create_post(headline=headline, message=message, user=user, days=0)
+        response = self.client.get(reverse('social_match:home'))
+        self.assertQuerysetEqual(
+            response.context['post_list'],
+            ['<Post: posted today>']
+        )
+
+    def test_future_post(self):
+        headline = 'Future post'
+        message = 'should not appear in home page'
+        user = self.create_test_user()
+        create_post(headline=headline, message=message, user=user, days=30)
+        response = self.client.get(reverse('social_match:home'))
+        self.assertQuerysetEqual(response.context['post_list'], [])
+
+    def test_future_post_and_past_post(self):
+        user = self.create_test_user()
+        create_post(
+            headline='Past post',
+            message = 'should appear in home page',
+            user = user,
+            days = -30
+        )
+        create_post(
+            headline='Future post',
+            message = 'should not appear in home page',
+            user = user,
+            days = 30
+        )
+        response = self.client.get(reverse('social_match:home'))
+        self.assertQuerysetEqual(
+            response.context['post_list'],
+            ['<Post: Past post>']
+        )
+
+    def test_first_20_of_21_questions_appear_in_home(self):
+        headline = '21 posts'
+        message = 'message'
+        user = self.create_test_user()
+        create_many_posts(headline, message, user, 21)
+        response = self.client.get(reverse('social_match:home'))
+
+        list = []
+        for i in range(20):
+            list.append('<Post: ' + headline + '>')
+
+        self.assertQuerysetEqual(response.context['post_list'], list)

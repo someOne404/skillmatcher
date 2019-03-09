@@ -68,6 +68,10 @@
                 </ul>
             </div>
         </nav>
+        {% block content %}
+
+        {% endblock %}
+
         {% else %}
         <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
             <a class="navbar-brand" href="#">Lucky 13's Social Matcher</a>
@@ -93,9 +97,6 @@
     </div>
     {% endif %}
 
-    {% block content %}
-
-    {% endblock %}
     <div class="footer">
         <footer class="page-footer font-small orange lighten-1">
 
