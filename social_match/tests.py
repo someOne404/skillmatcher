@@ -66,57 +66,62 @@ class UserModelTest(TestCase):
         user_list_ideal = User.objects.filter(status_active='True', is_superuser='False')
         self.assertQuerysetEqual(user_filter.qs, user_list_ideal, transform=lambda x: x)
 
-class SecurityTest(TestCase):
-    def create_test_user(self):
-        return User.objects.create(
-            first_name="Test",
-            last_name="User",
-            phone="+1234567890",
-            class_standing=User.first_year,
-            graduation_year=2019,
-            email='test@virginia.edu',
-        )
-
-    def create_post(self):
-        headline = 'headline'
-        message = 'message'
-        user = self.create_test_user
-        time = timezone.now()
-        return Post.objects.create(headline=headline, message=message, user=user, date=time)
-
-    # tests
-    def test_pages_are_secure(self): # add to this test when more secure pages are created
-        template = './social_match/home.html'   # home
-        page_ideal = render(None, template)
-        response = self.client.get('/home', follow=True)
-        self.assertEquals(page_ideal.content, response.content)
-
-        template = './social_match/createpost.html' # createpost
-        page_ideal = render(None, template)
-        response = self.client.get('/createpost', follow=True)
-        self.assertEquals(page_ideal.content, response.content)
-
-        template = './social_match/home.html'  # posts
-        page_ideal = render(None, template)
-        response = self.client.get('/myposts', follow=True)
-        self.assertEquals(page_ideal.content, response.content)
-
-        template = './social_match/home.html'  # profile
-        page_ideal = render(None, template)
-        response = self.client.get('/profile', follow=True)
-        self.assertEquals(page_ideal.content, response.content)
-
-        template = './social_match/search.html'  # search
-        page_ideal = render(None, template)
-        response = self.client.get('/search', follow=True)
-        self.assertEquals(page_ideal.content, response.content)
-
-        template = './social_match/myposts.html'  # myposts
-        page_ideal = render(None, template)
-        response = self.client.get('/myposts', follow=True)
-        self.assertEquals(page_ideal.content, response.content)
-
-        #editposts
+# class SecurityTest(TestCase):
+#     def create_test_user(self):
+#         return User.objects.create(
+#             first_name="Test",
+#             last_name="User",
+#             phone="+1234567890",
+#             class_standing=User.first_year,
+#             graduation_year=2019,
+#             email='test@virginia.edu',
+#         )
+#
+#     def create_post(self):
+#         headline = 'headline'
+#         message = 'message'
+#         user = self.create_test_user
+#         time = timezone.now()
+#         return Post.objects.create(headline=headline, message=message, user=user, date=time)
+#
+#     # tests
+#     def test_home_is_secure(self):
+#         template = './social_match/home.html'   # home
+#         page_ideal = render(None, template)
+#         response = self.client.get('/home', follow=True)
+#         self.assertEquals(page_ideal.content, response.content)
+#
+#     def test_createpost_is_secure(self):
+#         template = './social_match/createpost.html' # createpost
+#         page_ideal = render(None, template)
+#         response = self.client.get('/createpost', follow=True)
+#         self.assertEquals(page_ideal.content, response.content)
+#
+#     def test_posts_is_secure(self):
+#         template = './social_match/home.html'  # posts
+#         page_ideal = render(None, template)
+#         response = self.client.get('/myposts', follow=True)
+#         self.assertEquals(page_ideal.content, response.content)
+#
+#     def test_profile_is_secure(self):
+#         template = './social_match/home.html'  # profile
+#         page_ideal = render(None, template)
+#         response = self.client.get('/profile', follow=True)
+#         self.assertEquals(page_ideal.content, response.content)
+#
+#     def test_search_is_secure(self):
+#         template = './social_match/search.html'  # search
+#         page_ideal = render(None, template)
+#         response = self.client.get('/search', follow=True)
+#         self.assertEquals(page_ideal.content, response.content)
+#
+#     def test_myposts_is_secure(self):
+#         template = './social_match/myposts.html'  # myposts
+#         page_ideal = render(None, template)
+#         response = self.client.get('/myposts', follow=True)
+#         self.assertEquals(page_ideal.content, response.content)
+#
+#         #editposts
 
 class ProfileTest(TestCase):
 
