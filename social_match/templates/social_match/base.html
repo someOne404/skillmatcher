@@ -26,6 +26,29 @@
     <script type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.3/js/mdb.min.js"></script>
     <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(event){
+            $(document).on('click', '#like', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var set = $(this).attr('data-value');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:likepost" %}',
+                    data: {'id':pk, 'current_set':set, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>

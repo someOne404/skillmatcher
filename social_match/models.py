@@ -111,6 +111,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField('date posted', blank=True)
     date_edited = models.DateTimeField('date edited', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='likes', blank=True)
 
     def __str__(self):
         return self.headline

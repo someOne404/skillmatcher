@@ -12,6 +12,7 @@
                         Last edited on: {{post.date_edited}}
                         {% endif %}
                     </p>
+                    <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
                     {% if not post.post_active %}
                         <p> Archived </p>
                     {% endif %}
