@@ -1,14 +1,17 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from django.views import generic
+from django.http import HttpResponseRedirect
 from django.urls import reverse
-# from .models import Post
-
 from django.contrib.auth.models import User
-from .filters import UserFilter
-from .forms import PostForm, ProfileForm
-
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+
+from .models import Post
+from .filters import UserFilter
+from .forms import PostForm, ProfileForm, EditPostForm
+
+from datetime import datetime
+import math
+
 User = get_user_model()
 
 def base(request):
@@ -20,20 +23,41 @@ def about(request):
     return render(request, template_name)
 
 def home(request):
+    posts_per_page = 20
     template_name = './social_match/home.html'
     user_list = User.objects.filter(status_active=True, is_superuser=False)
-    context = {'user_list': user_list}
+    max_sets = math.ceil(len(Post.objects.filter(
+        date__lte=timezone.now(),
+        post_active=True
+    )) / posts_per_page)
+
+    if 'newer' in request.POST:
+        post_set = int(request.POST.get("current_set")) - 1
+        post_list = Post.objects.filter(
+            date__lte=timezone.now(),
+            post_active=True
+        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
+    elif 'older' in request.POST:
+        post_set = int(request.POST.get("current_set")) + 1
+        post_list = Post.objects.filter(
+            date__lte=timezone.now(),
+            post_active=True
+        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
+        print(post_set)
+    else:
+        post_list = Post.objects.filter(
+            date__lte=timezone.now(),
+            post_active = True
+        ).order_by('-date')[:posts_per_page]
+        post_set = 1
+
+    context = {'user_list': user_list, 'post_list':post_list, 'post_set':post_set, 'max_sets':max_sets}
     return render(request, template_name, context)
 
 def search(request):
     user_list = User.objects.all()
     user_filter = UserFilter(request.GET, queryset=user_list)
     return render(request, './social_match/search.html', {'filter': user_filter})
-
-def createpost(request):
-    template_name = './social_match/createpost.html'
-    form = PostForm()
-    return render(request,template_name, {'form': form})
 
 def profile(request):
     if not request.user.is_authenticated:
@@ -60,9 +84,81 @@ def profile(request):
         'activities': user.activities,
     })
 
-    return render(request, template_name, {'user': user, 'form': ProfileForm})
+    return render(request, template_name, {'user': user, 'form': ProfileForm})    
 
-def posts(request):
-    template_name = './social_match/posts.html'    
-    return render(request,template_name)
+def myposts(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('social_match:home'))
 
+    posts_per_page = 20
+    post_list = Post.objects.filter(
+        user = request.user
+    ).order_by('-date')
+
+    max_sets = math.ceil(len(Post.objects.filter(
+        user = request.user
+    )) / posts_per_page)
+
+    if 'newer' in request.POST:
+        post_set = int(request.POST.get("current_set")) - 1
+        post_list = Post.objects.filter(
+            user=request.user
+        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
+    elif 'older' in request.POST:
+        post_set = int(request.POST.get("current_set")) + 1
+        post_list = Post.objects.filter(
+            user=request.user
+        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
+        print(post_set)
+    else:
+        post_list = Post.objects.filter(
+            user=request.user
+        ).order_by('-date')[:posts_per_page]
+        post_set = 1
+
+    template_name = './social_match/myposts.html'
+    context = {'post_list':post_list, 'post_set':post_set, 'max_sets':max_sets}
+    return render(request, template_name, context)
+
+
+def createpost(request):
+    template_name = './social_match/createpost.html'
+
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.date = datetime.now()
+            post.save()
+
+            message = 'Your post has been created!'
+            form = PostForm()
+            context = {'form':form, 'confirmation':message}
+            return render(request, template_name, context)
+
+    else:
+        form = PostForm()
+
+    return render(request, template_name, {'form': form})
+
+def editpost(request, post_id):
+    template_name = './social_match/editpost.html'
+    post = Post.objects.get(id=post_id)
+
+    if request.method == "POST":
+        form = EditPostForm(request.POST)
+        if form.has_changed() and form.is_valid():
+            post.refresh_from_db()
+            post.headline = form.cleaned_data.get('headline')
+            post.message = form.cleaned_data.get('message')
+            post.post_active = not form.cleaned_data.get('post_active')
+            post.post_edited = True
+            post.date_edited = datetime.now()
+            post.save()
+
+            return HttpResponseRedirect('/myposts')
+    else:
+        form = EditPostForm(initial={'headline':post.headline, 'message':post.message, 'post_active':(not post.post_active)})
+
+    return render(request, template_name, {'form': form})
