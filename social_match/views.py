@@ -1,11 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.core import serializers
+import json
 
-from .models import Post
+
+from .models import *
 from .filters import UserFilter
 from .forms import PostForm, ProfileForm, EditPostForm
 
@@ -162,3 +165,24 @@ def editpost(request, post_id):
         form = EditPostForm(initial={'headline':post.headline, 'message':post.message, 'post_active':(not post.post_active)})
 
     return render(request, template_name, {'form': form})
+
+
+def classlist(request):
+    courses = Course.objects.all()
+    data = [{"name": str(c)+": " + c.name} for c in courses]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
+
+
+def majorlist(request):
+    majors = Major.objects.all()
+    data = [{"name": str(m)+": " + m.name} for m in majors]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
+
+
+def minorlist(request):
+    minors = Minor.objects.all()
+    data = [{"name": str(m)+": " + m.name} for m in minors]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
