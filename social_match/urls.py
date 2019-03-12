@@ -15,4 +15,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('myposts/', views.myposts, name='myposts'),
     path('editpost/<int:post_id>/', views.editpost, name="editpost"),
+    path('api/classes/', views.classlist, name='classlist'),
+    path('api/majors/', views.majorlist, name='majorlist'),
+    path('api/minors/', views.minorlist, name='minorlist')
 ]
