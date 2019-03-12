@@ -37,7 +37,7 @@ def unload_minors_fixture(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('social_match', '0002_post'),
+        ('social_match', '0007_auto_20190312_1425'),
     ]
 
     operations = [
