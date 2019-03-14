@@ -3,9 +3,9 @@
 {% if user.is_authenticated %}
 <div>
     {% if confirmation %}
-        {{confirmation}} Create another:
+    {{confirmation}} Create another:
     {% else %}
-        Create a post!
+    Create a post!
     {% endif %}
     <form method="POST">{% csrf_token %}
         </br>
@@ -20,7 +20,7 @@
         </div>
         </br>
 
-        <button type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
 </div>
 {% endif %}

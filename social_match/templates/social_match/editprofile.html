@@ -1,0 +1,56 @@
+{% extends 'social_match/base.html' %}
+{% block content %}
+<div>
+    Edit your Profile!
+    <form method="POST">{% csrf_token %}
+        </br>
+        <div>
+            First Name:
+            {{ form.first_name }}
+        </div>
+        <div>
+            Last Name:
+            {{ form.last_name }}
+        </div>
+        <div>
+            Phone:
+            {{ form.phone }}
+        </div>
+        <div>
+            Class Standing:
+            {{ form.class_standing }}
+        </div>
+        <div>
+            Graduation Year:
+            {{ form.graduation_year }}
+        </div>
+        <div>
+            Majors:
+            {{ form.majors }}
+        </div>
+        <div>
+            Minors:
+            {{ form.minors }}
+        </div>
+        <div>
+            Skills:
+            {{ form.skills }}
+        </div>
+        <div>
+            Interests:
+            {{ form.interests }}
+        </div>
+        <div>
+            Courses:
+            {{ form.courses }}
+        </div>
+        <div>
+            Activities:
+            {{ form.activities }}
+        </div>
+        </br>
+
+        <button class="btn btn-light" type="submit">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
