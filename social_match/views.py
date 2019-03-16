@@ -59,17 +59,24 @@ def search(request):
     user_filter = UserFilter(request.GET, queryset=user_list)
     return render(request, './social_match/search.html', {'filter': user_filter})
 
-def profile(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('social_match:home'))
+def profile(request, user_id=None):
+    user = None
+    if not user_id: # accessing user's own profile
+        user = request.user
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('social_match:home'))
 
-    if 'change_status' in request.POST:
-        current_user = request.user
-        current_user.status_active = not current_user.status_active
-        current_user.save()
+        if 'change_status' in request.POST:
+            current_user = request.user
+            current_user.status_active = not current_user.status_active
+            current_user.save()
+    else:
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return render(request, './social_match/404.html')
 
     template_name = './social_match/profile.html'
-    user = request.user
     form = ProfileForm(initial={
         'first_name': user.first_name,
         'last_name': user.last_name,
