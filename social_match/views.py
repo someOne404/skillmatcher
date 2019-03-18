@@ -60,7 +60,8 @@ def search(request):
     return render(request, './social_match/search.html', {'filter': user_filter})
 
 def profile(request, user_id=None):
-    user = None
+    user = request.user
+    viewing_user = user
     if not user_id: # accessing user's own profile
         user = request.user
         if not request.user.is_authenticated:
@@ -72,26 +73,26 @@ def profile(request, user_id=None):
             current_user.save()
     else:
         try:
-            user = User.objects.get(id=user_id)
+            viewing_user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return render(request, './social_match/404.html')
 
     template_name = './social_match/profile.html'
     form = ProfileForm(initial={
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-        'phone': user.phone,
-        'class_standing': user.class_standing,
-        'graduation_year': user.graduation_year,
-        'majors': user.majors,
-        'minors': user.minors,
-        'courses': user.courses,
-        'interests': user.interests,
-        'skills': user.skills,
-        'activities': user.activities,
+        'first_name': viewing_user.first_name,
+        'last_name': viewing_user.last_name,
+        'phone': viewing_user.phone,
+        'class_standing': viewing_user.class_standing,
+        'graduation_year': viewing_user.graduation_year,
+        'majors': viewing_user.majors,
+        'minors': viewing_user.minors,
+        'courses': viewing_user.courses,
+        'interests': viewing_user.interests,
+        'skills': viewing_user.skills,
+        'activities': viewing_user.activities,
     })
 
-    return render(request, template_name, {'user': user, 'form': ProfileForm})    
+    return render(request, template_name, {'user': user, 'viewing_user': viewing_user, 'form': ProfileForm})
 
 def myposts(request):
     if not request.user.is_authenticated:
