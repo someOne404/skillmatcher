@@ -169,12 +169,13 @@ def editpost(request, post_id):
 def editprofile(request, user_id):
     template_name = './social_match/editprofile.html'
     user = User.objects.get(id=user_id)
-    # user = request.user
     if request.method == "POST":
         form = EditProfileForm(request.POST)
 
         if form.has_changed() and form.is_valid():
             user.refresh_from_db()
+
+            return HttpResponse(user.phone)
 
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')

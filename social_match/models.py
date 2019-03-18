@@ -83,9 +83,7 @@ class User(AbstractUser):
     )
 
     graduation_year = models.PositiveIntegerField(default=current_year()+4, validators=[min_value_current_year, max_value_in_four_years])
-
     picture = models.ImageField(blank=True, upload_to='images/')
-
     majors = models.ManyToManyField(Major, blank=True)
     minors = models.ManyToManyField(Minor, blank=True)
     skills = models.ManyToManyField(Skill, blank=True)
