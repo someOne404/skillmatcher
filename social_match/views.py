@@ -181,23 +181,29 @@ def editprofile(request, user_id):
             user.phone = form.cleaned_data.get('phone')
             user.class_standing = form.cleaned_data.get('class_standing')
             user.graduation_year = form.cleaned_data.get('graduation_year')
-            # user.majors = form.cleaned_data.get('majors').set()
-            # user.minors = form.cleaned_data.get('minors').set()
-            # user.skills = form.cleaned_data.get('skills').set()
-            # user.interests = form.cleaned_data.get('interests').set()
-            # user.courses = form.cleaned_data.get('courses').set()
-            # user.activities = form.cleaned_data.get('activities')
 
+            user.majors.set(form.cleaned_data.get('majors'))
+            user.minors.set(form.cleaned_data.get('minors'))
+            user.skills.set(form.cleaned_data.get('skills'))
+            user.interests.set(form.cleaned_data.get('interests'))
+            user.courses.set(form.cleaned_data.get('courses'))
+            user.activities.set(form.cleaned_data.get('activities'))
             user.save()
 
             return HttpResponseRedirect('/profile')
     else:
-
         form = EditProfileForm(initial={
             'first_name':user.first_name,
             'last_name':user.last_name,
+            'phone':user.phone, 
+            'class_standing':user.class_standing,
             'graduation_year':user.graduation_year,
-            
+            'majors':user.majors, 
+            'minors':user.minors,
+            'skills':user.skills,
+            'interests':user.interests, 
+            'courses':user.courses,
+            'activities':user.activities,
         })
 
     return render(request, template_name, {'form': form})

@@ -33,6 +33,10 @@
             {{ form.minors }}
         </div>
         <div>
+            Courses:
+            {{ form.courses }}
+        </div>
+        <div>
             Skills:
             {{ form.skills }}
         </div>
@@ -41,16 +45,14 @@
             {{ form.interests }}
         </div>
         <div>
-            Courses:
-            {{ form.courses }}
-        </div>
-        <div>
             Activities:
             {{ form.activities }}
         </div>
         </br>
 
-        <button class="btn btn-light" type="submit">Save Changes</button>
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+        <button class="btn btn-light" type="submit" ><a href="{% url 'social_match:profile' %}">Cancel</a></button>
+
     </form>
 </div>
 {% endblock %}
