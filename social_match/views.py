@@ -170,7 +170,6 @@ def editprofile(request, user_id):
     template_name = './social_match/editprofile.html'
     user = User.objects.get(id=user_id)
     # user = request.user
-
     if request.method == "POST":
         form = EditProfileForm(request.POST)
 
@@ -182,29 +181,23 @@ def editprofile(request, user_id):
             user.phone = form.cleaned_data.get('phone')
             user.class_standing = form.cleaned_data.get('class_standing')
             user.graduation_year = form.cleaned_data.get('graduation_year')
-            user.majors = form.cleaned_data.get('majors').split(",")
-            user.minors = form.cleaned_data.get('minors').split(",")
-            user.skills = form.cleaned_data.get('skills').split(",")
-            user.interests = form.cleaned_data.get('interests').split(",")
-            user.courses = form.cleaned_data.get('courses').split(",")
-            user.activities = form.cleaned_data.get('activities').split(",")
+            # user.majors = form.cleaned_data.get('majors').set()
+            # user.minors = form.cleaned_data.get('minors').set()
+            # user.skills = form.cleaned_data.get('skills').set()
+            # user.interests = form.cleaned_data.get('interests').set()
+            # user.courses = form.cleaned_data.get('courses').set()
+            # user.activities = form.cleaned_data.get('activities')
 
             user.save()
 
             return HttpResponseRedirect('/profile')
     else:
+
         form = EditProfileForm(initial={
             'first_name':user.first_name,
             'last_name':user.last_name,
-            'phone':user.phone, 
-            'class_standing':user.class_standing,
             'graduation_year':user.graduation_year,
-            'majors':user.majors, 
-            'minors':user.minors,
-            'skills':user.skills,
-            'interests':user.interests, 
-            'courses':user.courses,
-            'activities':user.activities,
+            
         })
 
     return render(request, template_name, {'form': form})
