@@ -49,6 +49,51 @@
             });
         });
     </script>
+    <script type="text/javascript">
+        $(document).ready(function(event){
+            $(document).on('click', '#comment', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var set = $(this).attr('data-value');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 'current_set':set, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(event){
+            $(document).on('click', '#submitcomment', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var set = $(this).attr('data-value');
+                var text = $('#comment-text').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 'current_set':set, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        });
+    </script>
 </head>
 
 <body>

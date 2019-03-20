@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 
 from .models import Post
 from .filters import UserFilter
-from .forms import PostForm, ProfileForm, EditPostForm
+from .forms import *
 
 import math
 
@@ -183,6 +183,40 @@ def likepost(request):
     ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
 
     context = {'user_list': user_list, 'post_list': post_list, 'post_set': post_set, 'max_sets': max_sets}
+
+    if request.is_ajax():
+        html = render_to_string(template_name, context, request=request)
+        return JsonResponse({'form': html})
+
+def commentpost(request):
+    post_id = request.POST.get('id')
+    post = get_object_or_404(Post, id=post_id)
+    form = None
+    if request.POST.get('type') == 'comment':
+        form = CommentPostForm()
+    if request.POST.get('type') == 'submitcomment':
+        comment = Comment()
+        comment.text = request.POST.get('text')
+        comment.user = request.user
+        comment.date = timezone.now()
+        comment.post = post
+        comment.save()
+        form = None
+
+    posts_per_page = 20
+    template_name = './social_match/home_posts.html'
+    user_list = User.objects.filter(status_active=True, is_superuser=False)
+    max_sets = math.ceil(len(Post.objects.filter(
+        date__lte=timezone.now(),
+        post_active=True
+    )) / posts_per_page)
+    post_set = int(request.POST.get("current_set"))
+    post_list = Post.objects.filter(
+        date__lte=timezone.now(),
+        post_active=True
+    ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+
+    context = {'user_list': user_list, 'post_list': post_list, 'post_set': post_set, 'max_sets': max_sets, 'post_id': post_id, 'form': form}
 
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)

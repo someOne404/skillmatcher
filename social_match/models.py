@@ -118,7 +118,7 @@ class Post(models.Model):
         return self.headline
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
-    text = models.TextField()
-    date = models.DateTimeField(default = timezone.now)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', blank=True)
+    text = models.CharField(max_length=250)
+    date = models.DateTimeField('date commented', blank=True)

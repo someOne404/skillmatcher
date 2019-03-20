@@ -12,10 +12,18 @@
                         Last edited on: {{post.date_edited}}
                         {% endif %}
                     </p>
+
                     <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
+
                     {% if not post.post_active %}
                         <p> Archived </p>
                     {% endif %}
+
+                    {% for comment in post.comments.all %}
+                    <p><a href="/" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
+                        {{ comment.text }} <font size ='1'>{{ comment.date }}</font></p>
+                    {% endfor %}
+
                     <form action="{% url 'social_match:editpost' post.id %}" method="get">
                         {% csrf_token %}
                         <input type="submit" value="Edit Post" name="edit_post">
