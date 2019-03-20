@@ -21,11 +21,7 @@
                 {% endif %}
             </form>
 
-            {% if post_id == post.id %}
-            hi
-            {% endif %}
-
-            {% if form != None %}
+            {% if form != None and post_id == post.id %}
                 <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
                 {% csrf_token %}
                 {{ form.text }}

@@ -4,9 +4,7 @@ from django import forms
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.admin import ModelAdmin
 
-
 from social_match.models import *
-
 
 class UserAdmin(BaseUserAdmin):
 	form = auth_forms.UserChangeForm
@@ -31,6 +29,17 @@ class UserAdmin(BaseUserAdmin):
 	class Meta:
 		model = User
 
+class CommentInline(admin.TabularInline):
+    model = Comment
+    extra = 0
+
+class PostAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (None, {'fields': ('user','headline','message','date')}),
+        ('Other info', {'fields': ('post_active','post_edited','date_edited','likes')}),
+    )
+    inlines = [CommentInline]
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Major, ModelAdmin)
@@ -39,5 +48,4 @@ admin.site.register(Course, ModelAdmin)
 admin.site.register(Skill, ModelAdmin)
 admin.site.register(Activity, ModelAdmin)
 admin.site.register(Interest, ModelAdmin)
-admin.site.register(Post, ModelAdmin)
-admin.site.register(Comment, ModelAdmin)
+admin.site.register(Post, PostAdmin)

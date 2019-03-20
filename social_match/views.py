@@ -216,8 +216,7 @@ def commentpost(request):
         post_active=True
     ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
 
-    context = {'user_list': user_list, 'post_list': post_list, 'post_set': post_set, 'max_sets': max_sets, 'post_id': post_id, 'form': form}
-
+    context = {'user_list': user_list, 'post_list': post_list, 'post_set': post_set, 'max_sets': max_sets, 'post_id': int(post_id,10), 'form': form}
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})
