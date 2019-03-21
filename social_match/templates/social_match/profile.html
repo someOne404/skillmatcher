@@ -16,12 +16,14 @@
             </div>
       
             <br />
+            {% if viewing_user == user %}
             <div class='centerDiv'>
                 <form class="centerDiv" action="{% url 'social_match:editprofile' user.id %}" method="POST">
                     {% csrf_token %}
                     <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
                 </form>
             </div>
+            {% endif %}
         </div>
   
             <div class="col-md-8 col-sm-12 mb-3">
