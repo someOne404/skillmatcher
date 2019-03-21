@@ -125,6 +125,20 @@ class UserModelTest(TestCase):
 
 class ProfileTest(TestCase):
 
+    def create_test_user(self):
+        return User.objects.create(
+            first_name="Test",
+            last_name="User",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='test@virginia.edu',
+            username='testuser',
+            password='password'
+        ), 'testuser', 'password'
+
+
+
     def create_authenticated_active_user(self):
         user = 'testuser'
         pw = 'password'
@@ -152,6 +166,23 @@ class ProfileTest(TestCase):
         userQS = User.objects.filter(username=user)
         user = userQS[0]
         self.assertTrue(user.status_active)
+
+    #def test_view_user_profile(self):
+        #user, _, _ = self.create_test_user()
+        #response = self.client.get('/profile/{}/'.format(user.id))
+        #self.assertContains(response, "Test User")
+
+    def test_view_nonexistent_user(self):
+        response = self.client.get('/profile/1/')
+        expected_404 = render(None, "social_match/404.html")
+        self.assertEqual(response.content, expected_404.content)
+
+    def test_logged_in_user_profiles_identical(self):
+        user, username, pw = self.create_test_user()
+        self.client.login(username=username, password=pw)
+        response1 = self.client.get('/profile/{}'.format(user.id))
+        response2 = self.client.get('/profile/')
+        self.assertEqual(response1.content, response2.content)
 
 
 class SearchingTest(TestCase):
