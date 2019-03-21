@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from django.utils import timezone
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -83,9 +84,7 @@ class User(AbstractUser):
     )
 
     graduation_year = models.PositiveIntegerField(default=current_year()+4, validators=[min_value_current_year, max_value_in_four_years])
-
     picture = models.ImageField(blank=True, upload_to='images/')
-
     majors = models.ManyToManyField(Major, blank=True)
     minors = models.ManyToManyField(Minor, blank=True)
     skills = models.ManyToManyField(Skill, blank=True)
@@ -106,11 +105,21 @@ class Post(models.Model):
     post_active = models.BooleanField(default=True)
     post_edited = models.BooleanField(default=False)
 
-    headline = models.CharField(max_length=50, blank=True)
-    message = models.CharField(max_length=500, blank=True)
+    headline = models.CharField(max_length=50)
+    message = models.CharField(max_length=500)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField('date posted', blank=True)
     date_edited = models.DateTimeField('date edited', blank=True, null=True)
+    likes = models.ManyToManyField(User, related_name='likes', blank=True)
 
     def __str__(self):
         return self.headline
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', blank=True)
+    text = models.CharField(max_length=250)
+    date = models.DateTimeField('date commented', blank=True)
+
+    def __str__(self):
+        return self.text

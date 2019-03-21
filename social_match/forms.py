@@ -12,6 +12,25 @@ class EditPostForm(forms.ModelForm):
         model = Post
         fields = {'headline', 'message', 'post_active'}
 
+class CommentPostForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': forms.TextInput(attrs={
+                'id': 'comment-text',
+                'required': True,
+            })
+        }
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'phone', 
+        'class_standing', 'graduation_year',
+        'majors', 'minors', 'skills',
+        'interests','courses','activities')
+
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
