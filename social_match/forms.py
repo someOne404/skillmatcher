@@ -23,6 +23,14 @@ class CommentPostForm(forms.ModelForm):
             })
         }
 
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'phone', 
+        'class_standing', 'graduation_year',
+        'majors', 'minors', 'skills',
+        'interests','courses','activities')
+
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)

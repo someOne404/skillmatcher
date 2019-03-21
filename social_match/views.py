@@ -1,12 +1,16 @@
+
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.template.loader import render_to_string
+from django.core import serializers
+import json
 
-from .models import Post
+from .models import *
 from .filters import UserFilter
 from .forms import *
 
@@ -217,7 +221,7 @@ def commentpost(request):
             comment.post = post
             comment.save()
         form = None
-
+        
     posts_per_page = 20
     template_name = './social_match/home_posts.html'
     user_list = User.objects.filter(status_active=True, is_superuser=False)
@@ -243,3 +247,66 @@ def commentpost(request):
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})
+
+def editprofile(request, user_id):
+    template_name = './social_match/editprofile.html'
+    user = User.objects.get(id=user_id)
+    if request.method == "POST":
+        form = EditProfileForm(request.POST)
+
+        if form.has_changed() and form.is_valid():
+            user.refresh_from_db()
+
+            return HttpResponse(user.phone)
+
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.phone = form.cleaned_data.get('phone')
+            user.class_standing = form.cleaned_data.get('class_standing')
+            user.graduation_year = form.cleaned_data.get('graduation_year')
+
+            user.majors.set(form.cleaned_data.get('majors'))
+            user.minors.set(form.cleaned_data.get('minors'))
+            user.skills.set(form.cleaned_data.get('skills'))
+            user.interests.set(form.cleaned_data.get('interests'))
+            user.courses.set(form.cleaned_data.get('courses'))
+            user.activities.set(form.cleaned_data.get('activities'))
+            user.save()
+
+            return HttpResponseRedirect('/profile')
+    else:
+        form = EditProfileForm(initial={
+            'first_name':user.first_name,
+            'last_name':user.last_name,
+            'phone':user.phone, 
+            'class_standing':user.class_standing,
+            'graduation_year':user.graduation_year,
+            'majors':user.majors, 
+            'minors':user.minors,
+            'skills':user.skills,
+            'interests':user.interests, 
+            'courses':user.courses,
+            'activities':user.activities,
+        })
+
+    return render(request, template_name, {'form': form})
+
+def classlist(request):
+    courses = Course.objects.all()
+    data = [{"name": str(c)+": " + c.name} for c in courses]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
+
+
+def majorlist(request):
+    majors = Major.objects.all()
+    data = [{"name": str(m)+": " + m.name} for m in majors]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
+
+
+def minorlist(request):
+    minors = Minor.objects.all()
+    data = [{"name": str(m)+": " + m.name} for m in minors]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')

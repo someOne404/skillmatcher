@@ -31,16 +31,16 @@
             </div>
         </div>
     {% endfor %}
-        <form action="{% url 'social_match:myposts' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="current_set" value = '{{post_set}}'>
-            {% if post_set != 1 %}
-                <input type="submit" value="<- Newer" name="newer">
-            {% endif %}
-            {% if post_set != max_sets %}
-                <input type="submit" value="Older ->" name="older">
-            {% endif %}
-        </form>
+    <form action="{% url 'social_match:myposts' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="current_set" value='{{post_set}}'>
+        {% if post_set != 1 %}
+        <input type="submit" value="<- Newer" name="newer">
+        {% endif %}
+        {% if post_set != max_sets %}
+        <input type="submit" value="Older ->" name="older">
+        {% endif %}
+    </form>
     {% endif %}
 </div>
 {% endblock %}

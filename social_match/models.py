@@ -6,12 +6,12 @@ import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Major(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
 
 class Minor(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
 
@@ -84,9 +84,7 @@ class User(AbstractUser):
     )
 
     graduation_year = models.PositiveIntegerField(default=current_year()+4, validators=[min_value_current_year, max_value_in_four_years])
-
     picture = models.ImageField(blank=True, upload_to='images/')
-
     majors = models.ManyToManyField(Major, blank=True)
     minors = models.ManyToManyField(Minor, blank=True)
     skills = models.ManyToManyField(Skill, blank=True)
