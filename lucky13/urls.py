@@ -27,4 +27,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', include('social_match.urls')),
     path('inactive_user/', views.inactive_user, name='inactive_user'),
+    path(r'^friendship/', include('friendship.urls')),
 ]
