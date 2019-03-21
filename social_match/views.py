@@ -50,7 +50,12 @@ def home(request):
         ).order_by('-date')[:posts_per_page]
         post_set = 1
 
-    context = {'user_list': user_list, 'post_list': post_list, 'post_set': post_set, 'max_sets': max_sets}
+    context = {
+        'user_list': user_list,
+        'post_list': post_list,
+        'post_set': post_set,
+        'max_sets': max_sets
+    }
     return render(request, template_name, context)
 
 def search(request):
@@ -158,16 +163,20 @@ def editpost(request, post_id):
 
             return HttpResponseRedirect('/myposts')
     else:
-        form = EditPostForm(initial={'headline':post.headline, 'message':post.message, 'post_active':(not post.post_active)})
+        form = EditPostForm(initial={
+            'headline':post.headline,
+            'message':post.message,
+            'post_active':(not post.post_active)
+        })
 
     return render(request, template_name, {'form': form})
 
 def likepost(request):
     post = get_object_or_404(Post, id=request.POST.get('id'))
     if post.likes.filter(id=request.user.id).exists():
-        post.likes.remove(request.user)
+        post.likes.remove(request.user.id)
     else:
-        post.likes.add(request.user)
+        post.likes.add(request.user.id)
 
     posts_per_page = 20
     template_name = './social_match/home_posts.html'
@@ -182,7 +191,12 @@ def likepost(request):
         post_active=True
     ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
 
-    context = {'user_list': user_list, 'post_list': post_list, 'post_set': post_set, 'max_sets': max_sets}
+    context = {
+        'user_list': user_list,
+        'post_list': post_list,
+        'post_set': post_set,
+        'max_sets': max_sets
+    }
 
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
@@ -195,12 +209,13 @@ def commentpost(request):
     if request.POST.get('type') == 'comment':
         form = CommentPostForm()
     if request.POST.get('type') == 'submitcomment':
-        comment = Comment()
-        comment.text = request.POST.get('text')
-        comment.user = request.user
-        comment.date = timezone.now()
-        comment.post = post
-        comment.save()
+        if request.POST.get('text') != '':
+            comment = Comment()
+            comment.text = request.POST.get('text')
+            comment.user = request.user
+            comment.date = timezone.now()
+            comment.post = post
+            comment.save()
         form = None
 
     posts_per_page = 20
@@ -216,7 +231,15 @@ def commentpost(request):
         post_active=True
     ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
 
-    context = {'user_list': user_list, 'post_list': post_list, 'post_set': post_set, 'max_sets': max_sets, 'post_id': int(post_id,10), 'form': form}
+    context = {
+        'user_list': user_list,
+        'post_list': post_list,
+        'post_set': post_set,
+        'max_sets': max_sets,
+        'post_id': int(post_id,10),
+        'form': form
+    }
+
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})

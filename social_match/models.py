@@ -107,8 +107,8 @@ class Post(models.Model):
     post_active = models.BooleanField(default=True)
     post_edited = models.BooleanField(default=False)
 
-    headline = models.CharField(max_length=50, blank=True)
-    message = models.CharField(max_length=500, blank=True)
+    headline = models.CharField(max_length=50)
+    message = models.CharField(max_length=500)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateTimeField('date posted', blank=True)
     date_edited = models.DateTimeField('date edited', blank=True, null=True)
@@ -122,3 +122,6 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user', blank=True)
     text = models.CharField(max_length=250)
     date = models.DateTimeField('date commented', blank=True)
+
+    def __str__(self):
+        return self.text

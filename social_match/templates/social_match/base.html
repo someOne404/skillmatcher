@@ -48,10 +48,8 @@
                 });
             });
         });
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function(event){
-            $(document).on('click', '#comment', function(event){
+
+        $(document).on('click', '#comment', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('value');
                 var set = $(this).attr('data-value');
@@ -69,11 +67,8 @@
                     },
                 });
             });
-        });
-    </script>
-    <script type="text/javascript">
-        $(document).ready(function(event){
-            $(document).on('click', '#submitcomment', function(event){
+
+        $(document).on('click', '#submitcomment', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('value');
                 var set = $(this).attr('data-value');
@@ -92,7 +87,6 @@
                     },
                 });
             });
-        });
     </script>
 </head>
 
