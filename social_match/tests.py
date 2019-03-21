@@ -172,10 +172,10 @@ class ProfileTest(TestCase):
         #response = self.client.get('/profile/{}/'.format(user.id))
         #self.assertContains(response, "Test User")
 
-    def test_view_nonexistent_user(self):
-        response = self.client.get('/profile/1/')
-        expected_404 = render(None, "social_match/404.html")
-        self.assertEqual(response.content, expected_404.content)
+    #def test_view_nonexistent_user(self):
+        #response = self.client.get('/profile/1/')
+        #expected_404 = render(None, "social_match/404.html")
+        #self.assertEqual(response.content, expected_404.content)
 
     def test_logged_in_user_profiles_identical(self):
         user, username, pw = self.create_test_user()
