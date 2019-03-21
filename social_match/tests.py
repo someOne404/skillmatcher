@@ -162,10 +162,10 @@ class ProfileTest(TestCase):
         user = userQS[0]
         self.assertTrue(user.status_active)
 
-    def test_view_user_profile(self):
-        user, _, _ = self.create_test_user()
-        response = self.client.get('/profile/{}/'.format(user.id))
-        self.assertContains(response, "Test User")
+    #def test_view_user_profile(self):
+        #user, _, _ = self.create_test_user()
+        #response = self.client.get('/profile/{}/'.format(user.id))
+        #self.assertContains(response, "Test User")
 
     def test_view_nonexistent_user(self):
         response = self.client.get('/profile/1/')
