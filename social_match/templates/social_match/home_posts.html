@@ -1,0 +1,58 @@
+<div class="col-sm">
+    <h1>All Posts:</h1>
+    {% if post_list %}
+    {% for post in post_list %}
+    <div class="card" style="width: 35rem;">
+        <div class="card-body">
+            <h5 class="card-title">{{ post.headline }}</h5>
+            <p class="card-text">{{ post.message }}</p>
+            <p>Posted by: <a href="/" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a> on {{post.date}}<br>
+                {% if post.post_edited %}
+                Last edited on: {{post.date_edited}}
+                {% endif %}</p>
+
+            <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
+            <form action="{% url 'social_match:likepost' %}" method="post">
+                {% csrf_token %}
+                {% if user in post.likes.all %}
+                <button type="submit" id="like" name="unlike_id" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Unlike</button>
+                {% else %}
+                <button type="submit" id="like" name="like_id" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Like</button>
+                {% endif %}
+            </form>
+
+            {% if form != None and post_id == post.id %}
+                <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
+                {% csrf_token %}
+                {{ form.text }}
+                <button type="submit" id="submitcomment" name="submitcomment" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Comment</button>
+                </form>
+            {% else %}
+                <form action="{% url 'social_match:commentpost' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" id="comment" name="comment" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Comment</button>
+                </form>
+            {% endif %}
+
+            {% for comment in post.comments.all %}
+            <p><a href="/" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}<br><font size ='1'>{{ comment.date }}</font></p>
+            {% endfor %}
+
+        </div>
+    </div>
+    {% endfor %}
+
+    <form action="{% url 'social_match:home' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="current_set" value = '{{post_set}}'>
+        {% if post_set != 1 %}
+        <input type="submit" value="<- Newer" name="newer">
+        {% endif %}
+        {% if post_set != max_sets %}
+        <input type="submit" value="Older ->" name="older">
+        {% endif %}
+    </form>
+    {% else %}
+    <p>No posts are available.</p>
+    {% endif %}
+</div>

@@ -3,24 +3,33 @@
 <div>
     {% if post_list %}
     {% for post in post_list %}
-    <div class="card" style="width: 35rem;">
-        <div class="card-body">
-            <h5 class="card-title">{{ post.headline }}</h5>
-            <p class="card-text">{{ post.message }}</p>
-            <p>Posted on: {{post.date}} <br>
-                {% if post.post_edited %}
-                Last edited on: {{post.date_edited}}
-                {% endif %}
-            </p>
-            {% if not post.post_active %}
-            <p> Archived </p>
-            {% endif %}
-            <form action="{% url 'social_match:editpost' post.id %}" method="get">
-                {% csrf_token %}
-                <input class="btn btn-light" type="submit" value="Edit Post" name="edit_post">
-            </form>
+        <div class="card" style="width: 35rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.headline }}</h5>
+                    <p class="card-text">{{ post.message }}</p>
+                    <p>Posted on: {{post.date}} <br>
+                        {% if post.post_edited %}
+                        Last edited on: {{post.date_edited}}
+                        {% endif %}
+                    </p>
+
+                    <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
+
+                    {% if not post.post_active %}
+                        <p> Archived </p>
+                    {% endif %}
+
+                    {% for comment in post.comments.all %}
+                    <p><a href="/" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
+                        {{ comment.text }} <font size ='1'>{{ comment.date }}</font></p>
+                    {% endfor %}
+
+                    <form action="{% url 'social_match:editpost' post.id %}" method="get">
+                        {% csrf_token %}
+                        <input type="submit" value="Edit Post" name="edit_post">
+                    </form>
+            </div>
         </div>
-    </div>
     {% endfor %}
     <form action="{% url 'social_match:myposts' %}" method="post">
         {% csrf_token %}

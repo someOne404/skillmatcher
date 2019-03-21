@@ -12,6 +12,16 @@ class EditPostForm(forms.ModelForm):
         model = Post
         fields = {'headline', 'message', 'post_active'}
 
+class CommentPostForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('text',)
+        widgets = {
+            'text': forms.TextInput(attrs={
+                'id': 'comment-text',
+                'required': True,
+            })
+        }
 
 class EditProfileForm(forms.ModelForm):
     class Meta:
