@@ -2,6 +2,7 @@ from django.test import TestCase
 from social_match.filters import *
 from social_match.forms import *
 from django.urls import reverse
+from django.shortcuts import render
 
 from django.utils import timezone
 import datetime
