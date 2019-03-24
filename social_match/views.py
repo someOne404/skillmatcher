@@ -261,11 +261,8 @@ def editprofile(request, user_id):
     user = User.objects.get(id=user_id)
     if request.method == "POST":
         form = EditProfileForm(request.POST)
-
         if form.has_changed() and form.is_valid():
             user.refresh_from_db()
-
-            return HttpResponse(user.phone)
 
             user.first_name = form.cleaned_data.get('first_name')
             user.last_name = form.cleaned_data.get('last_name')
@@ -283,19 +280,7 @@ def editprofile(request, user_id):
 
             return HttpResponseRedirect('/profile')
     else:
-        form = EditProfileForm(initial={
-            'first_name':user.first_name,
-            'last_name':user.last_name,
-            'phone':user.phone, 
-            'class_standing':user.class_standing,
-            'graduation_year':user.graduation_year,
-            'majors':user.majors, 
-            'minors':user.minors,
-            'skills':user.skills,
-            'interests':user.interests, 
-            'courses':user.courses,
-            'activities':user.activities,
-        })
+        form = EditProfileForm(instance = user)
 
     return render(request, template_name, {'form': form})
 

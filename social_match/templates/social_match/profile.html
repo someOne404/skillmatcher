@@ -17,7 +17,7 @@
             <br />
             {% if viewing_user == user %}
             <div class='centerDiv'>
-                <form class="centerDiv" action="{% url 'social_match:editprofile' user.id %}" method="POST">
+                <form class="centerDiv" action="{% url 'social_match:editprofile' user.id %}" method="GET">
                     {% csrf_token %}
                     <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
                 </form>
