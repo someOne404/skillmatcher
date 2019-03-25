@@ -89,10 +89,10 @@ class UserModelTest(TestCase):
         user_list_ideal = User.objects.filter(status_active='True', is_superuser='False')
         self.assertQuerysetEqual(user_filter.qs, user_list_ideal, transform=lambda x: x)
 
-        self.create_regular_inactive_and_super_users()
     def test_reactivated_user_in_search_results(self):
-        user_reactivate = User.objects.filter(username='Reactivated')
+        self.create_regular_inactive_and_super_users()
 
+        user_reactivate = User.objects.filter(username='Reactivated')
         user_reactivate.status_active = 'True'
 
         GET={'title': 'test'}
