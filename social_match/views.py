@@ -64,6 +64,8 @@ def home(request):
 
 def search(request):
     user_list = User.objects.all()
+    # user_list.user_set.remove(request.user)
+
     user_filter = UserFilter(request.GET, queryset=user_list)
     return render(request, './social_match/search.html', {'filter': user_filter})
 
