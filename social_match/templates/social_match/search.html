@@ -73,14 +73,16 @@
       </tr>
     </thead>
     <tbody>
-      {% for user in filter.qs %}
+      {% for u in filter.qs %}
+        {% if user.email != u.email%}
         <tr>
-          <td>{{ user.first_name }}</td>
-          <td>{{ user.last_name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.phone}}</td>
+          <td>{{ u.first_name }}</td>
+          <td>{{ u.last_name }}</td>
+          <td>{{ u.email }}</td>
+          <td>{{ u.phone}}</td>
           <td><a href="{% url 'social_match:profile' user.id %}"><button type="button" class="btn btn-info">View</button></a></td>
         </tr>
+        {% endif %}
       {% empty %}
         <tr>
           <td colspan="5">No data</td>

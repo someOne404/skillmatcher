@@ -64,6 +64,7 @@ def home(request):
 
 def search(request):
     user_list = User.objects.all()
+    print(user_list)
     # user_list.remove(request.user)
 
     user_filter = UserFilter(request.GET, queryset=user_list)
