@@ -80,7 +80,7 @@
           <td>{{ u.last_name }}</td>
           <td>{{ u.email }}</td>
           <td>{{ u.phone}}</td>
-          <td><a href="{% url 'social_match:profile' user.id %}"><button type="button" class="btn btn-info">View</button></a></td>
+          <td><a href="{% url 'social_match:profile' u.id %}"><button type="button" class="btn btn-info">View</button></a></td>
         </tr>
         {% endif %}
       {% empty %}
