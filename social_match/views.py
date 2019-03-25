@@ -68,6 +68,9 @@ def search(request):
     user_filter = UserFilter(request.GET, queryset=user_list)
     return render(request, './social_match/search.html', {'filter': user_filter})
 
+def resetsearch(request):
+    return render(request, './social_match/search.html')
+
 def profile(request, user_id=None):
     user = request.user
     viewing_user = user

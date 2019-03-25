@@ -11,6 +11,7 @@ urlpatterns = [
     path('home/', views.home, name='home'),
     url(r'^search/$', FilterView.as_view(filterset_class=UserFilter,
         template_name='social_match/search.html'), name='search'),
+    path('search/', views.resetsearch, name='resetsearch'),
     path('createpost/', views.createpost, name='createpost'),
     path('profile/', views.profile, name='profile'),
     path('profile/<int:user_id>/', views.profile, name='profile'),
