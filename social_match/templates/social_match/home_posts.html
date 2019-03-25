@@ -6,7 +6,7 @@
         <div class="card-body">
             <h5 class="card-title">{{ post.headline }}</h5>
             <p class="card-text">{{ post.message }}</p>
-            <p>Posted by: <a href="/" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a> on {{post.date}}<br>
+            <p>Posted by: <a href="{% url 'social_match:profile' user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a> on {{post.date}}<br>
                 {% if post.post_edited %}
                 Last edited on: {{post.date_edited}}
                 {% endif %}</p>
@@ -35,7 +35,7 @@
             {% endif %}
 
             {% for comment in post.comments.all %}
-            <p><a href="/" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}<br><font size ='1'>{{ comment.date }}</font></p>
+            <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}<br><font size ='1'>{{ comment.date }}</font></p>
             {% endfor %}
 
         </div>
