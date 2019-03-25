@@ -51,6 +51,16 @@ class UserModelTest(TestCase):
             is_superuser='True',
             username='Superuser',
         )
+        User.objects.create(
+            first_name="Reactivated",
+            last_name="User",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='reactivated@virginia.edu',
+            status_active='False',
+            username='Reactivated',
+        )
 
     def test_create_user(self):
         u = self.create_test_user()
@@ -66,14 +76,40 @@ class UserModelTest(TestCase):
         user_list_ideal = User.objects.filter(status_active='True', is_superuser='False')
         self.assertQuerysetEqual(user_filter.qs, user_list_ideal, transform=lambda x: x)
 
+    def test_inactivated_user_not_search_results(self):
+        self.create_regular_inactive_and_super_users()
+
+        user_reactivate = User.objects.filter(username='Test')
+        user_reactivate.status_active = 'False'
+
+        GET={'title': 'test'}
+        user_list=User.objects.all()
+        user_filter = UserFilter(GET, queryset=user_list)
+
+        user_list_ideal = User.objects.filter(status_active='True', is_superuser='False')
+        self.assertQuerysetEqual(user_filter.qs, user_list_ideal, transform=lambda x: x)
+
+        self.create_regular_inactive_and_super_users()
+    def test_reactivated_user_in_search_results(self):
+        user_reactivate = User.objects.filter(username='Reactivated')
+
+        user_reactivate.status_active = 'True'
+
+        GET={'title': 'test'}
+        user_list=User.objects.all()
+        user_filter = UserFilter(GET, queryset=user_list)
+
+        user_list_ideal = User.objects.filter(status_active='True', is_superuser='False')
+        self.assertQuerysetEqual(user_filter.qs, user_list_ideal, transform=lambda x: x)
+
 # class SecurityTest(TestCase):
 #     def create_test_user(self):
 #         return User.objects.create(
 #             first_name="Test",
 #             last_name="User",
 #             phone="+1234567890",
-#             class_standing=User.first_year,
 #             graduation_year=2019,
+#             class_standing=User.first_year,
 #             email='test@virginia.edu',
 #         )
 #
@@ -94,14 +130,14 @@ class UserModelTest(TestCase):
 #     def test_createpost_is_secure(self):
 #         template = './social_match/createpost.html' # createpost
 #         page_ideal = render(None, template)
-#         response = self.client.get('/createpost', follow=True)
 #         self.assertEquals(page_ideal.content, response.content)
-#
+#         response = self.client.get('/createpost', follow=True)
 #     def test_posts_is_secure(self):
+#
+#         self.assertEquals(page_ideal.content, response.content)
+#         response = self.client.get('/myposts', follow=True)
 #         template = './social_match/home.html'  # posts
 #         page_ideal = render(None, template)
-#         response = self.client.get('/myposts', follow=True)
-#         self.assertEquals(page_ideal.content, response.content)
 #
 #     def test_profile_is_secure(self):
 #         template = './social_match/home.html'  # profile
@@ -119,10 +155,10 @@ class UserModelTest(TestCase):
 #         template = './social_match/myposts.html'  # myposts
 #         page_ideal = render(None, template)
 #         response = self.client.get('/myposts', follow=True)
-#         self.assertEquals(page_ideal.content, response.content)
 #
-#         #editposts
+#         self.assertEquals(page_ideal.content, response.content)
 
+#         #editposts
 class ProfileTest(TestCase):
 
     def create_test_user(self):
