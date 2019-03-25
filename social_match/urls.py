@@ -8,7 +8,7 @@ app_name = 'social_match'
 urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
-    # path('home/', views.home, name='home'),
+    path('home/', views.home, name='home'),
     url(r'^search/$', FilterView.as_view(filterset_class=UserFilter,
         template_name='social_match/search.html'), name='search'),
     path('createpost/', views.createpost, name='createpost'),
