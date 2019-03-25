@@ -20,7 +20,7 @@
                     {% endif %}
 
                     {% for comment in post.comments.all %}
-                    <p><a href="/" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
+                    <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
                         {{ comment.text }} <font size ='1'>{{ comment.date }}</font></p>
                     {% endfor %}
 
