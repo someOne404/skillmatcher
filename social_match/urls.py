@@ -6,7 +6,7 @@ from social_match.filters import UserFilter
 
 app_name = 'social_match'
 urlpatterns = [
-    path('', views.home, name='home'),
+    path('', views.base, name='base'),
     path('about/', views.about, name='about'),
     path('home/', views.home, name='home'),
     url(r'^search/$', FilterView.as_view(filterset_class=UserFilter,
