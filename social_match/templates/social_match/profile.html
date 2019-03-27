@@ -90,20 +90,55 @@
                 <h5>Email: {{ viewing_user.email }}</h5>
                 <h5>Phone number: {{ viewing_user.phone }}</h5>
 
-                <hr>
-                {% if viewing_user == user %}
-                    <h5>You are currently {{ viewing_user.status_active|yesno:"active, inactive" }}.</h5>
-                    <form action="{% url 'social_match:profile' %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" value="Change status" name="change_status">
-                    </form>
-                {% endif %}
-
             <br />
 
 
         </div>
     </div>
+</div>
+
+<div align="center">
+    {% if post_list %}
+    {% for post in post_list %}
+        <div class="card" align="left" style="width: 70rem;">
+            <div class="card-body">
+                <h5 class="card-title">{{ post.headline }}</h5>
+                    <p class="card-text">{{ post.message }}</p>
+                    <p>Posted on: {{post.date}} <br>
+                        {% if post.post_edited %}
+                        Last edited on: {{post.date_edited}}
+                        {% endif %}
+                    </p>
+
+                    <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
+
+                    {% if not post.post_active %}
+                        <p> Archived </p>
+                    {% endif %}
+
+                    {% for comment in post.comments.all %}
+                    <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
+                        {{ comment.text }} <font size ='1'>{{ comment.date }}</font></p>
+                    {% endfor %}
+
+                    <form action="{% url 'social_match:editpost' post.id %}" method="get">
+                        {% csrf_token %}
+                        <input type="submit" value="Edit Post" name="edit_post" class="btn btn-primary">
+                    </form>
+            </div>
+        </div>
+    {% endfor %}
+    <form action="{% url 'social_match:profile' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="current_set" value='{{post_set}}'>
+        {% if post_set != 1 %}
+        <input type="submit" value="<- Newer" name="newer" class="btn btn-primary">
+        {% endif %}
+        {% if post_set != max_sets %}
+        <input type="submit" value="Older ->" name="older" class="btn btn-primary">
+        {% endif %}
+    </form>
+    {% endif %}
 </div>
 
 {% endif %}

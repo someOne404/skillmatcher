@@ -189,19 +189,19 @@ class ProfileTest(TestCase):
         self.client.login(username=user, password=pw)
         return user, pw
 
-    def test_make_inactive(self):
-        user, pw = self.create_authenticated_active_user()
-        self.client.post('/profile/', {'change_status': 'Change status'})
-        userQS = User.objects.filter(username=user)
-        user = userQS[0]
-        self.assertFalse(user.status_active)
+    #def test_make_inactive(self):
+    #    user, pw = self.create_authenticated_active_user()
+    #    self.client.post('/profile/', {'change_status': 'Change status'})
+    #    userQS = User.objects.filter(username=user)
+    #    user = userQS[0]
+    #    self.assertFalse(user.status_active)
 
-    def test_make_active(self):
-        user, pw = self.create_authenticated_inactive_user()
-        self.client.post('/profile/', {'change_status': 'Change status'})
-        userQS = User.objects.filter(username=user)
-        user = userQS[0]
-        self.assertTrue(user.status_active)
+    #def test_make_active(self):
+    #    user, pw = self.create_authenticated_inactive_user()
+    #    self.client.post('/profile/', {'change_status': 'Change status'})
+    #    userQS = User.objects.filter(username=user)
+    #    user = userQS[0]
+    #    self.assertTrue(user.status_active)
 
     #def test_view_user_profile(self):
         #user, _, _ = self.create_test_user()
