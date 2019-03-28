@@ -6,6 +6,10 @@ from django.contrib.admin import ModelAdmin
 
 from social_match.models import *
 
+class PostInline(admin.TabularInline):
+    model = Post
+    extra = 1
+
 class UserAdmin(BaseUserAdmin):
 	form = auth_forms.UserChangeForm
 	add_form = auth_forms.UserCreationForm
@@ -18,6 +22,7 @@ class UserAdmin(BaseUserAdmin):
 									  	'date_joined', 'last_login', 'status_active')}),
 		('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions',)}),
 	)
+	inlines = [PostInline]
 	add_fieldsets = (
 		(None, {
 			'classes': ('wide',),

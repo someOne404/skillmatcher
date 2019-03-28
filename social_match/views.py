@@ -78,15 +78,33 @@ def profile(request, user_id=None):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('social_match:home'))
 
-        if 'change_status' in request.POST:
-            current_user = request.user
-            current_user.status_active = not current_user.status_active
-            current_user.save()
     else:
         try:
             viewing_user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return render(request, './social_match/404.html')
+
+    posts_per_page = 5
+
+    max_sets = math.ceil(len(Post.objects.filter(
+        user=viewing_user
+    )) / posts_per_page)
+
+    if 'newer' in request.POST:
+        post_set = int(request.POST.get("current_set")) - 1
+        post_list = Post.objects.filter(
+            user=viewing_user
+        ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    elif 'older' in request.POST:
+        post_set = int(request.POST.get("current_set")) + 1
+        post_list = Post.objects.filter(
+            user=viewing_user
+        ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    else:
+        post_list = Post.objects.filter(
+            user=viewing_user
+        ).order_by('-date')[:posts_per_page]
+        post_set = 1
 
     template_name = './social_match/profile.html'
     form = ProfileForm(initial={
@@ -103,42 +121,14 @@ def profile(request, user_id=None):
         'activities': viewing_user.activities,
     })
 
-    return render(request, template_name, {'user': user, 'viewing_user': viewing_user, 'form': ProfileForm})
-
-def myposts(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('social_match:home'))
-
-    posts_per_page = 20
-    post_list = Post.objects.filter(
-        user = request.user
-    ).order_by('-date')
-
-    max_sets = math.ceil(len(Post.objects.filter(
-        user = request.user
-    )) / posts_per_page)
-
-    if 'newer' in request.POST:
-        post_set = int(request.POST.get("current_set")) - 1
-        post_list = Post.objects.filter(
-            user=request.user
-        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
-    elif 'older' in request.POST:
-        post_set = int(request.POST.get("current_set")) + 1
-        post_list = Post.objects.filter(
-            user=request.user
-        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
-        print(post_set)
-    else:
-        post_list = Post.objects.filter(
-            user=request.user
-        ).order_by('-date')[:posts_per_page]
-        post_set = 1
-
-    template_name = './social_match/myposts.html'
-    context = {'post_list':post_list, 'post_set':post_set, 'max_sets':max_sets}
-    return render(request, template_name, context)
-
+    return render(request, template_name, {
+        'user': user,
+        'viewing_user': viewing_user,
+        'form': ProfileForm,
+        'post_list':post_list,
+        'post_set':post_set,
+        'max_sets':max_sets,
+    })
 
 def createpost(request):
     template_name = './social_match/createpost.html'
@@ -176,7 +166,7 @@ def editpost(request, post_id):
             post.date_edited = timezone.now()
             post.save()
 
-            return HttpResponseRedirect('/myposts')
+            return HttpResponseRedirect('/profile')
     else:
         form = EditPostForm(initial={
             'headline':post.headline,
@@ -279,6 +269,7 @@ def editprofile(request, user_id):
             user.interests.set(form.cleaned_data.get('interests'))
             user.courses.set(form.cleaned_data.get('courses'))
             user.activities.set(form.cleaned_data.get('activities'))
+            user.status_active = form.cleaned_data.get('status_active')
             user.save()
 
             return HttpResponseRedirect('/profile')

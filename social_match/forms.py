@@ -24,12 +24,13 @@ class CommentPostForm(forms.ModelForm):
         }
 
 class EditProfileForm(forms.ModelForm):
+    status_active = forms.BooleanField(required=False)
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'phone', 
         'class_standing', 'graduation_year',
         'majors', 'minors', 'skills',
-        'interests','courses','activities')
+        'interests','courses','activities','status_active')
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
