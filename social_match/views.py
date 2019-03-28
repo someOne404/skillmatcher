@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core import serializers
 import json
+from django.db.models import Q
 
 from .models import *
 from .filters import UserFilter
@@ -27,38 +28,54 @@ def about(request):
     return render(request, template_name)
 
 def home(request):
-    posts_per_page = 20
     template_name = './social_match/home.html'
-    user_list = User.objects.filter(status_active=True, is_superuser=False)
-    max_sets = math.ceil(len(Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    )) / posts_per_page)
+    form = PostSearchForm()
 
+    # get current set of posts to display on page
+    if_all = Q(date__lte=timezone.now(),post_active=True)
+    if_any = Q()
+    if request.method == 'POST':
+        if 'filter' in request.POST:
+            form = PostSearchForm(request.POST)
+            if form.is_valid():
+                keywords = form.cleaned_data['keywords'].split()
+                names = form.cleaned_data['name'].split()
+                liked = form.cleaned_data['liked']
+                commented = form.cleaned_data['commented']
+                for keyword in keywords:
+                    if_any |= Q(headline__icontains=keyword)
+                    if_any |= Q(message__icontains=keyword)
+                for name in names:
+                    if_any |= Q(user__first_name__icontains=name)
+                    if_any |= Q(user__last_name__icontains=name)
+                if liked:
+                    if_any |= Q(likes__id=request.user.id)
+                if commented:
+                    if_any |= Q(comments__user__id=request.user.id)
+            if_all &= if_any
+
+    posts_per_page = 20
+    #ISSUE: if you filter and >20 posts pop up, when you click "older', posts outside of the filter results show up
+    #ISSUE: likes and comments don't work after filtering
+    #fix issue: maybe do a number bar instead of newer/older? look up
+
+    #ISSUE: comments get really long - possibly compress them?
+    unordered_posts = Post.objects.filter(if_all)
+    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
     if 'newer' in request.POST:
         post_set = int(request.POST.get("current_set")) - 1
-        post_list = Post.objects.filter(
-            date__lte=timezone.now(),
-            post_active=True
-        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
     elif 'older' in request.POST:
         post_set = int(request.POST.get("current_set")) + 1
-        post_list = Post.objects.filter(
-            date__lte=timezone.now(),
-            post_active=True
-        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
     else:
-        post_list = Post.objects.filter(
-            date__lte=timezone.now(),
-            post_active = True
-        ).order_by('-date')[:posts_per_page]
         post_set = 1
 
+    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+
     context = {
-        'user_list': user_list,
         'post_list': post_list,
         'post_set': post_set,
-        'max_sets': max_sets
+        'max_sets': max_sets,
+        'form': form,
     }
     return render(request, template_name, context)
 
@@ -84,47 +101,24 @@ def profile(request, user_id=None):
         except User.DoesNotExist:
             return render(request, './social_match/404.html')
 
+    # get current set of posts to display on page
     posts_per_page = 5
-
-    max_sets = math.ceil(len(Post.objects.filter(
-        user=viewing_user
-    )) / posts_per_page)
+    unordered_posts = Post.objects.filter(user=viewing_user)
+    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
 
     if 'newer' in request.POST:
         post_set = int(request.POST.get("current_set")) - 1
-        post_list = Post.objects.filter(
-            user=viewing_user
-        ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
     elif 'older' in request.POST:
         post_set = int(request.POST.get("current_set")) + 1
-        post_list = Post.objects.filter(
-            user=viewing_user
-        ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
     else:
-        post_list = Post.objects.filter(
-            user=viewing_user
-        ).order_by('-date')[:posts_per_page]
         post_set = 1
+    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
 
     template_name = './social_match/profile.html'
-    form = ProfileForm(initial={
-        'first_name': viewing_user.first_name,
-        'last_name': viewing_user.last_name,
-        'phone': viewing_user.phone,
-        'class_standing': viewing_user.class_standing,
-        'graduation_year': viewing_user.graduation_year,
-        'majors': viewing_user.majors,
-        'minors': viewing_user.minors,
-        'courses': viewing_user.courses,
-        'interests': viewing_user.interests,
-        'skills': viewing_user.skills,
-        'activities': viewing_user.activities,
-    })
 
     return render(request, template_name, {
         'user': user,
         'viewing_user': viewing_user,
-        'form': ProfileForm,
         'post_list':post_list,
         'post_set':post_set,
         'max_sets':max_sets,
@@ -186,15 +180,10 @@ def likepost(request):
     posts_per_page = 20
     template_name = './social_match/home_posts.html'
     user_list = User.objects.filter(status_active=True, is_superuser=False)
-    max_sets = math.ceil(len(Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    )) / posts_per_page)
+    unordered_posts = Post.objects.filter(date__lte=timezone.now(),post_active=True)
+    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
     post_set = int(request.POST.get("current_set"))
-    post_list = Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
 
     context = {
         'user_list': user_list,
@@ -226,15 +215,10 @@ def commentpost(request):
     posts_per_page = 20
     template_name = './social_match/home_posts.html'
     user_list = User.objects.filter(status_active=True, is_superuser=False)
-    max_sets = math.ceil(len(Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    )) / posts_per_page)
+    unordered_posts = Post.objects.filter(date__lte=timezone.now(),post_active=True)
+    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
     post_set = int(request.POST.get("current_set"))
-    post_list = Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
 
     context = {
         'user_list': user_list,
