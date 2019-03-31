@@ -32,7 +32,7 @@ def home(request):
     template_name = './social_match/home.html'
     form = PostSearchForm()
 
-    filtered = 0
+    filtered = bool(request.GET.get('f'))
     keywordstr = request.GET.get('k')
     namestr = request.GET.get('n')
     liked = bool(request.GET.get('l'))
@@ -54,9 +54,9 @@ def home(request):
                 namestr = form.cleaned_data['name']
                 liked = form.cleaned_data['liked']
                 commented = form.cleaned_data['commented']
-                filtered = 1
+                filtered = True
         if 'clear' in request.POST:
-            filtered = 0
+            filtered = False
             keywordstr = ""
             namestr = ""
             liked = False
@@ -77,6 +77,7 @@ def home(request):
     if_all &= if_any
 
     #ISSUE: likes and comments don't work after filtering
+    #ISSUE: do same for myprofile posts
     #ISSUE: comments get really long - possibly compress them?
 
     posts_per_page= 20
@@ -194,19 +195,47 @@ def likepost(request):
     else:
         post.likes.add(request.user.id)
 
-    posts_per_page = 20
     template_name = './social_match/home_posts.html'
-    user_list = User.objects.filter(status_active=True, is_superuser=False)
-    unordered_posts = Post.objects.filter(date__lte=timezone.now(),post_active=True)
-    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
-    post_set = int(request.POST.get("current_set"))
-    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+
+    filtered = not bool(request.POST.get('f'))
+    keywordstr = request.POST.get('k')
+    namestr = request.POST.get('n')
+    liked = not bool(request.POST.get('l'))
+    commented = not bool(request.POST.get('c'))
+    if keywordstr is None:
+        keywordstr = ""
+    if namestr is None:
+        namestr = ""
+    if_all = Q(date__lte=timezone.now(), post_active=True)
+    if_any = Q()
+    keywords = keywordstr.split()
+    names = namestr.split()
+    for keyword in keywords:
+        if_any |= Q(headline__icontains=keyword)
+        if_any |= Q(message__icontains=keyword)
+    for name in names:
+        if_any |= Q(user__first_name__icontains=name)
+        if_any |= Q(user__last_name__icontains=name)
+    if liked:
+        if_any |= Q(likes__id=request.user.id)
+    if commented:
+        if_any |= Q(comments__user__id=request.user.id)
+    if_all &= if_any
+
+    posts_per_page = 20
+    posts = Post.objects.filter(if_all).distinct().order_by('-date')
+    paginator = Paginator(posts,posts_per_page)
+    page = request.POST.get('p')
+    post_list = paginator.get_page(page)
 
     context = {
-        'user_list': user_list,
         'post_list': post_list,
-        'post_set': post_set,
-        'max_sets': max_sets
+        'form': PostSearchForm(),
+        'keywords': keywordstr,
+        'names': namestr,
+        'liked': liked,
+        'commented': commented,
+        'filtered': filtered,
     }
 
     if request.is_ajax():
@@ -229,20 +258,48 @@ def commentpost(request):
             comment.save()
         form = None
 
+    template_name = './social_match/home_posts.html'
+
+    filtered = not bool(request.POST.get('f'))
+    keywordstr = request.POST.get('k')
+    namestr = request.POST.get('n')
+    liked = not bool(request.POST.get('l'))
+    commented = not bool(request.POST.get('c'))
+    if keywordstr is None:
+        keywordstr = ""
+    if namestr is None:
+        namestr = ""
+
+    if_all = Q(date__lte=timezone.now(), post_active=True)
+    if_any = Q()
+    keywords = keywordstr.split()
+    names = namestr.split()
+    for keyword in keywords:
+        if_any |= Q(headline__icontains=keyword)
+        if_any |= Q(message__icontains=keyword)
+    for name in names:
+        if_any |= Q(user__first_name__icontains=name)
+        if_any |= Q(user__last_name__icontains=name)
+    if liked:
+        if_any |= Q(likes__id=request.user.id)
+    if commented:
+        if_any |= Q(comments__user__id=request.user.id)
+    if_all &= if_any
 
     posts_per_page = 20
-    template_name = './social_match/home_posts.html'
-    user_list = User.objects.filter(status_active=True, is_superuser=False)
-    unordered_posts = Post.objects.filter(date__lte=timezone.now(),post_active=True)
-    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
-    post_set = int(request.POST.get("current_set"))
-    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    posts = Post.objects.filter(if_all).distinct().order_by('-date')
+    paginator = Paginator(posts, posts_per_page)
+    page = request.POST.get('p')
+    post_list = paginator.get_page(page)
 
     context = {
-        'user_list': user_list,
         'post_list': post_list,
-        'post_set': post_set,
-        'max_sets': max_sets,
+        'form': PostSearchForm(),
+        'keywords': keywordstr,
+        'names': namestr,
+        'liked': liked,
+        'commented': commented,
+        'filtered': filtered,
         'post_id': int(post_id,10),
         'form': form
     }

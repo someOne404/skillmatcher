@@ -1,4 +1,3 @@
-{% load tags %}
 <div class="col-sm">
     {% if filtered %}
         <h1>Showing filter results for:</h1>
@@ -26,9 +25,9 @@
             <form action="{% url 'social_match:likepost' %}" method="post">
                 {% csrf_token %}
                 {% if user in post.likes.all %}
-                <button type="submit" id="like" name="unlike_id" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Unlike</button>
+                <button type="submit" id="like" name="unlike_id" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Unlike</button>
                 {% else %}
-                <button type="submit" id="like" name="like_id" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Like</button>
+                <button type="submit" id="like" name="like_id" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Like</button>
                 {% endif %}
             </form>
 
@@ -36,12 +35,12 @@
                 <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
                 {% csrf_token %}
                 {{ form.text }}
-                <button type="submit" id="submitcomment" name="submitcomment" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Comment</button>
+                <button type="submit" id="submitcomment" name="submitcomment" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
                 </form>
             {% else %}
                 <form action="{% url 'social_match:commentpost' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" id="comment" name="comment" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Comment</button>
+                <button type="submit" id="comment" name="comment" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
                 </form>
             {% endif %}
 
