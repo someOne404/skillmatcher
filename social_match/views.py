@@ -10,6 +10,7 @@ from django.template.loader import render_to_string
 from django.core import serializers
 import json
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from .models import *
 from .filters import UserFilter
@@ -31,6 +32,17 @@ def home(request):
     template_name = './social_match/home.html'
     form = PostSearchForm()
 
+    filtered = 0
+    keywordstr = request.GET.get('k')
+    namestr = request.GET.get('n')
+    liked = bool(request.GET.get('l'))
+    commented = bool(request.GET.get('c'))
+
+    if keywordstr is None:
+        keywordstr = ""
+    if namestr is None:
+        namestr = ""
+
     # get current set of posts to display on page
     if_all = Q(date__lte=timezone.now(),post_active=True)
     if_any = Q()
@@ -38,44 +50,49 @@ def home(request):
         if 'filter' in request.POST:
             form = PostSearchForm(request.POST)
             if form.is_valid():
-                keywords = form.cleaned_data['keywords'].split()
-                names = form.cleaned_data['name'].split()
+                keywordstr = form.cleaned_data['keywords']
+                namestr = form.cleaned_data['name']
                 liked = form.cleaned_data['liked']
                 commented = form.cleaned_data['commented']
-                for keyword in keywords:
-                    if_any |= Q(headline__icontains=keyword)
-                    if_any |= Q(message__icontains=keyword)
-                for name in names:
-                    if_any |= Q(user__first_name__icontains=name)
-                    if_any |= Q(user__last_name__icontains=name)
-                if liked:
-                    if_any |= Q(likes__id=request.user.id)
-                if commented:
-                    if_any |= Q(comments__user__id=request.user.id)
-            if_all &= if_any
+                filtered = 1
+        if 'clear' in request.POST:
+            filtered = 0
+            keywordstr = ""
+            namestr = ""
+            liked = False
+            commented = False
 
-    posts_per_page = 20
-    #ISSUE: if you filter and >20 posts pop up, when you click "older', posts outside of the filter results show up
+    keywords = keywordstr.split()
+    names = namestr.split()
+    for keyword in keywords:
+        if_any |= Q(headline__icontains=keyword)
+        if_any |= Q(message__icontains=keyword)
+    for name in names:
+        if_any |= Q(user__first_name__icontains=name)
+        if_any |= Q(user__last_name__icontains=name)
+    if liked:
+        if_any |= Q(likes__id=request.user.id)
+    if commented:
+        if_any |= Q(comments__user__id=request.user.id)
+    if_all &= if_any
+
     #ISSUE: likes and comments don't work after filtering
-    #fix issue: maybe do a number bar instead of newer/older? look up
-
     #ISSUE: comments get really long - possibly compress them?
-    unordered_posts = Post.objects.filter(if_all)
-    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
-    if 'newer' in request.POST:
-        post_set = int(request.POST.get("current_set")) - 1
-    elif 'older' in request.POST:
-        post_set = int(request.POST.get("current_set")) + 1
-    else:
-        post_set = 1
 
-    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    posts_per_page= 20
+    posts = Post.objects.filter(if_all).distinct().order_by('-date')
+    paginator = Paginator(posts,posts_per_page)
+    page = request.GET.get('p')
+    post_list = paginator.get_page(page)
 
     context = {
         'post_list': post_list,
-        'post_set': post_set,
-        'max_sets': max_sets,
         'form': form,
+        'keywords': keywordstr,
+        'names': namestr,
+        'liked': liked,
+        'commented': commented,
+        'filtered' :filtered,
     }
     return render(request, template_name, context)
 
@@ -211,7 +228,8 @@ def commentpost(request):
             comment.post = post
             comment.save()
         form = None
-        
+
+
     posts_per_page = 20
     template_name = './social_match/home_posts.html'
     user_list = User.objects.filter(status_active=True, is_superuser=False)
