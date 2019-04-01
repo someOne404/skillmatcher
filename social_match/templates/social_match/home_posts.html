@@ -18,14 +18,15 @@
         <div class="card-body">
             <h5 class="card-title" style="display: flex"> 
                 {% if viewing_user.picture %}
-                    <img height='50' width='50' src="{{ viewing_user.picture.url }}">
+                    <img height='30' width='30' src="{{ viewing_user.picture.url }}">
                 {% else %}
-                    <img height='50' width='50' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                    <img height='30' width='30' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
 {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}   
                 <div style="width:10px"></div>             
-                <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}: </a>{{ post.headline }}
-            </h5>
+                <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}: </a>
+                {{ post.headline }}
+            </h5>  
             <p>{{ post.message }}</p>
             <p class="card-text">Posted on {{post.date}}<br>
                 {% if post.post_edited %}
@@ -55,6 +56,10 @@
                     <button type="submit" id="comment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Comment</button>
                     </form>
                 {% endif %}
+
+                <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
+                        <i class="fas fa-edit"></i></i>
+                </a>
             </div>
 
             {% for comment in post.comments.all %}
@@ -62,7 +67,7 @@
                 <br><font size ='1'>{{ comment.date }}</font>
                 {% if request.user == comment.user %}
                 <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-home" data-cid="{{comment.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
-                    <font size='1'>delete</font></a>
+                    <i class="fas fa-trash"></i></a>
                 {% endif %}
             </p>
             {% endfor %}
