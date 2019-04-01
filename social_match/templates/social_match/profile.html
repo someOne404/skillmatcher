@@ -16,11 +16,19 @@
       
             <br />
             {% if viewing_user == user %}
-            <div class='centerDiv'>
-                <form class="centerDiv" action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                    {% csrf_token %}
-                    <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                </form>
+            <div style="display: flex">
+                <div>
+                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                        {% csrf_token %}
+                        <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
+                    </form>
+                </div>
+                <div>
+                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                        {% csrf_token %}
+                        <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
+                    </form>
+                </div>
             </div>
             {% endif %}
 
@@ -86,7 +94,7 @@
 
 
             <hr>
-
+                <h2 class="display-5">Contact:</h4>
                 <h5>Email: {{ viewing_user.email }}</h5>
                 <h5>Phone number: {{ viewing_user.phone }}</h5>
 

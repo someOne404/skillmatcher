@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="col-sm">
     {% if filtered %}
         <h1>Showing filter results for:</h1>
@@ -14,7 +16,16 @@
     {% for post in post_list %}
     <div class="card" style="width: 35rem;">
         <div class="card-body">
-            <h5 class="card-title"> <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}: </a>{{ post.headline }}</h5>
+            <h5 class="card-title" style="display: flex"> 
+                {% if viewing_user.picture %}
+                    <img height='50' width='50' src="{{ viewing_user.picture.url }}">
+                {% else %}
+                    <img height='50' width='50' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+{#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
+                {% endif %}   
+                <div style="width:10px"></div>             
+                <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}: </a>{{ post.headline }}
+            </h5>
             <p>{{ post.message }}</p>
             <p class="card-text">Posted on {{post.date}}<br>
                 {% if post.post_edited %}
