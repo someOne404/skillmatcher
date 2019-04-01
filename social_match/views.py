@@ -392,12 +392,6 @@ class SkillAutocomplete(autocomplete.Select2QuerySetView):
 
 		return qs
 
-		# # add permission if necessary
-		# perm = Permission.objects.get(name="Can add skill")
-		# if type(self.request.user) == User and not self.has_add_permission(self.request):
-		# 	self.request.user.user_permissions.add(perm)
-
-
 
 class ActivityAutocomplete(autocomplete.Select2QuerySetView):
 	def get_queryset(self):
