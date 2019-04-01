@@ -221,6 +221,7 @@ class ProfileTest(TestCase):
         self.assertEqual(response1.content, response2.content)
 
 
+
 class SearchingTest(TestCase):
 
     def create_test_user1(self):

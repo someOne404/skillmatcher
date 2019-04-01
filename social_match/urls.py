@@ -31,4 +31,11 @@ urlpatterns = [
 		 name='activity-autocomplete'),
 	path("api/interest-autocomplete/", views.InterestAutocomplete.as_view(model=Interest, create_field='name'),
 		 name='interest-autocomplete'),
+
+	# separate paths for autocomplete without option to create (for searching)
+	path("api/skill-autocomplete-search/", views.SkillAutocomplete.as_view(model=Skill), name='skill-search'),
+	path("api/activity-autocomplete-search/", views.ActivityAutocomplete.as_view(model=Activity),
+		 name='activity-search'),
+	path("api/interest-autocomplete-search/", views.InterestAutocomplete.as_view(model=Interest),
+		 name='interest-search'),
 ]

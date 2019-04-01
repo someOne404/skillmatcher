@@ -1,7 +1,7 @@
 {% extends 'social_match/base.html' %}
 {% load widget_tweaks %}
 {% block content %}
-
+{{ filter.form.media }}
 {% if user.is_authenticated %}
   <form method="get">
     <div class="well">
