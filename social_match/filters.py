@@ -9,22 +9,29 @@ class UserFilter(django_filters.FilterSet):
     last_name = django_filters.CharFilter(lookup_expr='icontains')
     email = django_filters.CharFilter(lookup_expr='icontains')
     majors = django_filters.ModelMultipleChoiceFilter(queryset=Major.objects.all(),
-                                                      widget=autocomplete.ModelSelect2Multiple(url='social_match:major-autocomplete'))
+                                                      conjoined=True,
+                                                      widget=autocomplete.ModelSelect2Multiple(
+                                                          url='social_match:major-autocomplete'))
     minors = django_filters.ModelMultipleChoiceFilter(queryset=Minor.objects.all(),
+                                                      conjoined=True,
                                                       widget=autocomplete.ModelSelect2Multiple(
                                                           url='social_match:minor-autocomplete'))
     courses = django_filters.ModelMultipleChoiceFilter(queryset=Course.objects.all(),
-                                                      widget=autocomplete.ModelSelect2Multiple(
-                                                          url='social_match:course-autocomplete'))
+                                                       conjoined=True,
+                                                       widget=autocomplete.ModelSelect2Multiple(
+                                                           url='social_match:course-autocomplete'))
     skills = django_filters.ModelMultipleChoiceFilter(queryset=Skill.objects.all(),
+                                                      conjoined=True,
                                                       widget=autocomplete.ModelSelect2Multiple(
                                                           url='social_match:skill-search'))
     activities = django_filters.ModelMultipleChoiceFilter(queryset=Activity.objects.all(),
-                                                      widget=autocomplete.ModelSelect2Multiple(
-                                                          url='social_match:activity-search'))
-    interests = django_filters.ModelMultipleChoiceFilter(queryset=Interest.objects.all(),
+                                                          conjoined=True,
                                                           widget=autocomplete.ModelSelect2Multiple(
-                                                              url='social_match:interest-search'))
+                                                              url='social_match:activity-search'))
+    interests = django_filters.ModelMultipleChoiceFilter(queryset=Interest.objects.all(),
+                                                         conjoined=True,
+                                                         widget=autocomplete.ModelSelect2Multiple(
+                                                             url='social_match:interest-search'))
 
     class Meta:
         model = User
