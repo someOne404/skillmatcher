@@ -301,7 +301,7 @@ def get_profile_post_list(viewing_user, posts_per_page, page):
     post_list = paginator.get_page(page)
     return post_list
 
-def get_home_post_list(keywordstr, namestr, liked, commented, page, user_id, posts_per_page):
+def post_filter(keywordstr, namestr, liked, commented, user_id):
     if_all = Q(date__lte=timezone.now(), post_active=True)
     if_any = Q()
 
@@ -320,6 +320,10 @@ def get_home_post_list(keywordstr, namestr, liked, commented, page, user_id, pos
     if_all &= if_any
 
     posts = Post.objects.filter(if_all).distinct().order_by('-date')
+    return posts
+
+def get_home_post_list(keywordstr, namestr, liked, commented, page, user_id, posts_per_page):
+    posts = post_filter(keywordstr, namestr, liked, commented, user_id)
     paginator = Paginator(posts, posts_per_page)
     post_list = paginator.get_page(page)
 
