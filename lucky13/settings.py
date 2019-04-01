@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'social_match',
     'social_django',
     'widget_tweaks',
+    "friendship",
 ]
 
 MIDDLEWARE = [

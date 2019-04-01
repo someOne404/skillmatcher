@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
 from django.conf import settings
 from django.contrib.auth.views import LogoutView, LoginView
 from . import views
@@ -27,4 +28,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', include('social_match.urls')),
     path('inactive_user/', views.inactive_user, name='inactive_user'),
+    url(r'^friendship/', include('friendship.urls')),
 ]

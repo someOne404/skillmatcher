@@ -1,6 +1,7 @@
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from friendship.models import Friend, Follow, Block
 
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -297,3 +298,15 @@ def minorlist(request):
     data = [{"name": str(m)+": " + m.name} for m in minors]
     json_data = json.dumps(data)
     return HttpResponse(json_data, content_type='application/json')
+
+def follow(request, user_id):
+    self = request.user
+    followed_user = User.objects.get(id=user_id)
+    Follow.objects.add_follower(self, followed_user)
+
+def block(request, user_id):
+    self = request.user
+    blocked_user = User.objects.get(id=user_id)
+    Block.objects.add_block(request.user, blocked_user)
+
+
