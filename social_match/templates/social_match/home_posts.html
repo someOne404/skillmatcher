@@ -14,38 +14,40 @@
     {% for post in post_list %}
     <div class="card" style="width: 35rem;">
         <div class="card-body">
-            <h5 class="card-title">{{ post.headline }}</h5>
-            <p class="card-text">{{ post.message }}</p>
-            <p>Posted by: <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a> on {{post.date}}<br>
+            <h5 class="card-title"> <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}: </a>{{ post.headline }}</h5>
+            <p>{{ post.message }}</p>
+            <p class="card-text">Posted on {{post.date}}<br>
                 {% if post.post_edited %}
                 Last edited on: {{post.date_edited}}
                 {% endif %}</p>
+            <div style="display: flex">
+                <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
 
-            <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
-            <form action="{% url 'social_match:likepost' %}" method="post">
-                {% csrf_token %}
-                {% if user in post.likes.all %}
-                <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Unlike</button>
+                <form action="{% url 'social_match:likepost' %}" method="post">
+                    {% csrf_token %}
+                    {% if user in post.likes.all %}
+                    <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Unlike</button>
+                    {% else %}
+                    <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Like</button>
+                    {% endif %}
+                </form>
+
+                {% if form != None and post_id == post.id %}
+                    <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
+                    {% csrf_token %}
+                    {{ form.text }}
+                    <button type="submit" id="submitcomment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Comment</button>
+                    </form>
                 {% else %}
-                <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Like</button>
+                    <form action="{% url 'social_match:commentpost' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" id="comment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Comment</button>
+                    </form>
                 {% endif %}
-            </form>
-
-            {% if form != None and post_id == post.id %}
-                <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
-                {% csrf_token %}
-                {{ form.text }}
-                <button type="submit" id="submitcomment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
-                </form>
-            {% else %}
-                <form action="{% url 'social_match:commentpost' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" id="comment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
-                </form>
-            {% endif %}
+            </div>
 
             {% for comment in post.comments.all %}
-            <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
+            <p style="margin-left: 50px"><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
                 <br><font size ='1'>{{ comment.date }}</font>
                 {% if request.user == comment.user %}
                 <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-home" data-cid="{{comment.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
@@ -57,6 +59,7 @@
 
         </div>
     </div>
+    <br>
     {% endfor %}
 
         <div class="pagination">

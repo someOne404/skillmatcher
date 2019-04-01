@@ -35,11 +35,9 @@ def unload_minors_fixture(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('social_match', '0007_auto_20190312_1425'),
     ]
-
     operations = [
         migrations.RunPython(load_classes_fixture, reverse_code=unload_classes_fixture),
         migrations.RunPython(load_majors_fixture, reverse_code=unload_majors_fixture),

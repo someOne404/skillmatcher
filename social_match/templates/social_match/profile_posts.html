@@ -1,19 +1,16 @@
 <div align="center">
         {% if post_list %}
         {% for post in post_list %}
-            <div class="card" align="left" style="width: 70rem;">
+            <div class="card" align="left" style="width: 800px;">
                 <div class="card-body">
-                    <h5 class="card-title">{{ post.headline }}
-                    <a href="{% url 'social_match:editpost' post.id %}" method="get" name="edit_post" class="primary">
-                        {% if viewing_user == user %}
-                            <font size='1'>Edit Post</font>
-                        {% endif %}</a></h5>
-                        <p class="card-text">{{ post.message }}</p>
-                        <p>Posted on: {{post.date}} <br>
-                            {% if post.post_edited %}
-                            Last edited on: {{post.date_edited}}
-                            {% endif %}
-                        </p>
+                    <h5 class="card-title"> <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}: </a>{{ post.headline }}</h5>
+                    <p>{{ post.message }}</p>
+                    <p class="card-text">Posted on {{post.date}}<br>
+                        {% if post.post_edited %}
+                        Last edited on: {{post.date_edited}}
+                        {% endif %}</p>
+
+                    <div style="display: flex">
 
                         <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
 
@@ -24,9 +21,9 @@
                         <form action="{% url 'social_match:likepost' %}" method="post">
                             {% csrf_token %}
                             {% if user in post.likes.all %}
-                            <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary">Unlike</button>
+                            <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Unlike</button>
                             {% else %}
-                            <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary">Like</button>
+                            <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Like</button>
                             {% endif %}
                         </form>
 
@@ -34,17 +31,17 @@
                             <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
                             {% csrf_token %}
                             {{ form.text }}
-                            <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}"  data-p="{{post_list.number}}" class="btn btn-primary">Comment</button>
+                            <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}"  data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Comment</button>
                             </form>
                         {% else %}
                             <form action="{% url 'social_match:commentpost' %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary">Comment</button>
+                            <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Comment</button>
                             </form>
                         {% endif %}
-
+                    </div>
                         {% for comment in post.comments.all %}
-                        <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
+                        <p style="margin-left: 50px"><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
                             {{ comment.text }} <br><font size ='1'>{{ comment.date }}</font>
                             {% if request.user == comment.user %}
                                 <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-profile" data-cid="{{comment.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="primary">
@@ -54,6 +51,7 @@
                         {% endfor %}
                 </div>
             </div>
+            <br>
         {% endfor %}
         <div class="pagination">
             <span class="step-links">
