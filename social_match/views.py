@@ -32,12 +32,20 @@ def home(request):
     template_name = './social_match/home.html'
     form = PostSearchForm()
 
-    filtered = bool(request.GET.get('f'))
+    if request.GET.get('f') == "True":
+        filtered = True
+    else:
+        filtered = False
+    if request.GET.get('l') == "True":
+        liked = True
+    else:
+        liked = False
+    if request.GET.get('c') == "True":
+        commented = True
+    else:
+        commented = False
     keywordstr = request.GET.get('k')
     namestr = request.GET.get('n')
-    liked = bool(request.GET.get('l'))
-    commented = bool(request.GET.get('c'))
-
     if keywordstr is None:
         keywordstr = ""
     if namestr is None:
@@ -76,10 +84,6 @@ def home(request):
         if_any |= Q(comments__user__id=request.user.id)
     if_all &= if_any
 
-    #ISSUE: likes and comments don't work after filtering
-    #ISSUE: do same for myprofile posts
-    #ISSUE: comments get really long - possibly compress them?
-
     posts_per_page= 20
     posts = Post.objects.filter(if_all).distinct().order_by('-date')
     paginator = Paginator(posts,posts_per_page)
@@ -93,7 +97,7 @@ def home(request):
         'names': namestr,
         'liked': liked,
         'commented': commented,
-        'filtered' :filtered,
+        'filtered':filtered,
     }
     return render(request, template_name, context)
 
@@ -120,17 +124,11 @@ def profile(request, user_id=None):
             return render(request, './social_match/404.html')
 
     # get current set of posts to display on page
-    posts_per_page = 5
-    unordered_posts = Post.objects.filter(user=viewing_user)
-    max_sets = math.ceil(len(unordered_posts) / posts_per_page)
-
-    if 'newer' in request.POST:
-        post_set = int(request.POST.get("current_set")) - 1
-    elif 'older' in request.POST:
-        post_set = int(request.POST.get("current_set")) + 1
-    else:
-        post_set = 1
-    post_list = unordered_posts.order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    posts_per_page = 20
+    posts = Post.objects.filter(user=viewing_user).order_by('-date')
+    paginator = Paginator(posts, posts_per_page)
+    page = request.GET.get('p')
+    post_list = paginator.get_page(page)
 
     template_name = './social_match/profile.html'
 
@@ -138,8 +136,6 @@ def profile(request, user_id=None):
         'user': user,
         'viewing_user': viewing_user,
         'post_list':post_list,
-        'post_set':post_set,
-        'max_sets':max_sets,
     })
 
 def createpost(request):
@@ -215,6 +211,7 @@ def likepost(request):
         keywordstr = ""
     if namestr is None:
         namestr = ""
+
     if_all = Q(date__lte=timezone.now(), post_active=True)
     if_any = Q()
     keywords = keywordstr.split()
@@ -236,6 +233,8 @@ def likepost(request):
     paginator = Paginator(posts,posts_per_page)
     page = request.POST.get('p')
     post_list = paginator.get_page(page)
+
+    print(page)
 
     context = {
         'post_list': post_list,

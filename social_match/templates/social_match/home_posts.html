@@ -25,9 +25,9 @@
             <form action="{% url 'social_match:likepost' %}" method="post">
                 {% csrf_token %}
                 {% if user in post.likes.all %}
-                <button type="submit" id="like" name="unlike_id" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Unlike</button>
+                <button type="submit" id="like" name="unlike_id" value="{{post.id}}" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Unlike</button>
                 {% else %}
-                <button type="submit" id="like" name="like_id" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Like</button>
+                <button type="submit" id="like" name="like_id" value="{{post.id}}" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Like</button>
                 {% endif %}
             </form>
 
@@ -35,12 +35,12 @@
                 <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
                 {% csrf_token %}
                 {{ form.text }}
-                <button type="submit" id="submitcomment" name="submitcomment" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
+                <button type="submit" id="submitcomment" name="submitcomment" value="{{post.id}}" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
                 </form>
             {% else %}
                 <form action="{% url 'social_match:commentpost' %}" method="post">
                 {% csrf_token %}
-                <button type="submit" id="comment" name="comment" value="{{post.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
+                <button type="submit" id="comment" name="comment" value="{{post.id}}" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
                 </form>
             {% endif %}
 
@@ -48,11 +48,7 @@
             <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
                 <br><font size ='1'>{{ comment.date }}</font>
                 {% if request.user == comment.user %}
-                <!--<form action="{% url 'social_match:commentpost' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" id="deletecomment" name="deletecomment" data-cid="{{post.comment.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
-                </form>-->
-                <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment" name="deletecomment" data-cid="{{comment.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
+                <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment" name="deletecomment" data-cid="{{comment.id}}" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
                     <font size='1'>delete</font></a>
                 {% endif %}
             </p>
@@ -77,7 +73,7 @@
                 </span>
 
                 {% if post_list.has_next %}
-                    {% if post_list.next_page_number != paginator.num_pages %}
+                    {% if post_list.next_page_number != post_list.paginator.num_pages %}
                         <a href="?p={{post_list.next_page_number}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">next</a> -
                     {% endif %}
                 <a href="?p={{post_list.paginator.num_pages}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">last &raquo;</a>

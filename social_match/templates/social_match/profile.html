@@ -127,16 +127,27 @@
                 </div>
             </div>
         {% endfor %}
-        <form action="{% url 'social_match:profile' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="current_set" value='{{post_set}}'>
-            {% if post_set != 1 %}
-            <input type="submit" value="<- Newer" name="newer" class="btn btn-primary">
-            {% endif %}
-            {% if post_set != max_sets %}
-            <input type="submit" value="Older ->" name="older" class="btn btn-primary">
-            {% endif %}
-        </form>
+        <div class="pagination">
+            <span class="step-links">
+                {% if post_list.has_previous %}
+                    <a href="?p=1" class="primary">&laquo; first</a> -
+                    {% if post_list.previous_page_number != 1 %}
+                        <a href="?p={{post_list.previous_page_number}}" class="primary">previous</a>
+                    {% endif %}
+                {% endif %}
+
+                <span class="current">
+                    Page {{ post_list.number }} of {{ post_list.paginator.num_pages }}.
+                </span>
+
+                {% if post_list.has_next %}
+                    {% if post_list.next_page_number != post_list.paginator.num_pages %}
+                        <a href="?p={{post_list.next_page_number}}" class="primary">next</a> -
+                    {% endif %}
+                <a href="?p={{post_list.paginator.num_pages}}" class="primary">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         {% endif %}
     </div>
 </div>
