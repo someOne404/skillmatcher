@@ -5,7 +5,9 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ post.headline }}
                     <a href="{% url 'social_match:editpost' post.id %}" method="get" name="edit_post" class="primary">
-                                    <font size='1'>Edit Post</font></a></h5>
+                        {% if viewing_user == user %}
+                            <font size='1'>Edit Post</font>
+                        {% endif %}</a></h5>
                         <p class="card-text">{{ post.message }}</p>
                         <p>Posted on: {{post.date}} <br>
                             {% if post.post_edited %}
