@@ -1,4 +1,4 @@
-
+from dal import autocomplete
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 
@@ -8,6 +8,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core import serializers
+from django.db.models import CharField, Value as V
+from django.db.models.functions import Cast, Concat
 import json
 
 from .models import *
@@ -19,8 +21,7 @@ import math
 User = get_user_model()
 
 def base(request):
-    template_name = './social_match/base.html'
-    return render(request, template_name)
+    return HttpResponseRedirect(reverse('social_match:home'))
 
 def about(request):
     template_name = './social_match/about.html'
@@ -303,3 +304,19 @@ def minorlist(request):
     data = [{"name": str(m)+": " + m.name} for m in minors]
     json_data = json.dumps(data)
     return HttpResponse(json_data, content_type='application/json')
+
+
+class CourseAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Course.objects.none()
+
+        # search by course name and/or number
+        qs = Course.objects.annotate(full_name=Concat('department', V(' '), Cast('number', CharField()), V(': '), 'name'))
+
+        if self.q:
+            qs = qs.filter(full_name__icontains=self.q)
+
+        return qs
+

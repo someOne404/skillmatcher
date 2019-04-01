@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from dal import autocomplete
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -30,6 +31,12 @@ class EditProfileForm(forms.ModelForm):
         'class_standing', 'graduation_year',
         'majors', 'minors', 'skills',
         'interests','courses','activities')
+        widgets = {
+            'courses': autocomplete.ModelSelect2Multiple(
+                url='social_match:course-autocomplete',
+            )
+        }
+
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

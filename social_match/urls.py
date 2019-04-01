@@ -4,9 +4,10 @@ from . import views
 from django_filters.views import FilterView
 from social_match.filters import UserFilter
 
+
 app_name = 'social_match'
 urlpatterns = [
-    # path('', views.base, name='base'),
+    path('', views.base, name='base'),
     path('about/', views.about, name='about'),
     path('home/', views.home, name='home'),
     url(r'^search/$', FilterView.as_view(filterset_class=UserFilter,
@@ -21,5 +22,6 @@ urlpatterns = [
     path('editpost/<int:post_id>/', views.editpost, name="editpost"),
     path('api/classes/', views.classlist, name='classlist'),
     path('api/majors/', views.majorlist, name='majorlist'),
-    path('api/minors/', views.minorlist, name='minorlist')
+    path('api/minors/', views.minorlist, name='minorlist'),
+    path("api/course-autocomplete/", views.CourseAutocomplete.as_view(), name='course-autocomplete'),
 ]
