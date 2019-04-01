@@ -1,0 +1,31 @@
+html {
+  min-height: 100%;
+  position: relative;
+}
+
+body {
+  margin-bottom: 60px !important;
+}
+
+.splash {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.imagecropper {
+  border-radius: 60%;
+  width: 100px;
+  height: 100px;
+  /* object-fit: cover; */
+}
+
+.footer {
+  position: absolute;
+  height: 53px;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+}
