@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 
@@ -9,6 +8,8 @@ from django.utils import timezone
 from django.template.loader import render_to_string
 from django.core import serializers
 import json
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 from .models import *
 from .filters import UserFilter
@@ -27,38 +28,22 @@ def about(request):
     return render(request, template_name)
 
 def home(request):
-    posts_per_page = 20
     template_name = './social_match/home.html'
-    user_list = User.objects.filter(status_active=True, is_superuser=False)
-    max_sets = math.ceil(len(Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    )) / posts_per_page)
+    form = PostSearchForm()
 
-    if 'newer' in request.POST:
-        post_set = int(request.POST.get("current_set")) - 1
-        post_list = Post.objects.filter(
-            date__lte=timezone.now(),
-            post_active=True
-        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
-    elif 'older' in request.POST:
-        post_set = int(request.POST.get("current_set")) + 1
-        post_list = Post.objects.filter(
-            date__lte=timezone.now(),
-            post_active=True
-        ).order_by('-date')[posts_per_page*(post_set-1):posts_per_page*post_set]
-    else:
-        post_list = Post.objects.filter(
-            date__lte=timezone.now(),
-            post_active = True
-        ).order_by('-date')[:posts_per_page]
-        post_set = 1
+    keywordstr, namestr, liked, commented, filtered = get_filter_form_results(request)
+
+    posts_per_page = 20
+    post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
 
     context = {
-        'user_list': user_list,
         'post_list': post_list,
-        'post_set': post_set,
-        'max_sets': max_sets
+        'form': form,
+        'keywords': keywordstr,
+        'names': namestr,
+        'liked': liked,
+        'commented': commented,
+        'filtered':filtered,
     }
     return render(request, template_name, context)
 
@@ -85,49 +70,14 @@ def profile(request, user_id=None):
             return render(request, './social_match/404.html')
 
     posts_per_page = 5
-
-    max_sets = math.ceil(len(Post.objects.filter(
-        user=viewing_user
-    )) / posts_per_page)
-
-    if 'newer' in request.POST:
-        post_set = int(request.POST.get("current_set")) - 1
-        post_list = Post.objects.filter(
-            user=viewing_user
-        ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
-    elif 'older' in request.POST:
-        post_set = int(request.POST.get("current_set")) + 1
-        post_list = Post.objects.filter(
-            user=viewing_user
-        ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
-    else:
-        post_list = Post.objects.filter(
-            user=viewing_user
-        ).order_by('-date')[:posts_per_page]
-        post_set = 1
+    post_list = get_profile_post_list(viewing_user, posts_per_page, request.GET.get('p'))
 
     template_name = './social_match/profile.html'
-    form = ProfileForm(initial={
-        'first_name': viewing_user.first_name,
-        'last_name': viewing_user.last_name,
-        'phone': viewing_user.phone,
-        'class_standing': viewing_user.class_standing,
-        'graduation_year': viewing_user.graduation_year,
-        'majors': viewing_user.majors,
-        'minors': viewing_user.minors,
-        'courses': viewing_user.courses,
-        'interests': viewing_user.interests,
-        'skills': viewing_user.skills,
-        'activities': viewing_user.activities,
-    })
 
     return render(request, template_name, {
         'user': user,
         'viewing_user': viewing_user,
-        'form': ProfileForm,
         'post_list':post_list,
-        'post_set':post_set,
-        'max_sets':max_sets,
     })
 
 def createpost(request):
@@ -183,37 +133,58 @@ def likepost(request):
     else:
         post.likes.add(request.user.id)
 
-    posts_per_page = 20
-    template_name = './social_match/home_posts.html'
-    user_list = User.objects.filter(status_active=True, is_superuser=False)
-    max_sets = math.ceil(len(Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    )) / posts_per_page)
-    post_set = int(request.POST.get("current_set"))
-    post_list = Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    template = request.POST.get('t')
+    if template == "home":
+        template_name = './social_match/home_posts.html'
 
-    context = {
-        'user_list': user_list,
-        'post_list': post_list,
-        'post_set': post_set,
-        'max_sets': max_sets
-    }
+        keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+
+        posts_per_page = 20
+        post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
+
+        context = {
+            'post_list': post_list,
+            'keywords': keywordstr,
+            'names': namestr,
+            'liked': liked,
+            'commented': commented,
+            'filtered': filtered,
+        }
+
+    else:
+        template_name = './social_match/profile_posts.html'
+
+        user_id = request.POST.get('u')
+        if not user_id:  # accessing user's own profile
+            user = request.user
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect(reverse('social_match:home'))
+        else:
+            try:
+                viewing_user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return render(request, './social_match/404.html')
+
+        posts_per_page = 5
+        post_list = get_profile_post_list(viewing_user, posts_per_page, request.POST.get('p'))
+
+        context = {
+            'user': request.user,
+            'viewing_user': viewing_user,
+            'post_list': post_list,
+        }
 
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})
 
 def commentpost(request):
-    post_id = request.POST.get('id')
-    post = get_object_or_404(Post, id=post_id)
+    id = request.POST.get('id')
     form = None
     if request.POST.get('type') == 'comment':
         form = CommentPostForm()
     if request.POST.get('type') == 'submitcomment':
+        post = get_object_or_404(Post, id=id)
         if request.POST.get('text') != '':
             comment = Comment()
             comment.text = request.POST.get('text')
@@ -222,28 +193,54 @@ def commentpost(request):
             comment.post = post
             comment.save()
         form = None
-        
-    posts_per_page = 20
-    template_name = './social_match/home_posts.html'
-    user_list = User.objects.filter(status_active=True, is_superuser=False)
-    max_sets = math.ceil(len(Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    )) / posts_per_page)
-    post_set = int(request.POST.get("current_set"))
-    post_list = Post.objects.filter(
-        date__lte=timezone.now(),
-        post_active=True
-    ).order_by('-date')[posts_per_page * (post_set - 1):posts_per_page * post_set]
+    if request.POST.get('type') == 'deletecomment':
+        comment = get_object_or_404(Comment, id=id)
+        comment.delete()
+        form = None
 
-    context = {
-        'user_list': user_list,
-        'post_list': post_list,
-        'post_set': post_set,
-        'max_sets': max_sets,
-        'post_id': int(post_id,10),
-        'form': form
-    }
+    template = request.POST.get('t')
+    if template == "home":
+        template_name = './social_match/home_posts.html'
+
+        keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+
+        posts_per_page = 20
+        post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
+
+        context = {
+            'post_list': post_list,
+            'keywords': keywordstr,
+            'names': namestr,
+            'liked': liked,
+            'commented': commented,
+            'filtered': filtered,
+            'post_id': int(id,10),
+            'form': form
+        }
+    else:
+        template_name = './social_match/profile_posts.html'
+
+        user_id = request.POST.get('u')
+        if not user_id:  # accessing user's own profile
+            user = request.user
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect(reverse('social_match:home'))
+        else:
+            try:
+                viewing_user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return render(request, './social_match/404.html')
+
+        posts_per_page = 5
+        post_list = get_profile_post_list(viewing_user, posts_per_page, request.POST.get('p'))
+
+        context = {
+            'user': request.user,
+            'viewing_user': viewing_user,
+            'post_list': post_list,
+            'post_id': int(id, 10),
+            'form': form,
+        }
 
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
@@ -297,3 +294,107 @@ def minorlist(request):
     data = [{"name": str(m)+": " + m.name} for m in minors]
     json_data = json.dumps(data)
     return HttpResponse(json_data, content_type='application/json')
+
+def get_profile_post_list(viewing_user, posts_per_page, page):
+    posts = Post.objects.filter(user=viewing_user).order_by('-date')
+    paginator = Paginator(posts, posts_per_page)
+    post_list = paginator.get_page(page)
+    return post_list
+
+def post_filter(keywordstr, namestr, liked, commented, user_id):
+    if_all = Q(date__lte=timezone.now(), post_active=True)
+    if_any = Q()
+
+    keywords = keywordstr.split()
+    names = namestr.split()
+    for keyword in keywords:
+        if_any |= Q(headline__icontains=keyword)
+        if_any |= Q(message__icontains=keyword)
+    for name in names:
+        if_any |= Q(user__first_name__icontains=name)
+        if_any |= Q(user__last_name__icontains=name)
+    if liked:
+        if_any |= Q(likes__id=user_id)
+    if commented:
+        if_any |= Q(comments__user__id=user_id)
+    if_all &= if_any
+
+    posts = Post.objects.filter(if_all).distinct().order_by('-date')
+    return posts
+
+def get_home_post_list(keywordstr, namestr, liked, commented, page, user_id, posts_per_page):
+    posts = post_filter(keywordstr, namestr, liked, commented, user_id)
+    paginator = Paginator(posts, posts_per_page)
+    post_list = paginator.get_page(page)
+
+    return post_list
+
+def get_filter_inputs(request):
+
+    if request.method == 'GET':
+        if request.GET.get('f') == "True":
+            filtered = True
+        else:
+            filtered = False
+        if request.GET.get('l') == "True":
+            liked = True
+        else:
+            liked = False
+        if request.GET.get('c') == "True":
+            commented = True
+        else:
+            commented = False
+        keywordstr = request.GET.get('k')
+        namestr = request.GET.get('n')
+        if keywordstr is None:
+            keywordstr = ""
+        if namestr is None:
+            namestr = ""
+    elif request.method == 'POST':
+        if request.POST.get('f') == "True":
+            filtered = True
+        else:
+            filtered = False
+        if request.POST.get('l') == "True":
+            liked = True
+        else:
+            liked = False
+        if request.POST.get('c') == "True":
+            commented = True
+        else:
+            commented = False
+        keywordstr = request.POST.get('k')
+        namestr = request.POST.get('n')
+        if keywordstr is None:
+            keywordstr = ""
+        if namestr is None:
+            namestr = ""
+    else:
+        filtered = False
+        keywordstr = ""
+        namestr = ""
+        liked = False
+        commented = False
+
+    return keywordstr, namestr, liked, commented, filtered
+
+def get_filter_form_results(request):
+    keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+
+    if request.method == 'POST':
+        if 'filter' in request.POST:
+            form = PostSearchForm(request.POST)
+            if form.is_valid():
+                keywordstr = form.cleaned_data['keywords']
+                namestr = form.cleaned_data['name']
+                liked = form.cleaned_data['liked']
+                commented = form.cleaned_data['commented']
+                filtered = True
+        if 'clear' in request.POST:
+            filtered = False
+            keywordstr = ""
+            namestr = ""
+            liked = False
+            commented = False
+
+    return keywordstr, namestr, liked, commented, filtered

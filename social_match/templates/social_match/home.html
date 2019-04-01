@@ -19,19 +19,29 @@
             </div>
 
             <div class="col-sm">
-                <!-- Users -->
-                <h1>Currently Active Users:</h1>
-                {% if user_list %}
-                {% for user in user_list %}
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ user.email }}<br>
-                        </h5>
-                    </div>
-                </div>
-                {% endfor %}
+                <!-- Filtering Posts -->
+                <h1>Filter Posts:</h1>
 
-                {% endif %}
+                <form method="POST">{% csrf_token %}
+                    <br>
+                    <div>
+                        Name: {{ form.name }}
+                    </div><br>
+                    <div>
+                        Keywords: {{ form.keywords }}<br>
+                        Separate keywords by a space
+                    </div><br>
+                    <div>
+                        Posts I've liked: {{ form.liked }}
+                    </div>
+                    <div>
+                        Posts I've commented on: {{ form.commented }}
+                    </div>
+
+                    <button class="btn btn-primary" type="submit" name="filter">Filter</button>
+                    <button class="btn btn-primary" type="submit" name="clear">Clear Filter</button>
+                </form>
+
             </div>
         </div>
     </div>

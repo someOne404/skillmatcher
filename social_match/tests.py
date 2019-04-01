@@ -1,5 +1,6 @@
 from django.test import TestCase
 from social_match.filters import *
+from social_match.views import *
 from social_match.forms import *
 from django.urls import reverse
 from django.shortcuts import render
@@ -321,6 +322,15 @@ def create_post(headline, message, user, days):
     time = timezone.now() + datetime.timedelta(days=days)
     return Post.objects.create(headline=headline, message=message, user=user, date=time)
 
+def create_comment(text, user, post):
+    comment = Comment()
+    comment.text = text
+    comment.user = user
+    comment.date = timezone.now()
+    comment.post = post
+    comment.save()
+    return comment
+
 def create_many_posts(headline, message, user, num_posts):
     for i in range(num_posts):
         create_post(headline, message, user, (-1*num_posts))
@@ -452,3 +462,104 @@ class PostTest(TestCase):
         form_data = {'text':'text'}
         form = CommentPostForm(data = form_data)
         self.assertTrue(form.is_valid())
+
+class FilterPostTest(TestCase):
+    def create_test_user(self):
+        return User.objects.create(
+            first_name="Test",
+            last_name="User",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='test@virginia.edu',
+        )
+
+    # tests
+    def test_post_filter_by_headline_with_results(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user()
+        create_post(headline, message, user, days=0)
+
+        posts = post_filter('line', '', False, False, user.id)
+        expected_posts = ['<Post: ' + headline + '>']
+
+        self.assertQuerysetEqual(posts, expected_posts)
+
+    def test_post_filter_by_headline_with_no_results(self):
+        headline = 'head'
+        message = 'message'
+        user = self.create_test_user()
+        create_post(headline, message, user, days=0)
+
+        posts = post_filter('line', '', False, False, user.id)
+        expected_posts = []
+
+        self.assertQuerysetEqual(posts, expected_posts)
+
+    def test_post_filter_by_name_with_results(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user()
+        create_post(headline, message, user, days=0)
+
+        posts = post_filter('', user.first_name, False, False, user.id)
+        expected_posts = ['<Post: ' + headline + '>']
+
+        self.assertQuerysetEqual(posts, expected_posts)
+
+    def test_post_filter_by_name_with_no_results(self):
+        user = self.create_test_user()
+
+        posts = post_filter('', user.first_name, False, False, user.id)
+        expected_posts = []
+
+        self.assertQuerysetEqual(posts, expected_posts)
+
+    def test_post_filter_by_liked_with_results(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user()
+        post = create_post(headline, message, user, days=0)
+        post.likes.add(user.id)
+
+        posts = post_filter('', '', True, False, user.id)
+        expected_posts = ['<Post: ' + headline + '>']
+
+        self.assertQuerysetEqual(posts, expected_posts)
+
+    def test_post_filter_by_liked_with_no_results(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user()
+        create_post(headline, message, user, days=0)
+
+        posts = post_filter('', '', True, False, user.id)
+        expected_posts = []
+
+        self.assertQuerysetEqual(posts, expected_posts)
+
+    def test_post_filter_by_commented_with_results(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user()
+        post = create_post(headline, message, user, days=0)
+
+        text = 'comment'
+        create_comment(text, user, post)
+
+        posts = post_filter('', '', False, True, user.id)
+        expected_posts = ['<Post: ' + headline + '>']
+
+        self.assertQuerysetEqual(posts, expected_posts)
+
+    def test_post_filter_by_commented_with_no_results(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user()
+        post = create_post(headline, message, user, days=0)
+
+        posts = post_filter('', '', False, True, user.id)
+        expected_posts = []
+
+        self.assertQuerysetEqual(posts, expected_posts)
