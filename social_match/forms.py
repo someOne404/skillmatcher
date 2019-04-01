@@ -37,6 +37,12 @@ class EditProfileForm(forms.ModelForm):
 				  'majors', 'minors', 'skills',
 				  'interests', 'courses', 'activities')
 		widgets = {
+			'majors': autocomplete.ModelSelect2Multiple(
+				url='social_match:major-autocomplete',
+			),
+			'minors': autocomplete.ModelSelect2Multiple(
+				url='social_match:minor-autocomplete',
+			),
 			'courses': autocomplete.ModelSelect2Multiple(
 				url='social_match:course-autocomplete',
 			),

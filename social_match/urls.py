@@ -23,6 +23,8 @@ urlpatterns = [
 	path('api/classes/', views.classlist, name='classlist'),
 	path('api/majors/', views.majorlist, name='majorlist'),
 	path('api/minors/', views.minorlist, name='minorlist'),
+	path("api/major-autocomplete/", views.MajorAutocomplete.as_view(), name='major-autocomplete'),
+	path("api/minor-autocomplete/", views.MinorAutocomplete.as_view(), name='minor-autocomplete'),
 	path("api/course-autocomplete/", views.CourseAutocomplete.as_view(), name='course-autocomplete'),
 	path("api/skill-autocomplete/", views.SkillAutocomplete.as_view(model=Skill, create_field='name'), name='skill-autocomplete'),
 	path("api/activity-autocomplete/", views.ActivityAutocomplete.as_view(model=Activity, create_field='name'),

@@ -332,6 +332,36 @@ def minorlist(request):
 	return HttpResponse(json_data, content_type='application/json')
 
 
+class MajorAutocomplete(autocomplete.Select2QuerySetView):
+	def get_queryset(self):
+		# Don't forget to filter out results depending on the visitor !
+		if not self.request.user.is_authenticated:
+			return Major.objects.none()
+
+		# search by course name and/or number
+		qs = Major.objects.all()
+
+		if self.q:
+			qs = qs.filter(name__icontains=self.q)
+
+		return qs
+
+
+class MinorAutocomplete(autocomplete.Select2QuerySetView):
+	def get_queryset(self):
+		# Don't forget to filter out results depending on the visitor !
+		if not self.request.user.is_authenticated:
+			return Minor.objects.none()
+
+		# search by course name and/or number
+		qs = Minor.objects.all()
+
+		if self.q:
+			qs = qs.filter(name__icontains=self.q)
+
+		return qs
+
+
 class CourseAutocomplete(autocomplete.Select2QuerySetView):
 	def get_queryset(self):
 		# Don't forget to filter out results depending on the visitor !
