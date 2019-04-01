@@ -74,6 +74,7 @@ def search(request):
 def profile(request, user_id=None):
     user = request.user
     viewing_user = user
+
     if not user_id: # accessing user's own profile
         user = request.user
         if not request.user.is_authenticated:
@@ -303,10 +304,14 @@ def follow(request, user_id):
     self = request.user
     followed_user = User.objects.get(id=user_id)
     Follow.objects.add_follower(self, followed_user)
+    #url = reverse('/profile', kwargs={'user_id': user_id})
+    return HttpResponseRedirect('/profile')
+
 
 def block(request, user_id):
     self = request.user
     blocked_user = User.objects.get(id=user_id)
-    Block.objects.add_block(request.user, blocked_user)
+    Block.objects.add_block(self, blocked_user)
+    return HttpResponseRedirect('/profile')
 
 

@@ -13,6 +13,8 @@ urlpatterns = [
         template_name='social_match/search.html'), name='search'),
     path('createpost/', views.createpost, name='createpost'),
     path('profile/', views.profile, name='profile'),
+    #path('follow/<int:user_id>/', views.follow, name='follow'),
+    path('follow/<int:user_id>/', views.follow, name='follow'),
     path('profile/<int:user_id>/', views.profile, name='profile'),
     path('editprofile/<int:user_id>/', views.editprofile, name="editprofile"),
     path('likepost/', views.likepost, name="likepost"),

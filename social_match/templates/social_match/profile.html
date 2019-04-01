@@ -23,7 +23,7 @@
                 </form>
             </div>
                 {% else %}
-                <button type="button" class="btn btn-primary">Follow</button>
+                <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow" class="primary"><button type="button" class="btn btn-info">Follow</button></a>
             {% endif %}
 
         </div>
