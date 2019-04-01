@@ -197,11 +197,20 @@ def likepost(request):
 
     template_name = './social_match/home_posts.html'
 
-    filtered = not bool(request.POST.get('f'))
+    if request.POST.get('f') == "True":
+        filtered = True
+    else:
+        filtered = False
+    if request.POST.get('l') == "True":
+        liked = True
+    else:
+        liked = False
+    if request.POST.get('c') == "True":
+        commented = True
+    else:
+        commented = False
     keywordstr = request.POST.get('k')
     namestr = request.POST.get('n')
-    liked = not bool(request.POST.get('l'))
-    commented = not bool(request.POST.get('c'))
     if keywordstr is None:
         keywordstr = ""
     if namestr is None:
@@ -243,12 +252,12 @@ def likepost(request):
         return JsonResponse({'form': html})
 
 def commentpost(request):
-    post_id = request.POST.get('id')
-    post = get_object_or_404(Post, id=post_id)
+    id = request.POST.get('id')
     form = None
     if request.POST.get('type') == 'comment':
         form = CommentPostForm()
     if request.POST.get('type') == 'submitcomment':
+        post = get_object_or_404(Post, id=id)
         if request.POST.get('text') != '':
             comment = Comment()
             comment.text = request.POST.get('text')
@@ -257,14 +266,27 @@ def commentpost(request):
             comment.post = post
             comment.save()
         form = None
+    if request.POST.get('type') == 'deletecomment':
+        comment = get_object_or_404(Comment, id=id)
+        comment.delete()
+        form = None
 
     template_name = './social_match/home_posts.html'
 
-    filtered = not bool(request.POST.get('f'))
+    if request.POST.get('f') == "True":
+        filtered = True
+    else:
+        filtered = False
+    if request.POST.get('l') == "True":
+        liked = True
+    else:
+        liked = False
+    if request.POST.get('c') == "True":
+        commented = True
+    else:
+        commented = False
     keywordstr = request.POST.get('k')
     namestr = request.POST.get('n')
-    liked = not bool(request.POST.get('l'))
-    commented = not bool(request.POST.get('c'))
     if keywordstr is None:
         keywordstr = ""
     if namestr is None:
@@ -277,6 +299,7 @@ def commentpost(request):
     for keyword in keywords:
         if_any |= Q(headline__icontains=keyword)
         if_any |= Q(message__icontains=keyword)
+        print(keyword)
     for name in names:
         if_any |= Q(user__first_name__icontains=name)
         if_any |= Q(user__last_name__icontains=name)
@@ -300,7 +323,7 @@ def commentpost(request):
         'liked': liked,
         'commented': commented,
         'filtered': filtered,
-        'post_id': int(post_id,10),
+        'post_id': int(id,10),
         'form': form
     }
 

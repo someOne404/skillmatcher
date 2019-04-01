@@ -45,8 +45,19 @@
             {% endif %}
 
             {% for comment in post.comments.all %}
-            <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}<br><font size ='1'>{{ comment.date }}</font></p>
+            <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
+                <br><font size ='1'>{{ comment.date }}</font>
+                {% if request.user == comment.user %}
+                <!--<form action="{% url 'social_match:commentpost' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" id="deletecomment" name="deletecomment" data-cid="{{post.comment.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary">Comment</button>
+                </form>-->
+                <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment" name="deletecomment" data-cid="{{comment.id}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
+                    <font size='1'>delete</font></a>
+                {% endif %}
+            </p>
             {% endfor %}
+
 
         </div>
     </div>

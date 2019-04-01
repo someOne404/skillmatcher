@@ -102,6 +102,29 @@
                     },
                 });
             });
+
+         $(document).on('click', '#deletecomment', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-cid');
+                var k = $(this).attr('data-k');
+                var n = $(this).attr('data-n');
+                var l = $(this).attr('data-l');
+                var c = $(this).attr('data-c');
+                var f = $(this).attr('data-f');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'type':'deletecomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
     </script>
 </head>
 
