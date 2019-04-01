@@ -56,6 +56,10 @@
                     <button type="submit" id="comment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Comment</button>
                     </form>
                 {% endif %}
+
+                <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
+                        <i class="fas fa-edit"></i></i>
+                </a>
             </div>
 
             {% for comment in post.comments.all %}
@@ -63,7 +67,7 @@
                 <br><font size ='1'>{{ comment.date }}</font>
                 {% if request.user == comment.user %}
                 <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-home" data-cid="{{comment.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
-                    <font size='1'>delete</font></a>
+                    <i class="fas fa-trash"></i></a>
                 {% endif %}
             </p>
             {% endfor %}

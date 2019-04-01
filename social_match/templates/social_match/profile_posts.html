@@ -54,7 +54,7 @@
                     {% endif %}
 
                     <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
-                        <i class="far fa-edit"></i>
+                        <i class="fas fa-edit"></i></i>
                     </a>
                 </div>
                     {% for comment in post.comments.all %}
@@ -62,7 +62,7 @@
                         {{ comment.text }} <br><font size ='1'>{{ comment.date }}</font>
                         {% if request.user == comment.user %}
                             <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-profile" data-cid="{{comment.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="primary">
-                                <font size='1'>delete</font></a>
+                                <i class="fas fa-trash"></i></a>
                         {% endif %}
                     </p>
                     {% endfor %}
