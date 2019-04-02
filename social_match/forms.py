@@ -2,12 +2,14 @@ from django import forms
 from .models import *
 
 class PostForm(forms.ModelForm):
+    message = forms.CharField(widget=forms.Textarea)
     class Meta:
         model = Post
         fields = ('headline', 'message')
 
 class EditPostForm(forms.ModelForm):
     post_active = forms.BooleanField(required=False)
+    message = forms.CharField(widget=forms.Textarea)
     class Meta:
         model = Post
         fields = {'headline', 'message', 'post_active'}

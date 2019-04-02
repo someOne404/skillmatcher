@@ -57,9 +57,11 @@
                     </form>
                 {% endif %}
 
+                {% if post.user == user %}
                 <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
                         <i class="fas fa-edit"></i></i>
                 </a>
+                {% endif %}
             </div>
 
             {% for comment in post.comments.all %}
