@@ -304,14 +304,12 @@ def follow(request, user_id):
     self = request.user
     followed_user = User.objects.get(id=user_id)
     Follow.objects.add_follower(self, followed_user)
-    #url = reverse('/profile', kwargs={'user_id': user_id})
-    return HttpResponseRedirect('/profile')
-
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def block(request, user_id):
     self = request.user
     blocked_user = User.objects.get(id=user_id)
     Block.objects.add_block(self, blocked_user)
-    return HttpResponseRedirect('/profile')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
