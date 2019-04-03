@@ -23,6 +23,7 @@ from django.contrib.auth.views import LogoutView, LoginView
 import notifications.urls
 
 from . import views
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),

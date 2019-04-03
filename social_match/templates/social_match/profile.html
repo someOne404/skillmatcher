@@ -14,15 +14,36 @@
 {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}
       
-                <br />
-                {% if viewing_user == user %}
-                <div class='centerDiv'>
-                <form class="centerDiv" action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                    {% csrf_token %}
-                    <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                </form>
+            <br />
+            {% if viewing_user == user %}
+            <div style="display: flex">
+                <div>
+                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                        {% csrf_token %}
+                        <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
+                    </form>
                 </div>
-                {% endif %}
+                <div>
+                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                        {% csrf_token %}
+                        <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
+                    </form> 
+
+                    
+                    {% comment %} <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="myfile">
+                        <button class="btn btn-light" type="submit">Upload</button>
+                    </form>
+
+                    {% if uploaded_file_url %}
+                        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                    {% endif %} {% endcomment %}
+
+
+                </div>
+            </div>
+            {% endif %}
 
             </div>
   
@@ -86,7 +107,7 @@
 
 
             <hr>
-
+                <h2 class="display-5">Contact:</h4>
                 <h5>Email: {{ viewing_user.email }}</h5>
                 <h5>Phone number: {{ viewing_user.phone }}</h5>
 
