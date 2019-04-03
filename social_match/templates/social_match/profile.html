@@ -107,7 +107,7 @@
 
 
             <hr>
-                <h2 class="display-5">Contact:</h4>
+                <h4 class="display-5">Contact:</h4>
                 <h5>Email: {{ viewing_user.email }}</h5>
                 <h5>Phone number: {{ viewing_user.phone }}</h5>
 
@@ -115,16 +115,14 @@
 
 
         </div>
-
-    <div id="profile_posts">
-        {% include 'social_match/profile_posts.html' %}
     </div>
 
         <!-- Displaying Notifications -->
-    <div class="col-sm" align="left" style="overflow-y: auto; height:400px;">
     {% if viewing_user == user %}
-        <h1>Notifications</h1>
+        <hr>
+        <h1 align="center">Notifications</h1>
         {% if notifications %}
+        <div align="center" class="col-sm" align="left" style="overflow-y: auto; height:400px;">
         {% for notification in notifications %}
         <div class="card" style="width: 30rem;">
             <div class="card-body">
@@ -141,18 +139,21 @@
                 {% csrf_token %}
                 <input type="hidden" name="return_to" value="profile">
                 {% if notification.unread %}
-                <input class="btn btn-light" type="submit" value="Mark as read" name="read">
+                <input class="btn btn-light btn-sm" type="submit" value="Mark as read" name="read">
                 {% endif %}
-                <input class="btn btn-light" type="submit" value="Delete" name="delete">
+                <input class="btn btn-light btn-sm" type="submit" value="Delete" name="delete">
             </form>
             </div>
         </div>
-        {% endfor %}
+            {% endfor %} {% else %} <p align="center">No Notifications.</p>
         {% endif %}
     {% endif %}
     </div>
 
+    <div id="profile_posts">
+        {% include 'social_match/profile_posts.html' %}
     </div>
+
 </div>
 
 {% endif %}

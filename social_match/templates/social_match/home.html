@@ -38,11 +38,12 @@
                         <h5>Posts I've commented on: {{ form.commented }}</h5>
                     </div>
 
-                    <button class="btn btn-primary" type="submit" name="filter">Filter</button>
-                    <button class="btn btn-primary" type="submit" name="clear">Clear Filter</button>
+                    <button class="btn btn-primary btn-sm" type="submit" name="filter">Filter</button>
+                    <button class="btn btn-primary btn-sm" type="submit" name="clear">Clear Filter</button>
                 </form>
 
                 <br />
+                <hr>
                 <!-- Displaying Notifications -->
                 <h1>You have <strong>{{ notifications|length }}</strong> unread notification{{notifications|pluralize}}.</h1>
                 {% if notifications %}
@@ -62,8 +63,8 @@
                         <form class="centerDiv" action="{% url 'social_match:notifications' notification.id %}" method="GET">
                             {% csrf_token %}
                             <input type="hidden" name="return_to" value="home">
-                            <input class="btn btn-light" type="submit" value="Mark as read" name="read">
-                            <input class="btn btn-light" type="submit" value="Delete" name="delete">
+                            <input class="btn btn-light btn-sm" type="submit" value="Mark as read" name="read">
+                            <input class="btn btn-light btn-sm" type="submit" value="Delete" name="delete">
                         </form>
                     </div>
                 </div>
