@@ -17,6 +17,7 @@ urlpatterns = [
     path('editprofile/<int:user_id>/', views.editprofile, name="editprofile"),
     path('likepost/', views.likepost, name="likepost"),
     path('commentpost/', views.commentpost, name="commentpost"),
+    path('notifications/<int:notification_id>', views.notifications, name="notifications"),
     path('editpost/<int:post_id>/', views.editpost, name="editpost"),
     path('api/classes/', views.classlist, name='classlist'),
     path('api/majors/', views.majorlist, name='majorlist'),

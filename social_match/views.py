@@ -13,6 +13,10 @@ import json
 from django.db.models import Q
 from django.core.paginator import Paginator
 
+from django.db.models.signals import post_save, m2m_changed
+from notifications.signals import notify
+from notifications.models import *
+
 from .models import *
 from .filters import UserFilter
 from .forms import *
@@ -38,6 +42,15 @@ def home(request):
     posts_per_page = 20
     post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
 
+    if request.user.is_authenticated:
+        request_user = User.objects.get(id=request.user.id)
+        notifications = Notification.objects.filter(recipient=request_user, unread=True)
+    else:
+        notifications = []
+
+    #show unread notifications on home
+    #show all notifications on profile
+
     context = {
         'post_list': post_list,
         'form': form,
@@ -45,7 +58,8 @@ def home(request):
         'names': namestr,
         'liked': liked,
         'commented': commented,
-        'filtered':filtered,
+        'filtered': filtered,
+        'notifications': notifications,
     }
     return render(request, template_name, context)
 
@@ -74,6 +88,8 @@ def profile(request, user_id=None):
     posts_per_page = 5
     post_list = get_profile_post_list(viewing_user, posts_per_page, request.GET.get('p'))
 
+    notifications = Notification.objects.filter(recipient=viewing_user)
+
     template_name = './social_match/profile.html'
 
     #uploading files
@@ -92,7 +108,8 @@ def profile(request, user_id=None):
     return render(request, template_name, {
         'user': user,
         'viewing_user': viewing_user,
-        'post_list':post_list,
+        'post_list': post_list,
+        'notifications': notifications,
     })
 
 def createpost(request):
@@ -261,6 +278,19 @@ def commentpost(request):
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})
 
+def notifications(request, notification_id):
+    notification = get_object_or_404(Notification, id=notification_id)
+    if 'read' in request.GET:
+        notification.mark_as_read()
+    if 'delete' in request.GET:
+        notification.delete()
+
+    return_to = request.GET.get("return_to")
+    if return_to == "home":
+        return HttpResponseRedirect('/home')
+    else:
+        return HttpResponseRedirect('/profile')
+
 def editprofile(request, user_id):
     template_name = './social_match/editprofile.html'
     user = User.objects.get(id=user_id)
@@ -295,7 +325,6 @@ def classlist(request):
     data = [{"name": str(c)+": " + c.name} for c in courses]
     json_data = json.dumps(data)
     return HttpResponse(json_data, content_type='application/json')
-
 
 def majorlist(request):
     majors = Major.objects.all()
@@ -413,3 +442,36 @@ def get_filter_form_results(request):
             commented = False
 
     return keywordstr, namestr, liked, commented, filtered
+
+# "save" signal handling for comments created on Posts
+def commentHandler(sender, instance, created, **kwargs):
+    user_sender = User.objects.get(id=instance.user.id)
+    user_recipient = User.objects.get(id=instance.post.user.id)
+    post = Post.objects.get(id=instance.post.id)
+
+    if user_sender != user_recipient:
+        # target: post commented on
+        # action_object: comment created on post
+        # sender: user commenting on post
+        # recipient: user receiving notification
+        # verb: action description
+        notify.send(target=post, action_object=instance, sender=user_sender, recipient=user_recipient, verb='commented')
+
+post_save.connect(commentHandler, sender=Comment)
+
+# "save" signal handling for likes added to Posts
+def likeHandler(sender, instance, action, pk_set, **kwargs):
+    if action == "post_add":
+        for i in pk_set: # always a single element in this set
+            sender_id = i
+        user_sender = User.objects.get(id=sender_id)
+        user_recipient = User.objects.get(id=instance.user.id)
+
+        if user_sender != user_recipient:
+            # target: post liked
+            # sender: user liking post
+            # recipient: user receiving notification
+            # verb: action description
+            notify.send(target=instance, sender=user_sender, recipient=user_recipient, verb='liked')
+
+m2m_changed.connect(likeHandler, sender=Post.likes.through)

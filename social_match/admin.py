@@ -5,10 +5,15 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.admin import ModelAdmin
 
 from social_match.models import *
+from notifications.models import *
 
 class PostInline(admin.TabularInline):
     model = Post
-    extra = 1
+    extra = 0
+
+class NotificationInline(admin.TabularInline):
+    model = Notification
+    extra = 0
 
 class UserAdmin(BaseUserAdmin):
 	form = auth_forms.UserChangeForm
@@ -22,7 +27,7 @@ class UserAdmin(BaseUserAdmin):
 									  	'date_joined', 'last_login', 'status_active')}),
 		('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions',)}),
 	)
-	inlines = [PostInline]
+	inlines = [NotificationInline, PostInline]
 	add_fieldsets = (
 		(None, {
 			'classes': ('wide',),
