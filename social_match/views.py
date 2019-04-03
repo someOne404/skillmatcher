@@ -306,6 +306,12 @@ def follow(request, user_id):
     Follow.objects.add_follower(self, followed_user)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+def following(request):
+    return render(request, './social_match/following.html')
+
+def follower(request):
+    return render(request, './social_match/follower.html')
+
 def block(request, user_id):
     self = request.user
     blocked_user = User.objects.get(id=user_id)
