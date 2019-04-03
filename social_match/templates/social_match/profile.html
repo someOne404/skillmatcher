@@ -95,6 +95,33 @@
 
         </div>
     </div>
+
+    <!-- Displaying Notifications -->
+    {% if viewing_user == user %}
+        <h1>Notifications</h1>
+        {% if notifications %}
+        {% for notification in notifications %}
+        {% if notification.verb == "liked" %}
+            <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> liked your post:</h5>
+            {{notification.target.headline}}
+        {% endif %}
+        {% if notification.verb == "commented" %}
+            <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> commented on your post:</h5>
+            {{notification.target.headline}}<br>
+            {{notification.action_object.text}}
+        {% endif %}
+        <form class="centerDiv" action="{% url 'social_match:notifications' notification.id %}" method="GET">
+            {% csrf_token %}
+            <input type="hidden" name="return_to" value="profile">
+            {% if notification.unread %}
+            <input class="btn btn-light" type="submit" value="Mark as read" name="read">
+            {% endif %}
+            <input class="btn btn-light" type="submit" value="Delete" name="delete">
+        </form><br><br>
+        {% endfor %}
+        {% endif %}
+    {% endif %}
+
     <div id="profile_posts">
         {% include 'social_match/profile_posts.html' %}
     </div>
