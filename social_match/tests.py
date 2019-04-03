@@ -5,6 +5,8 @@ from social_match.forms import *
 from django.urls import reverse
 from django.shortcuts import render
 
+from notifications.models import *
+
 from django.utils import timezone
 import datetime
 
@@ -563,3 +565,86 @@ class FilterPostTest(TestCase):
         expected_posts = []
 
         self.assertQuerysetEqual(posts, expected_posts)
+
+class NotificationTest(TestCase):
+    def create_test_user1(self):
+        return User.objects.create(
+            first_name="Test",
+            last_name="User",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='test@virginia.edu',
+            username='1',
+        )
+
+    def create_test_user2(self):
+        return User.objects.create(
+            first_name="Test",
+            last_name="User",
+            phone="+1234567890",
+            class_standing=User.first_year,
+            graduation_year=2019,
+            email='test@virginia.edu',
+            username='2',
+        )
+
+    def test_comment_from_another_user_sends_notification(self):
+        headline = 'headline'
+        message = 'message'
+        user1 = self.create_test_user1()
+        post = create_post(headline, message, user1, days=0)
+
+        notifications = Notification.objects.filter(recipient=user1)
+        self.assertEqual(len(notifications), 0)
+
+        text = 'comment'
+        user2 = self.create_test_user2()
+        create_comment(text, user2, post)
+
+        notifications = Notification.objects.filter(recipient = user1)
+        self.assertEqual(len(notifications), 1)
+
+    def test_comment_from_self_sends_no_notification(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user1()
+        post = create_post(headline, message, user, days=0)
+
+        notifications = Notification.objects.filter(recipient=user)
+        self.assertEqual(len(notifications), 0)
+
+        text = 'comment'
+        create_comment(text, user, post)
+
+        notifications = Notification.objects.filter(recipient = user)
+        self.assertEqual(len(notifications), 0)
+
+    def test_like_from_another_user_sends_notification(self):
+        headline = 'headline'
+        message = 'message'
+        user1 = self.create_test_user1()
+        post = create_post(headline, message, user1, days=0)
+
+        notifications = Notification.objects.filter(recipient=user1)
+        self.assertEqual(len(notifications), 0)
+
+        user2 = self.create_test_user2()
+        post.likes.add(user2.id)
+
+        notifications = Notification.objects.filter(recipient = user1)
+        self.assertEqual(len(notifications), 1)
+
+    def test_like_from_self_sends_no_notification(self):
+        headline = 'headline'
+        message = 'message'
+        user = self.create_test_user1()
+        post = create_post(headline, message, user, days=0)
+
+        notifications = Notification.objects.filter(recipient=user)
+        self.assertEqual(len(notifications), 0)
+
+        post.likes.add(user.id)
+
+        notifications = Notification.objects.filter(recipient = user)
+        self.assertEqual(len(notifications), 0)
