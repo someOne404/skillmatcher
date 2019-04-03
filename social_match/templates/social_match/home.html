@@ -44,8 +44,9 @@
 
                 <br />
                 <!-- Displaying Notifications -->
-                <h1>You have <strong>{{ notifications|length }}</strong> unread notifications.</h1>
+                <h1>You have <strong>{{ notifications|length }}</strong> unread notification{{notifications|pluralize}}.</h1>
                 {% if notifications %}
+                <div style="overflow-y: auto; height:400px;">
                 {% for notification in notifications %}
                 <div class="card" style="width: 30rem;">
                     <div class="card-body">
@@ -67,6 +68,7 @@
                     </div>
                 </div>
                 {% endfor %}
+                </div>
                 {% endif %}
             </div>
         </div>

@@ -1,7 +1,14 @@
-<div align="center">
+<div class="col-sm">
+    <h1>
+    {% if viewing_user == user %}
+        Your
+    {% endif %}
+        Posts
+    </h1>
         {% if post_list %}
         {% for post in post_list %}
-            <div class="card" align="left" style="width: 70rem;">
+        {% if viewing_user == user or post.post_active %}
+            <div class="card" align="left" style="width: 55rem;">
                 <div class="card-body">
                     <h5 class="card-title">{{ post.headline }}
                     <a href="{% url 'social_match:editpost' post.id %}" method="get" name="edit_post" class="primary">
@@ -54,6 +61,7 @@
                         {% endfor %}
                 </div>
             </div>
+        {% endif %}
         {% endfor %}
         <div class="pagination">
             <span class="step-links">

@@ -14,17 +14,17 @@
 {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}
       
-            <br />
-            {% if viewing_user == user %}
-            <div class='centerDiv'>
+                <br />
+                {% if viewing_user == user %}
+                <div class='centerDiv'>
                 <form class="centerDiv" action="{% url 'social_match:editprofile' user.id %}" method="GET">
                     {% csrf_token %}
                     <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
                 </form>
-            </div>
-            {% endif %}
+                </div>
+                {% endif %}
 
-        </div>
+            </div>
   
             <div class="col-md-8 col-sm-12 mb-3">
                 <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
@@ -94,38 +94,44 @@
 
 
         </div>
-    </div>
-
-    <!-- Displaying Notifications -->
-    {% if viewing_user == user %}
-        <h1>Notifications</h1>
-        {% if notifications %}
-        {% for notification in notifications %}
-        {% if notification.verb == "liked" %}
-            <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> liked your post:</h5>
-            {{notification.target.headline}}
-        {% endif %}
-        {% if notification.verb == "commented" %}
-            <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> commented on your post:</h5>
-            {{notification.target.headline}}<br>
-            {{notification.action_object.text}}
-        {% endif %}
-        <form class="centerDiv" action="{% url 'social_match:notifications' notification.id %}" method="GET">
-            {% csrf_token %}
-            <input type="hidden" name="return_to" value="profile">
-            {% if notification.unread %}
-            <input class="btn btn-light" type="submit" value="Mark as read" name="read">
-            {% endif %}
-            <input class="btn btn-light" type="submit" value="Delete" name="delete">
-        </form><br><br>
-        {% endfor %}
-        {% endif %}
-    {% endif %}
 
     <div id="profile_posts">
         {% include 'social_match/profile_posts.html' %}
     </div>
 
+        <!-- Displaying Notifications -->
+    <div class="col-sm" align="left" style="overflow-y: auto; height:400px;">
+    {% if viewing_user == user %}
+        <h1>Notifications</h1>
+        {% if notifications %}
+        {% for notification in notifications %}
+        <div class="card" style="width: 30rem;">
+            <div class="card-body">
+            {% if notification.verb == "liked" %}
+                <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> liked your post:</h5>
+                {{notification.target.headline}}
+            {% endif %}
+            {% if notification.verb == "commented" %}
+                <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> commented on your post:</h5>
+                {{notification.target.headline}}<br>
+                {{notification.action_object.text}}
+            {% endif %}
+            <form class="centerDiv" action="{% url 'social_match:notifications' notification.id %}" method="GET">
+                {% csrf_token %}
+                <input type="hidden" name="return_to" value="profile">
+                {% if notification.unread %}
+                <input class="btn btn-light" type="submit" value="Mark as read" name="read">
+                {% endif %}
+                <input class="btn btn-light" type="submit" value="Delete" name="delete">
+            </form>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    {% endif %}
+    </div>
+
+    </div>
 </div>
 
 {% endif %}
