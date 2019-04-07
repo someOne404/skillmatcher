@@ -65,7 +65,7 @@ def home(request):
 
 def search(request):
     user_list = User.objects.all()
-    print(user_list)
+    #print(user_list)
     # user_list.remove(request.user)
 
     user_filter = UserFilter(request.GET, queryset=user_list)
@@ -302,9 +302,21 @@ def minorlist(request):
 
 def follow(request, user_id):
     self = request.user
-    followed_user = User.objects.get(id=user_id)
-    Follow.objects.add_follower(self, followed_user)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    other = User.objects.get(id=user_id)
+
+    if other not in Follow.objects.following(self):
+        Follow.objects.add_follower(self, other)
+    else:
+        Follow.objects.remove_follower(self, other)
+
+    following_list = Follow.objects.following(self)
+    check_follow = False
+    if other in following_list:
+        check_follow = True
+
+    #print(following_list)
+    #print(check_follow)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': check_follow})
 
 def following(request):
     return render(request, './social_match/following.html')
@@ -314,8 +326,19 @@ def follower(request):
 
 def block(request, user_id):
     self = request.user
-    blocked_user = User.objects.get(id=user_id)
-    Block.objects.add_block(self, blocked_user)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    other = User.objects.get(id=user_id)
+    if other not in Block.objects.blocking(self):
+        Block.objects.add_block(self, other)
+    else:
+        Block.objects.remove_block(self, other)
+
+    blocking_list = Block.objects.blocking(self)
+    check_block = False
+    if other in blocking_list:
+        check_block = True
+
+    #print(blocking_list)
+    #print(check_block)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': check_block})
 
 

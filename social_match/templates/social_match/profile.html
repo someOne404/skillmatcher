@@ -1,6 +1,7 @@
 {% extends 'social_match/base.html' %}
 {% load static %}
 {% block content %}
+{% load friendshiptags %}
 {% if viewing_user.is_authenticated %}
 
 
@@ -13,7 +14,7 @@
                     <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
 {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}
-      
+
             <br />
             {% if viewing_user == user %}
             <div class='centerDiv'>
@@ -23,10 +24,17 @@
                 </form>
             </div>
                 {% else %}
-                <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow" class="primary"><button type="button" class="btn btn-info">Follow</button></a>
-                <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block" class="primary"><button type="button" class="btn btn-info">Block</button></a>
+                    {% if check_follow == false %}
+                        <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow/Unfollow</button></a>
+                    {% elif check_follow == true %}
+                        <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
+                    {% endif %}
+                    {% if check_block == false %}
+                        <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block/Unblock</button></a>
+                    {% elif check_block == true %}
+                        <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
+                    {% endif %}
                 {% endif %}
-
         </div>
   
             <div class="col-md-8 col-sm-12 mb-3">
