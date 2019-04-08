@@ -17,8 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
+from django.conf.urls import url
 from django.contrib.auth.views import LogoutView, LoginView
+
+import notifications.urls
+
 from . import views
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +32,5 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', include('social_match.urls')),
     path('inactive_user/', views.inactive_user, name='inactive_user'),
+    url('^inbox/notifications/', include(notifications.urls,namespace='notifications')),
 ]

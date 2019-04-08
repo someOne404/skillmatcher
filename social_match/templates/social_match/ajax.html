@@ -1,0 +1,191 @@
+<script type="text/javascript">
+        $(document).ready(function(event){
+            $(document).on('click', '#like-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var k = $(this).attr('data-k');
+                var n = $(this).attr('data-n');
+                var l = $(this).attr('data-l');
+                var c = $(this).attr('data-c');
+                var f = $(this).attr('data-f');
+                var t = $(this).attr('data-t');
+                var p = $(this).attr('data-p');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:likepost" %}',
+                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        });
+
+        $(document).ready(function(event){
+            $(document).on('click', '#like-profile', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var u = $(this).attr('data-u');
+                var t = $(this).attr('data-t');
+                var p = $(this).attr('data-p');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:likepost" %}',
+                    data: {'id':pk, 'p':p, 't':t, 'u':u, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#profile_posts').html(response)
+                        console.log($('#profile_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        });
+
+        $(document).on('click', '#comment-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var k = $(this).attr('data-k');
+                var n = $(this).attr('data-n');
+                var l = $(this).attr('data-l');
+                var c = $(this).attr('data-c');
+                var f = $(this).attr('data-f');
+                var t = $(this).attr('data-t');
+                var p = $(this).attr('data-p');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#comment-profile', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var u = $(this).attr('data-u');
+                var t = $(this).attr('data-t');
+                var p = $(this).attr('data-p');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 't':t, 'u':u, 'p':p, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#profile_posts').html(response)
+                        console.log($('#profile_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#submitcomment-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var k = $(this).attr('data-k');
+                var n = $(this).attr('data-n');
+                var l = $(this).attr('data-l');
+                var c = $(this).attr('data-c');
+                var f = $(this).attr('data-f');
+                var p = $(this).attr('data-p');
+                var t = $(this).attr('data-t');
+                var text = $('#comment-text').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+         $(document).on('click', '#submitcomment-profile', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('value');
+                var u = $(this).attr('data-u');
+                var t = $(this).attr('data-t');
+                var p = $(this).attr('data-p');
+                var text = $('#comment-text').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 't':t, 'u':u, 'p':p, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#profile_posts').html(response)
+                        console.log($('#profile_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+         $(document).on('click', '#deletecomment-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-cid');
+                var k = $(this).attr('data-k');
+                var n = $(this).attr('data-n');
+                var l = $(this).attr('data-l');
+                var c = $(this).attr('data-c');
+                var f = $(this).attr('data-f');
+                var t = $(this).attr('data-t');
+                var p = $(this).attr('data-p');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'deletecomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_posts').html(response)
+                        console.log($('#home_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+         $(document).on('click', '#deletecomment-profile', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-cid');
+                var u = $(this).attr('data-u');
+                var t = $(this).attr('data-t');
+                var p = $(this).attr('data-p');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:commentpost" %}',
+                    data: {'id':pk, 't':t, 'u':u, 'p':p, 'type':'deletecomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#profile_posts').html(response)
+                        console.log($('#profile_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+    </script>

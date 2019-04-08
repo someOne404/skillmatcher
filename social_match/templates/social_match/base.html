@@ -1,9 +1,15 @@
+<!-- Citations -->
+<!-- Ajax: https://www.youtube.com/watch?v=VoWw1Y5qqt8 -->
+<!-- Ajax: https://www.youtube.com/watch?v=wh2Nzc9wKXM -->
 {% load static %}
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- For Logo -->
+    <link rel="shortcut icon" href="{% static 'images/lucky13.ico' type='image/x-icon' %}">
+
     <!-- For Home page -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
 
@@ -27,67 +33,7 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.3/js/mdb.min.js"></script>
     <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function(event){
-            $(document).on('click', '#like', function(event){
-                event.preventDefault();
-                var pk = $(this).attr('value');
-                var set = $(this).attr('data-value');
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "social_match:likepost" %}',
-                    data: {'id':pk, 'current_set':set, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                    dataType: 'json',
-                    success: function(response){
-                        $('#home_posts').html(response)
-                        console.log($('#home_posts').html(response['form']));
-                    },
-                    error: function(rs, e){
-                        console.log(rs.responseText);
-                    },
-                });
-            });
-        });
-
-        $(document).on('click', '#comment', function(event){
-                event.preventDefault();
-                var pk = $(this).attr('value');
-                var set = $(this).attr('data-value');
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'current_set':set, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                    dataType: 'json',
-                    success: function(response){
-                        $('#home_posts').html(response)
-                        console.log($('#home_posts').html(response['form']));
-                    },
-                    error: function(rs, e){
-                        console.log(rs.responseText);
-                    },
-                });
-            });
-
-        $(document).on('click', '#submitcomment', function(event){
-                event.preventDefault();
-                var pk = $(this).attr('value');
-                var set = $(this).attr('data-value');
-                var text = $('#comment-text').val();
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'current_set':set, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                    dataType: 'json',
-                    success: function(response){
-                        $('#home_posts').html(response)
-                        console.log($('#home_posts').html(response['form']));
-                    },
-                    error: function(rs, e){
-                        console.log(rs.responseText);
-                    },
-                });
-            });
-    </script>
+    {% include 'social_match/ajax.html' %}
 </head>
 
 <body>
@@ -122,7 +68,6 @@
                         <div class="dropdown-menu dropdown-menu-right dropdown-info"
                             aria-labelledby="navbarDropdownMenuLink-4">
                             <a class="dropdown-item" href="{% url 'social_match:profile' %}">My Profile</a>
-                            <a class="dropdown-item" href="{% url 'social_match:myposts' %}">My Posts</a>
 
                             <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
                         </div>
@@ -130,11 +75,10 @@
                 </ul>
             </div>
         </nav>
-        {% block content %}
-
-        {% endblock %}
-
+            {% block content %}
+            {% endblock %}
         {% else %}
+        <img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" />
         <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
             <a class="navbar-brand" href="#">Lucky 13's Social Matcher</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -145,7 +89,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'social_match:about' %}">About Us
+                        <a class="nav-link" href="/about/">About Us
                         </a>
                     </li>
                 </ul>
@@ -154,8 +98,7 @@
                 </ul>
             </div>
         </nav>
-    </div>
-    <img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" />
+    </div>    
     </div>
     {% endif %}
 
@@ -203,12 +146,12 @@
 
             <!-- Copyright -->
             <div class="footer-copyright text-center py-3">&copy; 2019 Copyright:
-                <a href="#"> Lucky 13</a>
+                <a href="/about/"> Lucky 13</a>
             </div>
             <!-- Copyright -->
 
-        </footer>
-    </div>
+        </footer> 
+    </div> 
 
 
 </body>

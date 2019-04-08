@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'social_match',
     'social_django',
     'widget_tweaks',
+    'notifications'
 ]
 
 MIDDLEWARE = [
@@ -75,6 +76,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lucky13.wsgi.application'
 
+# Notifications
+# https://github.com/django-notifications/django-notifications
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases

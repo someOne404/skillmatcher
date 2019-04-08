@@ -4,18 +4,17 @@ from dal import autocomplete
 
 
 class PostForm(forms.ModelForm):
-	class Meta:
-		model = Post
-		fields = ('headline', 'message')
-
+    message = forms.CharField(widget=forms.Textarea)
+    class Meta:
+        model = Post
+        fields = ('headline', 'message')
 
 class EditPostForm(forms.ModelForm):
-	post_active = forms.BooleanField(required=False)
-
-	class Meta:
-		model = Post
-		fields = {'headline', 'message', 'post_active'}
-
+    post_active = forms.BooleanField(required=False)
+    message = forms.CharField(widget=forms.Textarea)
+    class Meta:
+        model = Post
+        fields = {'headline', 'message', 'post_active'}
 
 class CommentPostForm(forms.ModelForm):
 	class Meta:
@@ -29,7 +28,14 @@ class CommentPostForm(forms.ModelForm):
 		}
 
 
+class PostSearchForm(forms.Form):
+    name = forms.CharField(max_length=50, required=False)
+    keywords = forms.CharField(max_length=200, required=False)
+    liked = forms.BooleanField(required=False)
+    commented = forms.BooleanField(required=False)
+
 class EditProfileForm(forms.ModelForm):
+  status_active = forms.BooleanField(required=False)
 	class Meta:
 		model = User
 		fields = ('first_name', 'last_name', 'phone',
@@ -56,7 +62,6 @@ class EditProfileForm(forms.ModelForm):
 				url='social_match:interest-autocomplete',
 			)
 		}
-
 
 class ProfileForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):

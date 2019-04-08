@@ -1,8 +1,163 @@
-{% extends 'social_match/base.html' %}
-{% block content %}
-{% if user.is_authenticated %}
-<div>
-    About Us
+{% load static %}
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- For Logo -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' type='image/x-icon' %}">
+
+    <!-- For Home page -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}">
+
+    <title>Skill Matching</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.3/css/mdb.min.css" rel="stylesheet">
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.3/js/mdb.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<div><img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" />
+        <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
+            <a class="navbar-brand" href="/">Lucky 13's Social Matcher</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent-555" aria-controls="navbarSupportedContent-555"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent-555">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about/">About Us
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <a class="btn btn-link" href="{% url 'social:begin' 'google-oauth2' %}">Login</a>
+                </ul>
+            </div>
+        </nav>
+    <h1 style="margin: auto; width: 28%;">Meet Team Lucky13</h1>
+    <br/>
+    <br/>
+
+    <div class="container">
+  <div class="row">
+    <div class="col-sm">
+        <div class="card card-cascade">
+            <div class="view view-cascade overlay">
+                <img class="card-img-top" src="{% static 'images/vivian.jpg' %}" alt="Card image cap">
+            </div>
+            <div class="card-body card-body-cascade text-center">
+                <h4 class="card-title"><strong>Vivian Lin</strong></h4>
+                <h6 class="font-weight-bold indigo-text py-2">Scrum Master</h6>
+                {% comment %} <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam. {% endcomment %}
+                {% comment %} </p> {% endcomment %}
+                <a type="button" href="https://github.com/vwl4ac"><i class="fab fa-github"></i></i></a>
+                <a type="button" href="https://www.linkedin.com/in/vivian-w-lin/detail/treasury/summary/?entityUrn=urn%3Ali%3Afs_treasuryMedia%3A(ACoAACVM95IBPqhiNt3QPxyqk9HDWUhAEZp84kM%2C1552073627339)&section=summary&treasuryCount=1"><i class="fab fa-linkedin"></i></a>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+        <div class="card card-cascade">
+            <div class="view view-cascade overlay">
+                <img class="card-img-top" src="{% static 'images/angie.jpg' %}" alt="Card image cap">
+            </div>
+            <div class="card-body card-body-cascade text-center">
+                <h4 class="card-title"><strong>Angie Lavan</strong></h4>
+                <h6 class="font-weight-bold indigo-text py-2">Testing Manager</h6>
+                {% comment %} <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam. {% endcomment %}
+                {% comment %} </p> {% endcomment %}
+                <a type="button" href="https://github.com/AngelicaLavan"><i class="fab fa-github"></i></i></a>
+                <a type="button" href="https://www.linkedin.com/in/angelica-lavan/"><i class="fab fa-linkedin"></i></a>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+      <div class="card card-cascade">
+            <div class="view view-cascade overlay">
+                <img class="card-img-top" src="{% static 'images/burgard3.jpg' %}" alt="Card image cap">
+            </div>
+            <div class="card-body card-body-cascade text-center">
+                <h4 class="card-title"><strong>Burgard Lu</strong></h4>
+                <h6 class="font-weight-bold indigo-text py-2">Config. Manager</h6>
+                {% comment %} <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam. {% endcomment %}
+                {% comment %} </p> {% endcomment %}
+                <a type="button" href="https://github.com/someOne404"><i class="fab fa-github"></i></i></a>
+                <a type="button" href="https://www.linkedin.com/in/jiayi-l-2b918aa1/"><i class="fab fa-linkedin"></i></a>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+      <div class="card card-cascade">
+            <div class="view view-cascade overlay">
+                <img class="card-img-top" src="{% static 'images/stephen.jpg' %}" alt="Card image cap">
+            </div>
+            <div class="card-body card-body-cascade text-center">
+                <h4 class="card-title"><strong>Stephen Shamaiengar</strong></h4>
+                <h6 class="font-weight-bold indigo-text py-2">Software Architect</h6>
+                {% comment %} <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam. {% endcomment %}
+                {% comment %} </p> {% endcomment %}
+                <a type="button" href="https://github.com/sshamaiengar"><i class="fab fa-github"></i></i></a>
+                <a type="button" href="https://www.linkedin.com/in/sshamaiengar/"><i class="fab fa-linkedin"></i></a>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm">
+      <div class="card card-cascade">
+            <div class="view view-cascade overlay">
+                <img class="card-img-top" src="{% static 'images/sungjoon2.jpg' %}" alt="Card image cap">
+            </div>
+            <div class="card-body card-body-cascade text-center">
+                <h4 class="card-title"><strong>Sung Joon Park</strong></h4>
+                <h6 class="font-weight-bold indigo-text py-2">Req. Manager</h6>
+                {% comment %} <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus, ex, recusandae. Facere modi sunt, quod quibusdam. {% endcomment %}
+                {% comment %} </p> {% endcomment %}
+                <a type="button" href="https://github.com/sp3bk"><i class="fab fa-github"></i></i></a>
+                <a type="button" href="https://www.linkedin.com/in/sung-joon-park/"><i class="fab fa-linkedin"></i></a>
+
+            </div>
+        </div>
+    </div>
+  </div>
 </div>
-{% endif %}
-{% endblock %}
+   
+</div>
+
+
+<div class="footer">
+        <footer class="page-footer font-small orange lighten-1">
+            <!-- Footer Links -->
+            <div class="container-fluid text-center text-md-left">
+            </div>
+            <!-- Footer Links -->
+            <!-- Copyright -->
+            <div class="footer-copyright text-center py-3">&copy; 2019 Copyright:
+                <a href="/about/"> Lucky 13</a>
+            </div>
+            <!-- Copyright -->
+
+        </footer>
+    </div>
+
+</body>
+</html>
