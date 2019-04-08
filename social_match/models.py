@@ -20,7 +20,7 @@ class Course(models.Model):
     number = models.IntegerField(validators=[MaxValueValidator(9999), MinValueValidator(100)])
     name = models.CharField(max_length=200)
     def __str__(self):
-        return "{} {}".format(self.department, self.number)
+        return "{} {}: {}".format(self.department, self.number, self.name)
 
 
 class Skill(models.Model):

@@ -1,5 +1,6 @@
 {% extends 'social_match/base.html' %}
 {% block content %}
+    {{ form.media }}
 <div>
     <h2>Edit your Profile!</h2>
     <form method="POST">{% csrf_token %}
