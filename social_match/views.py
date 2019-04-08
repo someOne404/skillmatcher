@@ -86,6 +86,18 @@ def profile(request, user_id=None):
         except User.DoesNotExist:
             return render(request, './social_match/404.html')
 
+    following_list = Follow.objects.following(user)
+    check_follow = False
+    if viewing_user in following_list:
+        check_follow = True
+
+    blocking_list = Block.objects.blocking(user)
+    check_block = False
+    if viewing_user in blocking_list:
+        check_block = True
+
+
+
     posts_per_page = 5
 
     max_sets = math.ceil(len(Post.objects.filter(
@@ -130,6 +142,8 @@ def profile(request, user_id=None):
         'post_list':post_list,
         'post_set':post_set,
         'max_sets':max_sets,
+        'check_follow': check_follow,
+        'check_block': check_block,
     })
 
 def createpost(request):
@@ -314,8 +328,6 @@ def follow(request, user_id):
     if other in following_list:
         check_follow = True
 
-    #print(following_list)
-    #print(check_follow)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': check_follow})
 
 def following(request):
@@ -337,8 +349,6 @@ def block(request, user_id):
     if other in blocking_list:
         check_block = True
 
-    #print(blocking_list)
-    #print(check_block)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': check_block})
 
 
