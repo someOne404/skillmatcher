@@ -37,31 +37,31 @@ class PostSearchForm(forms.Form):
 class EditProfileForm(forms.ModelForm):
     status_active = forms.BooleanField(required=False)
     class Meta:
-    model = User
-    fields = ('first_name', 'last_name', 'phone',
-              'class_standing', 'graduation_year',
-              'majors', 'minors', 'skills',
-              'interests', 'courses', 'activities')
-    widgets = {
-        'majors': autocomplete.ModelSelect2Multiple(
-            url='social_match:major-autocomplete',
-        ),
-        'minors': autocomplete.ModelSelect2Multiple(
-            url='social_match:minor-autocomplete',
-        ),
-        'courses': autocomplete.ModelSelect2Multiple(
-            url='social_match:course-autocomplete',
-        ),
-        'skills': autocomplete.ModelSelect2Multiple(
-            url='social_match:skill-autocomplete',
-        ),
-        'activities': autocomplete.ModelSelect2Multiple(
-            url='social_match:activity-autocomplete',
-        ),
-        'interests': autocomplete.ModelSelect2Multiple(
-            url='social_match:interest-autocomplete',
-        )
-    }
+        model = User
+        fields = ('first_name', 'last_name', 'phone',
+		  'class_standing', 'graduation_year',
+                  'majors', 'minors', 'skills',
+                  'interests', 'courses', 'activities')
+        widgets = {
+            'majors': autocomplete.ModelSelect2Multiple(
+                url='social_match:major-autocomplete',
+            ),
+            'minors': autocomplete.ModelSelect2Multiple(
+                url='social_match:minor-autocomplete',
+            ),
+            'courses': autocomplete.ModelSelect2Multiple(
+                url='social_match:course-autocomplete',
+            ),
+            'skills': autocomplete.ModelSelect2Multiple(
+                url='social_match:skill-autocomplete',
+            ),
+            'activities': autocomplete.ModelSelect2Multiple(
+                url='social_match:activity-autocomplete',
+            ),
+            'interests': autocomplete.ModelSelect2Multiple(
+                url='social_match:interest-autocomplete',
+            )
+        }
 
 class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
