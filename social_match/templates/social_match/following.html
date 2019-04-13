@@ -1,0 +1,9 @@
+{% extends 'social_match/base.html' %}
+{% load static %}
+{% load friendshiptags %}
+{% block content %}
+
+<p>Following: </p>
+<p>{% following request.user %}</p>
+
+{% endblock %}

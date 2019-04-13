@@ -16,6 +16,10 @@ urlpatterns = [
 	path('profile/', views.profile, name='profile'),
 	path('profile/<int:user_id>/', views.profile, name='profile'),
 	path('editprofile/<int:user_id>/', views.editprofile, name="editprofile"),
+  path('follow/<int:user_id>/', views.follow, name='follow'),
+  path('following/', views.following, name='following'),
+  path('follower/', views.follower, name='follower'),
+  path('block/<int:user_id>/', views.block, name='block'),
 	path('likepost/', views.likepost, name="likepost"),
 	path('commentpost/', views.commentpost, name="commentpost"),
   path('notifications/<int:notification_id>', views.notifications, name="notifications"),
@@ -39,3 +43,4 @@ urlpatterns = [
 	path("api/interest-autocomplete-search/", views.InterestAutocomplete.as_view(model=Interest),
 		 name='interest-search'),
 ]
+

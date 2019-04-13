@@ -1,6 +1,7 @@
 from dal import autocomplete
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from friendship.models import Follow, Block
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 
@@ -70,7 +71,7 @@ def home(request):
 
 def search(request):
     user_list = User.objects.all()
-    print(user_list)
+    #print(user_list)
     # user_list.remove(request.user)
 
     user_filter = UserFilter(request.GET, queryset=user_list)
@@ -79,6 +80,7 @@ def search(request):
 def profile(request, user_id=None):
     user = request.user
     viewing_user = user
+
     if not user_id: # accessing user's own profile
         user = request.user
         if not request.user.is_authenticated:
@@ -89,6 +91,18 @@ def profile(request, user_id=None):
             viewing_user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             return render(request, './social_match/404.html')
+
+    following_list = Follow.objects.following(user)
+    check_follow = False
+    if viewing_user in following_list:
+        check_follow = True
+
+    blocking_list = Block.objects.blocking(user)
+    check_block = False
+    if viewing_user in blocking_list:
+        check_block = True
+
+
 
     posts_per_page = 5
     post_list = get_profile_post_list(viewing_user, posts_per_page, request.GET.get('p'))
@@ -113,6 +127,12 @@ def profile(request, user_id=None):
     return render(request, template_name, {
         'user': user,
         'viewing_user': viewing_user,
+        'form': ProfileForm,
+        'post_list':post_list,
+        'post_set':post_set,
+        'max_sets':max_sets,
+        'check_follow': check_follow,
+        'check_block': check_block,
         'post_list': post_list,
         'notifications': notifications,
     })
@@ -360,7 +380,43 @@ def minorlist(request):
 	json_data = json.dumps(data)
 	return HttpResponse(json_data, content_type='application/json')
 
+def follow(request, user_id):
+    self = request.user
+    other = User.objects.get(id=user_id)
 
+    if other not in Follow.objects.following(self):
+        Follow.objects.add_follower(self, other)
+    else:
+        Follow.objects.remove_follower(self, other)
+
+    following_list = Follow.objects.following(self)
+    check_follow = False
+    if other in following_list:
+        check_follow = True
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': check_follow})
+
+def following(request):
+    return render(request, './social_match/following.html')
+
+def follower(request):
+    return render(request, './social_match/follower.html')
+
+def block(request, user_id):
+    self = request.user
+    other = User.objects.get(id=user_id)
+    if other not in Block.objects.blocking(self):
+        Block.objects.add_block(self, other)
+    else:
+        Block.objects.remove_block(self, other)
+
+    blocking_list = Block.objects.blocking(self)
+    check_block = False
+    if other in blocking_list:
+        check_block = True
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': check_block})
+  
 class MajorAutocomplete(autocomplete.Select2QuerySetView):
 	def get_queryset(self):
 		# Don't forget to filter out results depending on the visitor !
