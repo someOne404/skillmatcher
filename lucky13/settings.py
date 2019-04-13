@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'dal',
+    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'social_django',
     'widget_tweaks',
     "friendship",
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -74,6 +77,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'lucky13.wsgi.application'
 
+# Notifications
+# https://github.com/django-notifications/django-notifications
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases

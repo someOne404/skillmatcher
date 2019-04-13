@@ -1,57 +1,106 @@
+{% load static %}
+
 <div class="col-sm">
-    <h1>All Posts:</h1>
+    {% if filtered %}
+        <h1>Showing filter results for:</h1>
+        <h5>
+        name: {{ names }} <br>
+        keywords: {{ keywords }} <br>
+        posts liked: {{ liked }} <br>
+        posts commented on: {{ commented }} <br><br>
+        </h5>
+    {% else %}
+        <h1>All Posts:</h1>
+    {% endif %}
     {% if post_list %}
     {% for post in post_list %}
     <div class="card" style="width: 35rem;">
         <div class="card-body">
-            <h5 class="card-title">{{ post.headline }}</h5>
-            <p class="card-text">{{ post.message }}</p>
-            <p>Posted by: <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a> on {{post.date}}<br>
+            <h5 class="card-title" style="display: flex"> 
+                {% if viewing_user.picture %}
+                    <img height='30' width='30' src="{{ viewing_user.picture.url }}">
+                {% else %}
+                    <img height='30' width='30' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+{#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
+                {% endif %}   
+                <div style="width:10px"></div>             
+                <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}: </a>
+                {{ post.headline }}
+            </h5>  
+            <p>{{ post.message }}</p>
+            <p class="card-text">Posted on {{post.date}}<br>
                 {% if post.post_edited %}
                 Last edited on: {{post.date_edited}}
                 {% endif %}</p>
+            <div style="display: flex">
+                <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
 
-            <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
-            <form action="{% url 'social_match:likepost' %}" method="post">
-                {% csrf_token %}
-                {% if user in post.likes.all %}
-                <button type="submit" id="like" name="unlike_id" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Unlike</button>
+                <form action="{% url 'social_match:likepost' %}" method="post">
+                    {% csrf_token %}
+                    {% if user in post.likes.all %}
+                    <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Unlike</button>
+                    {% else %}
+                    <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Like</button>
+                    {% endif %}
+                </form>
+
+                {% if form != None and post_id == post.id %}
+                    <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
+                    {% csrf_token %}
+                    {{ form.text }}
+                    <button type="submit" id="submitcomment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Comment</button>
+                    </form>
                 {% else %}
-                <button type="submit" id="like" name="like_id" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Like</button>
+                    <form action="{% url 'social_match:commentpost' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" id="comment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Comment</button>
+                    </form>
                 {% endif %}
-            </form>
 
-            {% if form != None and post_id == post.id %}
-                <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
-                {% csrf_token %}
-                {{ form.text }}
-                <button type="submit" id="submitcomment" name="submitcomment" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Comment</button>
-                </form>
-            {% else %}
-                <form action="{% url 'social_match:commentpost' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" id="comment" name="comment" value="{{post.id}}" data-value="{{post_set}}" class="btn btn-primary">Comment</button>
-                </form>
-            {% endif %}
+                {% if post.user == user %}
+                <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
+                        <i class="fas fa-edit"></i></i>
+                </a>
+                {% endif %}
+            </div>
 
             {% for comment in post.comments.all %}
-            <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}<br><font size ='1'>{{ comment.date }}</font></p>
+            <p style="margin-left: 50px"><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
+                <br><font size ='1'>{{ comment.date }}</font>
+                {% if request.user == comment.user %}
+                <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-home" data-cid="{{comment.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
+                    <i class="fas fa-trash"></i></a>
+                {% endif %}
+            </p>
             {% endfor %}
+
 
         </div>
     </div>
+    <br>
     {% endfor %}
 
-    <form action="{% url 'social_match:home' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="current_set" value = '{{post_set}}'>
-        {% if post_set != 1 %}
-        <input type="submit" value="<- Newer" name="newer" class="btn btn-primary">
-        {% endif %}
-        {% if post_set != max_sets %}
-        <input type="submit" value="Older ->" name="older" class="btn btn-primary">
-        {% endif %}
-    </form>
+        <div class="pagination">
+            <span class="step-links">
+                {% if post_list.has_previous %}
+                    <a href="?p=1&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">&laquo; first</a> -
+                    {% if post_list.previous_page_number != 1 %}
+                        <a href="?p={{post_list.previous_page_number}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">previous</a>
+                    {% endif %}
+                {% endif %}
+
+                <span class="current">
+                    Page {{ post_list.number }} of {{ post_list.paginator.num_pages }}.
+                </span>
+
+                {% if post_list.has_next %}
+                    {% if post_list.next_page_number != post_list.paginator.num_pages %}
+                        <a href="?p={{post_list.next_page_number}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">next</a> -
+                    {% endif %}
+                <a href="?p={{post_list.paginator.num_pages}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
     {% else %}
     <p>No posts are available.</p>
     {% endif %}

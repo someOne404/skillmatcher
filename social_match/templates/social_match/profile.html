@@ -17,11 +17,32 @@
 
             <br />
             {% if viewing_user == user %}
-            <div class='centerDiv'>
-                <form class="centerDiv" action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                    {% csrf_token %}
-                    <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                </form>
+            <div style="display: flex">
+                <div>
+                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                        {% csrf_token %}
+                        <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
+                    </form>
+                </div>
+                <div>
+                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                        {% csrf_token %}
+                        <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
+                    </form> 
+
+                    
+                    {% comment %} <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="myfile">
+                        <button class="btn btn-light" type="submit">Upload</button>
+                    </form>
+
+                    {% if uploaded_file_url %}
+                        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                    {% endif %} {% endcomment %}
+
+
+                </div>
             </div>
                 {% else %}
                     {% if not check_follow %}
@@ -36,6 +57,7 @@
                     {% endif %}
                 {% endif %}
         </div>
+
   
             <div class="col-md-8 col-sm-12 mb-3">
                 <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
@@ -97,7 +119,7 @@
 
 
             <hr>
-
+                <h4 class="display-5">Contact:</h4>
                 <h5>Email: {{ viewing_user.email }}</h5>
                 <h5>Phone number: {{ viewing_user.phone }}</h5>
 
@@ -107,51 +129,43 @@
         </div>
     </div>
 
-    <div align="center">
-        {% if post_list %}
-        {% for post in post_list %}
-            <div class="card" align="left" style="width: 70rem;">
-                <div class="card-body">
-                    <h5 class="card-title">{{ post.headline }}</h5>
-                        <p class="card-text">{{ post.message }}</p>
-                        <p>Posted on: {{post.date}} <br>
-                            {% if post.post_edited %}
-                            Last edited on: {{post.date_edited}}
-                            {% endif %}
-                        </p>
-
-                        <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
-
-                        {% if not post.post_active %}
-                            <p> Archived </p>
-                        {% endif %}
-
-                        {% for comment in post.comments.all %}
-                        <p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
-                            {{ comment.text }} <font size ='1'>{{ comment.date }}</font></p>
-                        {% endfor %}
-                        {% if viewing_user == user %}
-                        <form action="{% url 'social_match:editpost' post.id %}" method="get">
-                            {% csrf_token %}
-                            <input type="submit" value="Edit Post" name="edit_post" class="btn btn-primary">
-                        </form>
-                        {% endif %}
-
-                </div>
+        <!-- Displaying Notifications -->
+    {% if viewing_user == user %}
+        <hr>
+        <h1 align="center">Notifications</h1>
+        {% if notifications %}
+        <div align="center" class="col-sm" align="left" style="overflow-y: auto; height:400px;">
+        {% for notification in notifications %}
+        <div class="card" style="width: 30rem;">
+            <div class="card-body">
+            {% if notification.verb == "liked" %}
+                <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> liked your post:</h5>
+                {{notification.target.headline}}
+            {% endif %}
+            {% if notification.verb == "commented" %}
+                <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> commented on your post:</h5>
+                {{notification.target.headline}}<br>
+                {{notification.action_object.text}}
+            {% endif %}
+            <form class="centerDiv" action="{% url 'social_match:notifications' notification.id %}" method="GET">
+                {% csrf_token %}
+                <input type="hidden" name="return_to" value="profile">
+                {% if notification.unread %}
+                <input class="btn btn-light btn-sm" type="submit" value="Mark as read" name="read">
+                {% endif %}
+                <input class="btn btn-light btn-sm" type="submit" value="Delete" name="delete">
+            </form>
             </div>
-        {% endfor %}
-        <form action="{% url 'social_match:profile' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="current_set" value='{{post_set}}'>
-            {% if post_set != 1 %}
-            <input type="submit" value="<- Newer" name="newer" class="btn btn-primary">
-            {% endif %}
-            {% if post_set != max_sets %}
-            <input type="submit" value="Older ->" name="older" class="btn btn-primary">
-            {% endif %}
-        </form>
+        </div>
+            {% endfor %} {% else %} <p align="center">No Notifications.</p>
         {% endif %}
+    {% endif %}
     </div>
+
+    <div id="profile_posts">
+        {% include 'social_match/profile_posts.html' %}
+    </div>
+
 </div>
 
 {% endif %}

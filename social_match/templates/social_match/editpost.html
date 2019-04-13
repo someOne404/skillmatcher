@@ -1,20 +1,18 @@
 {% extends 'social_match/base.html' %}
 {% block content %}
-<div>
-    Edit your post!
+<div style="padding-left: 50px">
+    <h2>Edit your post!</h2>
     <form method="POST">{% csrf_token %}
-        </br>
-
         <div>
-            Headline:
+            <h5>Headline:</h5>
             {{ form.headline }}
-        </div>
+        </div><br>
         <div>
-            Message:
+            <h5>Message:</h5>
             {{ form.message }}
-        </div>
+        </div><br>
         <div>
-            Archived:
+            <h5>Archived:</h5>
             {{ form.post_active }}
         </div>
         </br>
