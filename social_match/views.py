@@ -93,14 +93,17 @@ def profile(request, user_id=None):
             return render(request, './social_match/404.html')
 
     following_list = Follow.objects.following(user)
-    check_follow = False
     if viewing_user in following_list:
         check_follow = True
+    else:
+        check_follow = False
 
     blocking_list = Block.objects.blocking(user)
-    check_block = False
+
     if viewing_user in blocking_list:
         check_block = True
+    else:
+        check_block = False
 
 
 
@@ -383,18 +386,17 @@ def minorlist(request):
 def follow(request, user_id):
     self = request.user
     other = User.objects.get(id=user_id)
-
     if other not in Follow.objects.following(self):
         Follow.objects.add_follower(self, other)
-    else:
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'follow': True})
+
+def unfollow(request, user_id):
+    self = request.user
+    other = User.objects.get(id=user_id)
+    if other in Follow.objects.following(self):
         Follow.objects.remove_follower(self, other)
 
-    following_list = Follow.objects.following(self)
-    check_follow = False
-    if other in following_list:
-        check_follow = True
-
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': check_follow})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unfollow': True})
 
 def following(request):
     return render(request, './social_match/following.html')
@@ -402,21 +404,22 @@ def following(request):
 def follower(request):
     return render(request, './social_match/follower.html')
 
+
 def block(request, user_id):
     self = request.user
     other = User.objects.get(id=user_id)
     if other not in Block.objects.blocking(self):
         Block.objects.add_block(self, other)
-    else:
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'block': True})
+
+def unblock(request, user_id):
+    self = request.user
+    other = User.objects.get(id=user_id)
+    if other in Block.objects.blocking(self):
         Block.objects.remove_block(self, other)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unblock': True})
 
-    blocking_list = Block.objects.blocking(self)
-    check_block = False
-    if other in blocking_list:
-        check_block = True
-
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': check_block})
-  
 class MajorAutocomplete(autocomplete.Select2QuerySetView):
 	def get_queryset(self):
 		# Don't forget to filter out results depending on the visitor !
