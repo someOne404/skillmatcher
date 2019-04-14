@@ -15,7 +15,7 @@
                         <img height='256' width='256' src="{{ viewing_user.picture.url }}">
                     {% endif %}
                 {% else %}
-                    <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                    <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
 {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}
 
