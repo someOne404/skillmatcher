@@ -327,7 +327,7 @@ def editprofile(request, user_id):
 	template_name = './social_match/editprofile.html'
 	user = User.objects.get(id=user_id)
 	if request.method == "POST":
-		form = EditProfileForm(request.POST)
+		form = EditProfileForm(request.POST, request.FILES)
 		if form.has_changed() and form.is_valid():
 			user.refresh_from_db()
 
@@ -336,6 +336,7 @@ def editprofile(request, user_id):
 			user.phone = form.cleaned_data.get('phone')
 			user.class_standing = form.cleaned_data.get('class_standing')
 			user.graduation_year = form.cleaned_data.get('graduation_year')
+			user.picture = form.cleaned_data.get('picture')
 
 			user.majors.set(form.cleaned_data.get('majors'))
 			user.minors.set(form.cleaned_data.get('minors'))
