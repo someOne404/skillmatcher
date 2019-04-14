@@ -58,7 +58,7 @@
                 {% endif %}
 
                 {% if post.user == user %}
-                <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
+                <a class ="btn-lg" href="/editpost/{{post.id}}?return=home">
                         <i class="fas fa-edit"></i></i>
                 </a>
                 {% endif %}

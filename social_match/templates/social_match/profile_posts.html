@@ -54,7 +54,7 @@
                         </form>
                     {% endif %}
 
-                    <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
+                    <a class ="btn-lg" href="/editpost/{{post.id}}?return=profile">
                         <i class="fas fa-edit"></i></i>
                     </a>
                 </div>

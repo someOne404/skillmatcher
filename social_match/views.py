@@ -174,15 +174,22 @@ def editpost(request, post_id):
             post.date_edited = timezone.now()
             post.save()
 
-            return HttpResponseRedirect('/profile')
+            if request.POST.get('return_to') == "profile":
+                return HttpResponseRedirect('/profile')
+            else:
+                return HttpResponseRedirect('/home')
     else:
+        if request.GET.get('return') == 'profile':
+            return_to = 'profile'
+        else:
+            return_to = 'home'
         form = EditPostForm(initial={
             'headline':post.headline,
             'message':post.message,
-            'post_active':(not post.post_active)
+            'post_active':(not post.post_active),
         })
 
-    return render(request, template_name, {'form': form})
+    return render(request, template_name, {'form': form, 'return_to':return_to})
 
 def likepost(request):
     post = get_object_or_404(Post, id=request.POST.get('id'))
