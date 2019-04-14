@@ -48,18 +48,18 @@
 
                 </div>
             </div>
-                {% else %}
-                    {% if not check_follow %}
-                        <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
-                    {% elif check_follow %}
-                        <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
-                    {% endif %}
-                    {% if not check_block %}
-                        <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
-                    {% elif check_block %}
-                        <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
-                    {% endif %}
-                {% endif %}
+                <!-- {% else %} -->
+                    <!--{% if not check_follow %}-->
+                        <!-- <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>-->
+                    <!--{% elif check_follow %}-->
+                        <!--<a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>-->
+                    <!--{% endif %}-->
+                    <!--{% if not check_block %}-->
+                        <!--<a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>-->
+                    <!--{% elif check_block %}-->
+                        <!--<a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>-->
+                    <!--{% endif %}-->
+                <!--{% endif %} -->
         </div>
 
   
