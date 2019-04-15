@@ -1,7 +1,7 @@
 {% extends 'social_match/base.html' %}
 {% block content %}
 {% if user.is_authenticated %}
-<div style="padding-left: 50px">
+<div class="container">
     {% if confirmation %}
     {{confirmation}} Create another:
     {% else %}
@@ -9,11 +9,11 @@
     {% endif %}
     <form method="POST">{% csrf_token %}
 
-        <div>
+        <div class="form-group">
             <h5>Headline:</h5>
             {{ form.headline }}
         </div><br>
-        <div>
+        <div class="form-group">
             <h5>Message:</h5>
             {{ form.message }}
         </div>
