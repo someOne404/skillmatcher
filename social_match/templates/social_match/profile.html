@@ -123,6 +123,7 @@
         {% if viewing_user == user %}
             <hr>
             <h3 align="center">Notifications</h3>
+
             {% if notifications %}
             <div align="center" class="col-sm" align="left" style="overflow-y: auto; height:400px;">
                 {% for notification in notifications %}
@@ -147,12 +148,17 @@
                         </form>
                     </div>
                 </div>
-                {% endfor %} {% else %} <p align="center">No Notifications.</p>
+                {% endfor %}
             </div>
+            {% else %}
+                <p align="center">No Notifications.</p>
             {% endif %}
+
         {% endif %}
         </div>
+        <div id='testing' class="col-md-3"></div>
     </div>
+
     <div class="row">
         <div class="col-md-1"></div>
         <div id="profile_posts" class="col-md-8 col-sm-12">
@@ -161,6 +167,5 @@
     </div>
 
 </div>
-
 {% endif %}
 {% endblock %}

@@ -1,69 +1,76 @@
 {% extends 'social_match/base.html' %}
+{% load widget_tweaks %}
+
 {% block content %}
     {{ form.media }}
-<div>
-    <h2>Edit your Profile!</h2>
-    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
-        </br>
-        <div>
-            First Name:
-            {{ form.first_name }}
-        </div>
-        <div>
-            Last Name:
-            {{ form.last_name }}
-        </div>
-        <div>
-            Phone:
-            {{ form.phone }}
-            format: +9999999999
-        </div>
-        <div>
-            Class Standing:
-            {{ form.class_standing }}
-        </div>
-        <div>
-            Graduation Year:
-            {{ form.graduation_year }}
-        </div>
-        <div>
-            Majors:
-            {{ form.majors }}
-        </div>
-        <div>
-            Minors:
-            {{ form.minors }}
-        </div>
-        <div>
-            Courses:
-            {{ form.courses }}
-        </div>
-        <div>
-            Skills:
-            {{ form.skills }}
-        </div>
-        <div>
-            Interests:
-            {{ form.interests }}
-        </div>
-        <div>
-            Activities:
-            {{ form.activities }}
-        </div>
-        <div>
-            Active:
-            {{ form.status_active }}
-        </div>
-        <div>
-            Picture:
-            {{ form.picture }}
-        </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-8">
+            <h2>Edit your Profile!</h2>
+            <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+                </br>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">First Name:</label>
+                    <div class="col-sm-10">{% render_field form.first_name class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Last Name:</label>
+                    <div class="col-sm-10">{% render_field form.last_name class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Phone:</label>
+                    <div class="col-sm-10">{% render_field form.phone class="form-control" placeholder="+9999999999"%}</div>
 
-        </br>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Class Standing:</label>
+                    <div class="col-sm-10">{% render_field form.class_standing class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Graduation Year:</label>
+                    <div class="col-sm-10">{% render_field form.graduation_year class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Majors:</label>
+                    <div class="col-sm-10">{% render_field form.majors class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Minors:</label>
+                    <div class="col-sm-10">{% render_field form.minors class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Courses:</label>
+                    <div class="col-sm-10">{% render_field form.courses class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Skills:</label>
+                    <div class="col-sm-10">{% render_field form.skills class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Interests:</label>
+                    <div class="col-sm-10">{% render_field form.interests class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Activities:</label>
+                    <div class="col-sm-10">{% render_field form.activities class="form-control" %}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Active:</label>
+                    <div class="col-sm-10">{{ form.status_active }}</div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label">Picture:</label>
+                    <div class="col-sm-10">{% render_field form.picture class="form-control" %}</div>
+                </div>
 
-        <button class="btn btn-primary" type="submit">Save Changes</button>
-        <a class="btn btn-light" href="{% url 'social_match:profile' %}">Cancel</a>
-
-    </form>
+                </br>
+                <div class="form-group row">
+                    <button class="btn btn-primary" type="submit">Save Changes</button>
+                    <a class="btn btn-light" href="{% url 'social_match:profile' %}">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
