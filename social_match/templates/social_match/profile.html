@@ -66,7 +66,7 @@
             <div class="col-md-8 col-sm-12 mb-3">
                 <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
                 <h5>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</h5>
-                <h5>Majors:
+                <h5><strong>Majors:</strong>
                     {% for major in viewing_user.majors.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->
@@ -75,7 +75,7 @@
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Minors:
+                <h5><strong>Minors:</strong>
                     {% for minor in viewing_user.minors.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->
@@ -84,7 +84,7 @@
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Courses:
+                <h5><strong>Courses:</strong>
                     {% for course in viewing_user.courses.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->
@@ -93,7 +93,7 @@
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Skills:
+                <h5><strong>Skills:</strong>
                     {% for skill in viewing_user.skills.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ skill.name }}<!--</a>-->
@@ -102,7 +102,7 @@
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Interests:
+                <h5><strong>Interests:</strong>
                     {% for interest in viewing_user.interests.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ interest.name }}<!--</a>-->
@@ -111,7 +111,7 @@
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Activities:
+                <h5><strong>Activities:</strong>
                     {% for activity in viewing_user.activities.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ activity.name }}<!--</a>-->
@@ -123,9 +123,9 @@
 
 
             <hr>
-                <h4 class="display-5">Contact:</h4>
-                <h5>Email: {{ viewing_user.email }}</h5>
-                <h5>Phone number: {{ viewing_user.phone }}</h5>
+                <h2 class="display-5">Contacts</h2>
+                <h5><strong>Email:</strong> {{ viewing_user.email }}</h5>
+                <h5><strong>Phone number:</strong> {{ viewing_user.phone }}</h5>
 
             <br />
 
