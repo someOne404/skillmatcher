@@ -16,21 +16,20 @@
     {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                     {% endif %}   
                     <div style="width:10px"></div>             
-                    <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}:</a> {{ post.headline }}
+                    <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>: {{ post.headline }}
                 </h5>   
                 <p>{{ post.message }}</p>
                 <p class="card-text">Posted on {{post.date}}<br>
                     {% if post.post_edited %}
                     Last edited on: {{post.date_edited}}
-                    {% endif %}</p>
+                    {% endif %}<br>
 
-                <div style="display: flex">
-
-                    <p>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}</p>
+                    {{ post.likes.count }} Like{{ post.likes.count|pluralize }}
 
                     {% if not post.post_active %}
-                        <p> Archived </p>
-                    {% endif %}
+                    <br><br>Archived
+                    {% endif %}</p>
+                    <div style="display: flex">
 
                     <form action="{% url 'social_match:likepost' %}" method="post">
                         {% csrf_token %}
@@ -54,16 +53,16 @@
                         </form>
                     {% endif %}
 
-                    <a class ="btn-lg" href="{% url 'social_match:editpost' post.id %}">
+                    <a class ="btn-lg" href="/editpost/{{post.id}}?return=profile">
                         <i class="fas fa-edit"></i></i>
                     </a>
                 </div>
                     {% for comment in post.comments.all %}
-                    <p style="margin-left: 50px"><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
+                    <p style="margin-left: 25px"><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
                         {{ comment.text }} <br><font size ='1'>{{ comment.date }}</font>
                         {% if request.user == comment.user %}
                             <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-profile" data-cid="{{comment.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="primary">
-                                <i class="fas fa-trash"></i></a>
+                                <font size ='1'><i class="fas fa-trash"></i></font></a>
                         {% endif %}
                     </p>
                     {% endfor %}

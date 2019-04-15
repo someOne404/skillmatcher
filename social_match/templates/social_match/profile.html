@@ -48,18 +48,18 @@
 
                 </div>
             </div>
-                <!-- {% else %} -->
-                    <!--{% if not check_follow %}-->
-                        <!-- <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>-->
-                    <!--{% elif check_follow %}-->
-                        <!--<a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>-->
-                    <!--{% endif %}-->
-                    <!--{% if not check_block %}-->
-                        <!--<a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>-->
-                    <!--{% elif check_block %}-->
-                        <!--<a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>-->
-                    <!--{% endif %}-->
-                <!--{% endif %} -->
+                {% comment %} {% else %}
+                    {% if not check_follow %}
+                        <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
+                    {% elif check_follow %}
+                        <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
+                    {% endif %}
+                    {% if not check_block %}
+                        <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
+                    {% elif check_block %}
+                        <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
+                    {% endif %} {% endcomment %}
+                {% endif %}
         </div>
 
   
@@ -69,54 +69,54 @@
                 <h5>Majors:
                     {% for major in viewing_user.majors.all %}
                         {% if forloop.last %}
-                            <a class='link' href="#">{{ major.name }}</a>
+                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->
                         {% else %}
-                            <a class='link' href="#">{{ major.name }}</a>,
+                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5>Minors:
                     {% for minor in viewing_user.minors.all %}
                         {% if forloop.last %}
-                            <a class='link' href="#">{{ minor.name }}</a>
+                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->
                         {% else %}
-                            <a class='link' href="#">{{ minor.name }}</a>,
+                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5>Courses:
                     {% for course in viewing_user.courses.all %}
                         {% if forloop.last %}
-                            <a class='link' href="#">{{ course.name }}</a>
+                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->
                         {% else %}
-                            <a class='link' href="#">{{ course.name }}</a>,
+                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5>Skills:
                     {% for skill in viewing_user.skills.all %}
                         {% if forloop.last %}
-                            <a class='link' href="#">{{ skill.name }}</a>
+                            <!--<a class='link' href="#">-->{{ skill.name }}<!--</a>-->
                         {% else %}
-                            <a class='link' href="#">{{ skill.name }}</a>,
+                            <!--<a class='link' href="#">-->{{ skill.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5>Interests:
                     {% for interest in viewing_user.interests.all %}
                         {% if forloop.last %}
-                            <a class='link' href="#">{{ interest.name }}</a>
+                            <!--<a class='link' href="#">-->{{ interest.name }}<!--</a>-->
                         {% else %}
-                            <a class='link' href="#">{{ interest.name }}</a>,
+                            <!--<a class='link' href="#">-->{{ interest.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5>Activities:
                     {% for activity in viewing_user.activities.all %}
                         {% if forloop.last %}
-                            <a class='link' href="#">{{ activity.name }}</a>
+                            <!--<a class='link' href="#">-->{{ activity.name }}<!--</a>-->
                         {% else %}
-                            <a class='link' href="#">{{ activity.name }}</a>,
+                            <!--<a class='link' href="#">-->{{ activity.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
@@ -133,41 +133,22 @@
         </div>
     </div>
 
-        <!-- Displaying Notifications -->
+    <!-- Displaying Notifications -->
     {% if viewing_user == user %}
         <hr>
         <h1 align="center">Notifications</h1>
         {% if notifications %}
         <div align="center" class="col-sm" align="left" style="overflow-y: auto; height:400px;">
-        {% for notification in notifications %}
-        <div class="card" style="width: 30rem;">
-            <div class="card-body">
-            {% if notification.verb == "liked" %}
-                <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> liked your post:</h5>
-                {{notification.target.headline}}
-            {% endif %}
-            {% if notification.verb == "commented" %}
-                <h5 class="card-title"><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> commented on your post:</h5>
-                {{notification.target.headline}}<br>
-                {{notification.action_object.text}}
-            {% endif %}
-            <form class="centerDiv" action="{% url 'social_match:notifications' notification.id %}" method="GET">
-                {% csrf_token %}
-                <input type="hidden" name="return_to" value="profile">
-                {% if notification.unread %}
-                <input class="btn btn-light btn-sm" type="submit" value="Mark as read" name="read">
-                {% endif %}
-                <input class="btn btn-light btn-sm" type="submit" value="Delete" name="delete">
-            </form>
+            <div id="profile_notifications">
+                {% include 'social_match/notifications_ajax/profile_notifications.html' %}
             </div>
-        </div>
-            {% endfor %} {% else %} <p align="center">No Notifications.</p>
+         {% else %} <p align="center">No Notifications.</p>
         {% endif %}
     {% endif %}
     </div>
 
     <div id="profile_posts">
-        {% include 'social_match/profile_posts.html' %}
+        {% include 'social_match/posts_ajax/profile_posts.html' %}
     </div>
 
 </div>

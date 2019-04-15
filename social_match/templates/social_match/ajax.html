@@ -121,7 +121,7 @@
                 });
             });
 
-         $(document).on('click', '#submitcomment-profile', function(event){
+        $(document).on('click', '#submitcomment-profile', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('value');
                 var u = $(this).attr('data-u');
@@ -143,7 +143,7 @@
                 });
             });
 
-         $(document).on('click', '#deletecomment-home', function(event){
+        $(document).on('click', '#deletecomment-home', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('data-cid');
                 var k = $(this).attr('data-k');
@@ -168,7 +168,7 @@
                 });
             });
 
-         $(document).on('click', '#deletecomment-profile', function(event){
+        $(document).on('click', '#deletecomment-profile', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('data-cid');
                 var u = $(this).attr('data-u');
@@ -182,6 +182,119 @@
                     success: function(response){
                         $('#profile_posts').html(response)
                         console.log($('#profile_posts').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#readnotif-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-nid');
+                var t = $(this).attr('data-t');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:notifications" %}',
+                    data: {'id':pk, 't':t, 'section':'list', 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_notifications').html(response)
+                        console.log($('#home_notifications').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        $(document).on('click', '#readnotif-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-nid');
+                var t = $(this).attr('data-t');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:notifications" %}',
+                    data: {'id':pk, 't':t, 'section':'header', 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_notifications_header').html(response)
+                        console.log($('#home_notifications_header').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+         $(document).on('click', '#deletenotif-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-nid');
+                var t = $(this).attr('data-t');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:notifications" %}',
+                    data: {'id':pk, 't':t, 'section':'list', 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_notifications').html(response)
+                        console.log($('#home_notifications').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        $(document).on('click', '#deletenotif-home', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-nid');
+                var t = $(this).attr('data-t');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:notifications" %}',
+                    data: {'id':pk, 't':t, 'section':'header', 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#home_notifications_header').html(response)
+                        console.log($('#home_notifications_header').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#readnotif-profile', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-nid');
+                var t = $(this).attr('data-t');
+                var u = $(this).attr('data-u');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:notifications" %}',
+                    data: {'id':pk, 't':t, 'u':u, 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#profile_notifications').html(response)
+                        console.log($('#profile_notifications').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+        $(document).on('click', '#deletenotif-profile', function(event){
+                event.preventDefault();
+                var pk = $(this).attr('data-nid');
+                var t = $(this).attr('data-t');
+                var u = $(this).attr('data-u');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:notifications" %}',
+                    data: {'id':pk, 't':t, 'u':u, 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#profile_notifications').html(response)
+                        console.log($('#profile_notifications').html(response['form']));
                     },
                     error: function(rs, e){
                         console.log(rs.responseText);
