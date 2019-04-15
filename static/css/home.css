@@ -35,3 +35,9 @@ body {
 div > .container-fluid {
   margin-top: 3rem !important;
 }
+
+div.card .card-img-top {
+  width: 100% !important;
+  height: 14rem !important;
+  object-fit: contain !important;
+}

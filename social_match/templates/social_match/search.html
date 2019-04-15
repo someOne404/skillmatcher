@@ -9,100 +9,194 @@
 
 {% extends 'social_match/base.html' %}
 {% load widget_tweaks %}
+{% load static %}
 {% block content %}
 {{ filter.form.media }}
 {% if user.is_authenticated %}
-  <form method="get">
-    <div class="well">
-      <h2 style="margin-top: 0">Search</h2>
-      <div class="row">
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.first_name.label_tag }}
-          {% render_field filter.form.first_name class="form-control" %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-sm-12 col-md-7">
+            <div>
+                {% for u in filter.qs %}
+                    <div class="card" style="width:18rem !important;">
+                    {% if u.picture %}
+                        {% if u.picture.isempty or u.picture.name == 'False' %}
+                            <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                        {% else %}
+                            <img class="card-img-top" src="{{ u.picture.url }}">
+                        {% endif %}
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                    {% endif %}
+                        <div class="card-body">
+                            <p class="card-title"><a href="{% url 'social_match:profile' u.id %}">{{ u.first_name }} {{ u.last_name }}</a></p>
+                            <p>{% if u.class_standing %} {{ u.get_class_standing_display }}, {% endif %}Class of {{ u.graduation_year }}</p>
+                            {% for major in u.majors.all %}
+                                {% if forloop.last %}
+                                    <p style="display:inline">{{ major.name }}</p>
+                                {% else %}
+                                    <p style="display:inline">{{ major.name }}</p>,
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <h3>No users available</h3>
+                {% endfor %}
+            </div>
         </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.last_name.label_tag }}
-          {% render_field filter.form.last_name class="form-control" %}
+        <div class="col-sm-12 col-md-3 jumbotron">
+            <form method="get">
+              <h2 style="margin-top: 0">Search</h2>
+
+                    <div class="form-group">
+                      {{ filter.form.first_name.label_tag }}
+                      {% render_field filter.form.first_name class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.last_name.label_tag }}
+                      {% render_field filter.form.last_name class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.email.label_tag }}
+                      {% render_field filter.form.email class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.class_standing.label_tag }}
+                      {% render_field filter.form.class_standing class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.graduation_year.label_tag }}
+                      {% render_field filter.form.graduation_year class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.majors.label_tag }}
+                      {% render_field filter.form.majors class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.minors.label_tag }}
+                      {% render_field filter.form.minors class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.courses.label_tag }}
+                      {% render_field filter.form.courses class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.skills.label_tag }}
+                      {% render_field filter.form.skills class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.interests.label_tag }}
+                      {% render_field filter.form.interests class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      {{ filter.form.activities.label_tag }}
+                      {% render_field filter.form.activities class="form-control" %}
+                    </div>
+              <button type="submit" class="btn btn-primary">
+                <span class="glyphicon glyphicon-search"></span> Search
+              </button>
+              <a href="{% url 'social_match:resetsearch' %}">
+              <button type="button" class="btn btn-light">
+              Reset
+              </button></a>
+          </form>
+        <div class="col-md-1"></div>
         </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.email.label_tag }}
-          {% render_field filter.form.email class="form-control" %}
-        </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.class_standing.label_tag }}
-          {% render_field filter.form.class_standing class="form-control" %}
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.graduation_year.label_tag }}
-          {% render_field filter.form.graduation_year class="form-control" %}
-        </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.majors.label_tag }}
-          {% render_field filter.form.majors class="form-control" %}
-        </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.minors.label_tag }}
-          {% render_field filter.form.minors class="form-control" %}
-        </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.courses.label_tag }}
-          {% render_field filter.form.courses class="form-control" %}
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.skills.label_tag }}
-          {% render_field filter.form.skills class="form-control" %}
-        </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.interests.label_tag }}
-          {% render_field filter.form.interests class="form-control" %}
-        </div>
-        <div class="form-group col-sm-4 col-md-3">
-          {{ filter.form.activities.label_tag }}
-          {% render_field filter.form.activities class="form-control" %}
-        </div>
-      </div>
-      <button type="submit" class="btn btn-primary">
-        <span class="glyphicon glyphicon-search"></span> Search
-      </button>
-      <a href="{% url 'social_match:resetsearch' %}">
-      <button type="button" class="btn btn-light">
-      Reset
-      </button></a>
     </div>
-  </form>
+{#  <form method="get">#}
+{#    <div class="well">#}
+{#      <h2 style="margin-top: 0">Search</h2>#}
+{#      <div class="row">#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.first_name.label_tag }}#}
+{#          {% render_field filter.form.first_name class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.last_name.label_tag }}#}
+{#          {% render_field filter.form.last_name class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.email.label_tag }}#}
+{#          {% render_field filter.form.email class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.class_standing.label_tag }}#}
+{#          {% render_field filter.form.class_standing class="form-control" %}#}
+{#        </div>#}
+{#      </div>#}
+{#      <div class="row">#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.graduation_year.label_tag }}#}
+{#          {% render_field filter.form.graduation_year class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.majors.label_tag }}#}
+{#          {% render_field filter.form.majors class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.minors.label_tag }}#}
+{#          {% render_field filter.form.minors class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.courses.label_tag }}#}
+{#          {% render_field filter.form.courses class="form-control" %}#}
+{#        </div>#}
+{#      </div>#}
+{#      <div class="row">#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.skills.label_tag }}#}
+{#          {% render_field filter.form.skills class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.interests.label_tag }}#}
+{#          {% render_field filter.form.interests class="form-control" %}#}
+{#        </div>#}
+{#        <div class="form-group col-sm-4 col-md-3">#}
+{#          {{ filter.form.activities.label_tag }}#}
+{#          {% render_field filter.form.activities class="form-control" %}#}
+{#        </div>#}
+{#      </div>#}
+{#      <button type="submit" class="btn btn-primary">#}
+{#        <span class="glyphicon glyphicon-search"></span> Search#}
+{#      </button>#}
+{#      <a href="{% url 'social_match:resetsearch' %}">#}
+{#      <button type="button" class="btn btn-light">#}
+{#      Reset#}
+{#      </button></a>#}
+{#    </div>#}
+{#  </form>#}
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Profile</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for u in filter.qs %}
-        {% if user.email != u.email%}
-        <tr>
-          <td>{{ u.first_name }}</td>
-          <td>{{ u.last_name }}</td>
-          <td>{{ u.email }}</td>
-          <td>{{ u.phone}}</td>
-          <td><a href="{% url 'social_match:profile' u.id %}"><button type="button" class="btn btn-info">View</button></a></td>
-        </tr>
-        {% endif %}
-      {% empty %}
-        <tr>
-          <td colspan="5">No data</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+{#  <table class="table table-bordered">#}
+{#    <thead>#}
+{#      <tr>#}
+{#        <th>First name</th>#}
+{#        <th>Last name</th>#}
+{#        <th>Email</th>#}
+{#        <th>Phone</th>#}
+{#        <th>Profile</th>#}
+{#      </tr>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#      {% for u in filter.qs %}#}
+{#        {% if user.email != u.email%}#}
+{#        <tr>#}
+{#          <td>{{ u.first_name }}</td>#}
+{#          <td>{{ u.last_name }}</td>#}
+{#          <td>{{ u.email }}</td>#}
+{#          <td>{{ u.phone}}</td>#}
+{#          <td><a href="{% url 'social_match:profile' u.id %}"><button type="button" class="btn btn-info">View</button></a></td>#}
+{#        </tr>#}
+{#        {% endif %}#}
+{#      {% empty %}#}
+{#        <tr>#}
+{#          <td colspan="5">No data</td>#}
+{#        </tr>#}
+{#      {% endfor %}#}
+{#    </tbody>#}
+{#  </table>#}
 
-{% endif%}
+{% endif %}
+</div>
 {% endblock %}
