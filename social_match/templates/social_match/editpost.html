@@ -16,8 +16,8 @@
             {{ form.post_active }}
         </div>
         </br>
-
         <button class="btn btn-primary" type="submit">Save Changes</button>
+        <input type="hidden" name="return_to" value="{{return_to}}">
     </form>
 </div>
 {% endblock %}
