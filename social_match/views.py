@@ -74,6 +74,9 @@ def search(request):
     user_filter = UserFilter(request.GET, queryset=user_list)
     return render(request, './social_match/search.html', {'filter': user_filter})
 
+def resetsearch(request):
+    return render(request, './social_match/search.html')
+
 def profile(request, user_id=None):
     user = request.user
     viewing_user = user
@@ -90,14 +93,17 @@ def profile(request, user_id=None):
             return render(request, './social_match/404.html')
 
     following_list = Follow.objects.following(user)
-    check_follow = False
     if viewing_user in following_list:
         check_follow = True
+    else:
+        check_follow = False
 
     blocking_list = Block.objects.blocking(user)
-    check_block = False
+
     if viewing_user in blocking_list:
         check_block = True
+    else:
+        check_block = False
 
 
 
@@ -350,49 +356,51 @@ def notifications(request):
         return JsonResponse({'form': html})
 
 def editprofile(request, user_id):
-    template_name = './social_match/editprofile.html'
-    user = User.objects.get(id=user_id)
-    if request.method == "POST":
-        form = EditProfileForm(request.POST)
-        if form.has_changed() and form.is_valid():
-            user.refresh_from_db()
+	template_name = './social_match/editprofile.html'
+	user = User.objects.get(id=user_id)
+	if request.method == "POST":
+		form = EditProfileForm(request.POST, request.FILES)
+		if form.has_changed() and form.is_valid():
+			user.refresh_from_db()
 
-            user.first_name = form.cleaned_data.get('first_name')
-            user.last_name = form.cleaned_data.get('last_name')
-            user.phone = form.cleaned_data.get('phone')
-            user.class_standing = form.cleaned_data.get('class_standing')
-            user.graduation_year = form.cleaned_data.get('graduation_year')
+			user.first_name = form.cleaned_data.get('first_name')
+			user.last_name = form.cleaned_data.get('last_name')
+			user.phone = form.cleaned_data.get('phone')
+			user.class_standing = form.cleaned_data.get('class_standing')
+			user.graduation_year = form.cleaned_data.get('graduation_year')
+			user.picture = form.cleaned_data.get('picture')
 
-            user.majors.set(form.cleaned_data.get('majors'))
-            user.minors.set(form.cleaned_data.get('minors'))
-            user.skills.set(form.cleaned_data.get('skills'))
-            user.interests.set(form.cleaned_data.get('interests'))
-            user.courses.set(form.cleaned_data.get('courses'))
-            user.activities.set(form.cleaned_data.get('activities'))
+			user.majors.set(form.cleaned_data.get('majors'))
+			user.minors.set(form.cleaned_data.get('minors'))
+			user.skills.set(form.cleaned_data.get('skills'))
+			user.interests.set(form.cleaned_data.get('interests'))
+			user.courses.set(form.cleaned_data.get('courses'))
+			user.activities.set(form.cleaned_data.get('activities'))
+      
+      user.status_active = form.cleaned_data.get('status_active')
+      
+			user.save()
 
-            user.status_active = form.cleaned_data.get('status_active')
-            user.save()
+			return HttpResponseRedirect('/profile')
+	else:
+		form = EditProfileForm(instance=user, initial={'status_active' : user.status_active})
+		print("check perms")
+		# add permissions for creating options
+		perm1 = Permission.objects.get(name="Can add skill")
+		perm2 = Permission.objects.get(name="Can add activity")
+		perm3 = Permission.objects.get(name="Can add interest")
+		if isinstance(request.user, User):
+			if not request.user.has_perm(perm1):
+				print("Added permission 1")
+				request.user.user_permissions.add(perm1)
+			else:
+				print("Has permission")
+			if not request.user.has_perm(perm2):
+				request.user.user_permissions.add(perm2)
+			if not request.user.has_perm(perm3):
+				request.user.user_permissions.add(perm3)
 
-            return HttpResponseRedirect('/profile')
-    else:
-        form = EditProfileForm(instance=user, initial={'status_active' : user.status_active})
-        print("check perms")
-        # add permissions for creating options
-        perm1 = Permission.objects.get(name="Can add skill")
-        perm2 = Permission.objects.get(name="Can add activity")
-        perm3 = Permission.objects.get(name="Can add interest")
-        if isinstance(request.user, User):
-            if not request.user.has_perm(perm1):
-                print("Added permission 1")
-                request.user.user_permissions.add(perm1)
-            else:
-                print("Has permission")
-            if not request.user.has_perm(perm2):
-                request.user.user_permissions.add(perm2)
-            if not request.user.has_perm(perm3):
-                request.user.user_permissions.add(perm3)
-
-    return render(request, template_name, {'form': form})
+	return render(request, template_name, {'form': form})
 
 
 def classlist(request):
@@ -417,18 +425,17 @@ def minorlist(request):
 def follow(request, user_id):
     self = request.user
     other = User.objects.get(id=user_id)
-
     if other not in Follow.objects.following(self):
         Follow.objects.add_follower(self, other)
-    else:
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'follow': True})
+
+def unfollow(request, user_id):
+    self = request.user
+    other = User.objects.get(id=user_id)
+    if other in Follow.objects.following(self):
         Follow.objects.remove_follower(self, other)
 
-    following_list = Follow.objects.following(self)
-    check_follow = False
-    if other in following_list:
-        check_follow = True
-
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': check_follow})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unfollow': True})
 
 def following(request):
     return render(request, './social_match/following.html')
@@ -436,21 +443,22 @@ def following(request):
 def follower(request):
     return render(request, './social_match/follower.html')
 
+
 def block(request, user_id):
     self = request.user
     other = User.objects.get(id=user_id)
     if other not in Block.objects.blocking(self):
         Block.objects.add_block(self, other)
-    else:
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'block': True})
+
+def unblock(request, user_id):
+    self = request.user
+    other = User.objects.get(id=user_id)
+    if other in Block.objects.blocking(self):
         Block.objects.remove_block(self, other)
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unblock': True})
 
-    blocking_list = Block.objects.blocking(self)
-    check_block = False
-    if other in blocking_list:
-        check_block = True
-
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': check_block})
-  
 class MajorAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         # Don't forget to filter out results depending on the visitor !
