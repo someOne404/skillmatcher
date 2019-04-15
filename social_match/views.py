@@ -54,9 +54,6 @@ def home(request):
     else:
         notifications = []
 
-    #show unread notifications on home
-    #show all notifications on profile
-
     context = {
         'post_list': post_list,
         'form': form,
@@ -129,8 +126,6 @@ def profile(request, user_id=None):
         'viewing_user': viewing_user,
         'form': ProfileForm,
         'post_list':post_list,
-        #'post_set':post_set,
-        #'max_sets':max_sets,
         'check_follow': check_follow,
         'check_block': check_block,
         'post_list': post_list,
@@ -200,7 +195,7 @@ def likepost(request):
 
     template = request.POST.get('t')
     if template == "home":
-        template_name = './social_match/home_posts.html'
+        template_name = './social_match/posts_ajax/home_posts.html'
 
         keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
 
@@ -217,7 +212,7 @@ def likepost(request):
         }
 
     else:
-        template_name = './social_match/profile_posts.html'
+        template_name = './social_match/posts_ajax/profile_posts.html'
 
         user_id = request.POST.get('u')
         if not user_id:  # accessing user's own profile
@@ -265,7 +260,7 @@ def commentpost(request):
 
     template = request.POST.get('t')
     if template == "home":
-        template_name = './social_match/home_posts.html'
+        template_name = './social_match/posts_ajax/home_posts.html'
 
         keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
 
@@ -283,7 +278,7 @@ def commentpost(request):
             'form': form
         }
     else:
-        template_name = './social_match/profile_posts.html'
+        template_name = './social_match/posts_ajax/profile_posts.html'
 
         user_id = request.POST.get('u')
         if not user_id:  # accessing user's own profile
@@ -311,18 +306,48 @@ def commentpost(request):
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})
 
-def notifications(request, notification_id):
-    notification = get_object_or_404(Notification, id=notification_id)
-    if 'read' in request.GET:
+def notifications(request):
+    notification = get_object_or_404(Notification, id=request.POST.get('id'))
+    if request.POST.get('type') == 'read':
         notification.mark_as_read()
-    if 'delete' in request.GET:
+    if request.POST.get('type') == 'delete':
         notification.delete()
 
-    return_to = request.GET.get("return_to")
-    if return_to == "home":
-        return HttpResponseRedirect('/home')
+    template = request.POST.get('t')
+    section = request.POST.get('section')
+    if template == "home":
+        if section == 'list':
+            template_name = './social_match/notifications_ajax/home_notifications.html'
+
+            request_user = User.objects.get(id=request.user.id)
+            notifications = Notification.objects.filter(recipient=request_user, unread=True)
+
+        else:
+            template_name = './social_match/notifications_ajax/home_notifications_header.html'
+
+            request_user = User.objects.get(id=request.user.id)
+            notifications = Notification.objects.filter(recipient=request_user, unread=True)
     else:
-        return HttpResponseRedirect('/profile')
+        template_name = './social_match/notifications_ajax/profile_notifications.html'
+
+        user_id = request.POST.get('u')
+        user = request.user
+        viewing_user = user
+        if not user_id:  # accessing user's own profile
+            user = request.user
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect(reverse('social_match:home'))
+        else:
+            try:
+                viewing_user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return render(request, './social_match/404.html')
+
+        notifications = Notification.objects.filter(recipient=viewing_user)
+
+    if request.is_ajax():
+        html = render_to_string(template_name, {'notifications':notifications}, request=request)
+        return JsonResponse({'form': html})
 
 def editprofile(request, user_id):
     template_name = './social_match/editprofile.html'
