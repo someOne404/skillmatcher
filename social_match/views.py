@@ -356,51 +356,51 @@ def notifications(request):
         return JsonResponse({'form': html})
 
 def editprofile(request, user_id):
-	template_name = './social_match/editprofile.html'
-	user = User.objects.get(id=user_id)
-	if request.method == "POST":
-		form = EditProfileForm(request.POST, request.FILES)
-		if form.has_changed() and form.is_valid():
-			user.refresh_from_db()
+    template_name = './social_match/editprofile.html'
+    user = User.objects.get(id=user_id)
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, request.FILES)
+        if form.has_changed() and form.is_valid():
+            user.refresh_from_db()
 
-			user.first_name = form.cleaned_data.get('first_name')
-			user.last_name = form.cleaned_data.get('last_name')
-			user.phone = form.cleaned_data.get('phone')
-			user.class_standing = form.cleaned_data.get('class_standing')
-			user.graduation_year = form.cleaned_data.get('graduation_year')
-			user.picture = form.cleaned_data.get('picture')
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.phone = form.cleaned_data.get('phone')
+            user.class_standing = form.cleaned_data.get('class_standing')
+            user.graduation_year = form.cleaned_data.get('graduation_year')
+            user.picture = form.cleaned_data.get('picture')
 
-			user.majors.set(form.cleaned_data.get('majors'))
-			user.minors.set(form.cleaned_data.get('minors'))
-			user.skills.set(form.cleaned_data.get('skills'))
-			user.interests.set(form.cleaned_data.get('interests'))
-			user.courses.set(form.cleaned_data.get('courses'))
-			user.activities.set(form.cleaned_data.get('activities'))
+            user.majors.set(form.cleaned_data.get('majors'))
+            user.minors.set(form.cleaned_data.get('minors'))
+            user.skills.set(form.cleaned_data.get('skills'))
+            user.interests.set(form.cleaned_data.get('interests'))
+            user.courses.set(form.cleaned_data.get('courses'))
+            user.activities.set(form.cleaned_data.get('activities'))
       
-      user.status_active = form.cleaned_data.get('status_active')
+            user.status_active = form.cleaned_data.get('status_active')
       
-			user.save()
+            user.save()
 
-			return HttpResponseRedirect('/profile')
-	else:
-		form = EditProfileForm(instance=user, initial={'status_active' : user.status_active})
-		print("check perms")
-		# add permissions for creating options
-		perm1 = Permission.objects.get(name="Can add skill")
-		perm2 = Permission.objects.get(name="Can add activity")
-		perm3 = Permission.objects.get(name="Can add interest")
-		if isinstance(request.user, User):
-			if not request.user.has_perm(perm1):
-				print("Added permission 1")
-				request.user.user_permissions.add(perm1)
-			else:
-				print("Has permission")
-			if not request.user.has_perm(perm2):
-				request.user.user_permissions.add(perm2)
-			if not request.user.has_perm(perm3):
-				request.user.user_permissions.add(perm3)
+            return HttpResponseRedirect('/profile')
+    else:
+        form = EditProfileForm(instance=user, initial={'status_active' : user.status_active})
+        print("check perms")
+        # add permissions for creating options
+        perm1 = Permission.objects.get(name="Can add skill")
+        perm2 = Permission.objects.get(name="Can add activity")
+        perm3 = Permission.objects.get(name="Can add interest")
+        if isinstance(request.user, User):
+            if not request.user.has_perm(perm1):
+                print("Added permission 1")
+                request.user.user_permissions.add(perm1)
+            else:
+                print("Has permission")
+            if not request.user.has_perm(perm2):
+                request.user.user_permissions.add(perm2)
+            if not request.user.has_perm(perm3):
+                request.user.user_permissions.add(perm3)
 
-	return render(request, template_name, {'form': form})
+    return render(request, template_name, {'form': form})
 
 
 def classlist(request):

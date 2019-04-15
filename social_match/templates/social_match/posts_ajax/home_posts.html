@@ -17,11 +17,11 @@
     <div class="card" style="width: 35rem;">
         <div class="card-body">
             <h5 class="card-title" style="display: flex"> 
-                {% if viewing_user.picture %}
-                    <img height='30' width='30' src="{{ viewing_user.picture.url }}">
+                {% if post.user.picture %}
+                    <img height='30' width='30' src="{{ post.user.picture.url }}">
                 {% else %}
                     <img height='30' width='30' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-{#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
+                    {#<i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}   
                 <div style="width:10px"></div>             
                 <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>:
