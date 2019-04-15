@@ -62,12 +62,6 @@
                 <button type="submit" id="comment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-md"><i class="fas fa-comment"></i></button>
                 </form>
             {% endif %}
-
-{#            {% if post.user == user %}#}
-{#            <a class ="btn-lg text-right" href="{% url 'social_match:editpost' post.id %}">#}
-{#                    <i class="fas fa-edit"></i></i>#}
-{#            </a>#}
-{#            {% endif %}#}
         </div>
 
         <ul class="list-group list-group-flush">

@@ -31,12 +31,12 @@ User = get_user_model()
 
 
 def base(request):
-	return HttpResponseRedirect(reverse('social_match:home'))
+    return HttpResponseRedirect(reverse('social_match:home'))
 
 
 def about(request):
-	template_name = './social_match/about.html'
-	return render(request, template_name)
+    template_name = './social_match/about.html'
+    return render(request, template_name)
 
 
 def home(request):
@@ -144,25 +144,25 @@ def profile(request, user_id=None):
     })
 
 def createpost(request):
-	template_name = './social_match/createpost.html'
+    template_name = './social_match/createpost.html'
 
-	if request.method == 'POST':
-		form = PostForm(request.POST)
-		if form.is_valid():
-			post = form.save(commit=False)
-			post.user = request.user
-			post.date = timezone.now()
-			post.save()
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user
+            post.date = timezone.now()
+            post.save()
 
-			message = 'Your post has been created!'
-			form = PostForm()
-			context = {'form': form, 'confirmation': message}
-			return render(request, template_name, context)
+            message = 'Your post has been created!'
+            form = PostForm()
+            context = {'form': form, 'confirmation': message}
+            return render(request, template_name, context)
 
-	else:
-		form = PostForm()
+    else:
+        form = PostForm()
 
-	return render(request, template_name, {'form': form})
+    return render(request, template_name, {'form': form})
 
 
 def editpost(request, post_id):
@@ -221,6 +221,7 @@ def likepost(request):
         user_id = request.POST.get('u')
         if not user_id:  # accessing user's own profile
             user = request.user
+            viewing_user = user
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('social_match:home'))
         else:
@@ -287,6 +288,7 @@ def commentpost(request):
         user_id = request.POST.get('u')
         if not user_id:  # accessing user's own profile
             user = request.user
+            viewing_user = user
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('social_match:home'))
         else:
@@ -324,68 +326,68 @@ def notifications(request, notification_id):
         return HttpResponseRedirect('/profile')
 
 def editprofile(request, user_id):
-	template_name = './social_match/editprofile.html'
-	user = User.objects.get(id=user_id)
-	if request.method == "POST":
-		form = EditProfileForm(request.POST, request.FILES)
-		if form.has_changed() and form.is_valid():
-			user.refresh_from_db()
+    template_name = './social_match/editprofile.html'
+    user = User.objects.get(id=user_id)
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, request.FILES)
+        if form.has_changed() and form.is_valid():
+            user.refresh_from_db()
 
-			user.first_name = form.cleaned_data.get('first_name')
-			user.last_name = form.cleaned_data.get('last_name')
-			user.phone = form.cleaned_data.get('phone')
-			user.class_standing = form.cleaned_data.get('class_standing')
-			user.graduation_year = form.cleaned_data.get('graduation_year')
-			user.picture = form.cleaned_data.get('picture')
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.phone = form.cleaned_data.get('phone')
+            user.class_standing = form.cleaned_data.get('class_standing')
+            user.graduation_year = form.cleaned_data.get('graduation_year')
+            user.picture = form.cleaned_data.get('picture')
 
-			user.majors.set(form.cleaned_data.get('majors'))
-			user.minors.set(form.cleaned_data.get('minors'))
-			user.skills.set(form.cleaned_data.get('skills'))
-			user.interests.set(form.cleaned_data.get('interests'))
-			user.courses.set(form.cleaned_data.get('courses'))
-			user.activities.set(form.cleaned_data.get('activities'))
-			user.save()
+            user.majors.set(form.cleaned_data.get('majors'))
+            user.minors.set(form.cleaned_data.get('minors'))
+            user.skills.set(form.cleaned_data.get('skills'))
+            user.interests.set(form.cleaned_data.get('interests'))
+            user.courses.set(form.cleaned_data.get('courses'))
+            user.activities.set(form.cleaned_data.get('activities'))
+            user.save()
 
-			return HttpResponseRedirect('/profile')
-	else:
-		form = EditProfileForm(instance=user)
-		print("check perms")
-		# add permissions for creating options
-		perm1 = Permission.objects.get(name="Can add skill")
-		perm2 = Permission.objects.get(name="Can add activity")
-		perm3 = Permission.objects.get(name="Can add interest")
-		if isinstance(request.user, User):
-			if not request.user.has_perm(perm1):
-				print("Added permission 1")
-				request.user.user_permissions.add(perm1)
-			else:
-				print("Has permission")
-			if not request.user.has_perm(perm2):
-				request.user.user_permissions.add(perm2)
-			if not request.user.has_perm(perm3):
-				request.user.user_permissions.add(perm3)
+            return HttpResponseRedirect('/profile')
+    else:
+        form = EditProfileForm(instance=user)
+        print("check perms")
+        # add permissions for creating options
+        perm1 = Permission.objects.get(name="Can add skill")
+        perm2 = Permission.objects.get(name="Can add activity")
+        perm3 = Permission.objects.get(name="Can add interest")
+        if isinstance(request.user, User):
+            if not request.user.has_perm(perm1):
+                print("Added permission 1")
+                request.user.user_permissions.add(perm1)
+            else:
+                print("Has permission")
+            if not request.user.has_perm(perm2):
+                request.user.user_permissions.add(perm2)
+            if not request.user.has_perm(perm3):
+                request.user.user_permissions.add(perm3)
 
-	return render(request, template_name, {'form': form})
+    return render(request, template_name, {'form': form})
 
 
 def classlist(request):
-	courses = Course.objects.all()
-	data = [{"name": str(c) + ": " + c.name} for c in courses]
-	json_data = json.dumps(data)
-	return HttpResponse(json_data, content_type='application/json')
+    courses = Course.objects.all()
+    data = [{"name": str(c) + ": " + c.name} for c in courses]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
 
 def majorlist(request):
-	majors = Major.objects.all()
-	data = [{"name": str(m) + ": " + m.name} for m in majors]
-	json_data = json.dumps(data)
-	return HttpResponse(json_data, content_type='application/json')
+    majors = Major.objects.all()
+    data = [{"name": str(m) + ": " + m.name} for m in majors]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
 
 
 def minorlist(request):
-	minors = Minor.objects.all()
-	data = [{"name": str(m) + ": " + m.name} for m in minors]
-	json_data = json.dumps(data)
-	return HttpResponse(json_data, content_type='application/json')
+    minors = Minor.objects.all()
+    data = [{"name": str(m) + ": " + m.name} for m in minors]
+    json_data = json.dumps(data)
+    return HttpResponse(json_data, content_type='application/json')
 
 def follow(request, user_id):
     self = request.user
@@ -425,94 +427,94 @@ def unblock(request, user_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unblock': True})
 
 class MajorAutocomplete(autocomplete.Select2QuerySetView):
-	def get_queryset(self):
-		# Don't forget to filter out results depending on the visitor !
-		if not self.request.user.is_authenticated:
-			return Major.objects.none()
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Major.objects.none()
 
-		# search by course name and/or number
-		qs = Major.objects.all()
+        # search by course name and/or number
+        qs = Major.objects.all()
 
-		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
 
-		return qs
+        return qs
 
 
 class MinorAutocomplete(autocomplete.Select2QuerySetView):
-	def get_queryset(self):
-		# Don't forget to filter out results depending on the visitor !
-		if not self.request.user.is_authenticated:
-			return Minor.objects.none()
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Minor.objects.none()
 
-		# search by course name and/or number
-		qs = Minor.objects.all()
+        # search by course name and/or number
+        qs = Minor.objects.all()
 
-		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
 
-		return qs
+        return qs
 
 
 class CourseAutocomplete(autocomplete.Select2QuerySetView):
-	def get_queryset(self):
-		# Don't forget to filter out results depending on the visitor !
-		if not self.request.user.is_authenticated:
-			return Course.objects.none()
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Course.objects.none()
 
-		# search by course name and/or number
-		qs = Course.objects.annotate(
-			full_name=Concat('department', V(' '), Cast('number', CharField()), V(': '), 'name'))
+        # search by course name and/or number
+        qs = Course.objects.annotate(
+            full_name=Concat('department', V(' '), Cast('number', CharField()), V(': '), 'name'))
 
-		if self.q:
-			qs = qs.filter(full_name__icontains=self.q)
+        if self.q:
+            qs = qs.filter(full_name__icontains=self.q)
 
-		return qs
+        return qs
 
 
 class SkillAutocomplete(autocomplete.Select2QuerySetView):
-	def get_queryset(self):
-		# Don't forget to filter out results depending on the visitor !
-		if not self.request.user.is_authenticated:
-			return Skill.objects.none()
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Skill.objects.none()
 
-		# search by course name and/or number
-		qs = Skill.objects.all()
+        # search by course name and/or number
+        qs = Skill.objects.all()
 
-		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
 
-		return qs
+        return qs
 
 
 class ActivityAutocomplete(autocomplete.Select2QuerySetView):
-	def get_queryset(self):
-		# Don't forget to filter out results depending on the visitor !
-		if not self.request.user.is_authenticated:
-			return Activity.objects.none()
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Activity.objects.none()
 
-		# search by course name and/or number
-		qs = Activity.objects.all()
+        # search by course name and/or number
+        qs = Activity.objects.all()
 
-		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
 
-		return qs
+        return qs
 
 
 class InterestAutocomplete(autocomplete.Select2QuerySetView):
-	def get_queryset(self):
-		# Don't forget to filter out results depending on the visitor !
-		if not self.request.user.is_authenticated:
-			return Interest.objects.none()
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.user.is_authenticated:
+            return Interest.objects.none()
 
-		# search by course name and/or number
-		qs = Interest.objects.all()
+        # search by course name and/or number
+        qs = Interest.objects.all()
 
-		if self.q:
-			qs = qs.filter(name__icontains=self.q)
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
 
-		return qs
+        return qs
 
 def get_profile_post_list(viewing_user, posts_per_page, page):
     posts = Post.objects.filter(user=viewing_user).order_by('-date')
