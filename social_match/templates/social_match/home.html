@@ -12,15 +12,16 @@
 </head> -->
 
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div id="home_posts">
+            <div class="col-md-1"></div>
+            <div id="home_posts" class="col-sm-12 col-md-8">
                 {% include 'social_match/home_posts.html' %}
             </div>
 
-            <div class="col-sm">
+            <div id='filter_posts' class="col-sm-12 col-md-3">
                 <!-- Filtering Posts -->
-                <h1>Filter Posts:</h1>
+                <h3>Filter Posts</h3>
 
                 <form method="POST">{% csrf_token %}
                     <br>
@@ -72,6 +73,7 @@
                 </div>
                 {% endif %}
             </div>
+            <div class="col-md-1"></div>
         </div>
     </div>
 
