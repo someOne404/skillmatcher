@@ -34,7 +34,11 @@
 <body>
 <div><img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" />
         <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
-            <a class="navbar-brand" href="/">Lucky 13's Social Matcher</a>
+            <a class="navbar-brand" href="{% url 'social_match:home' %}">
+            <span class="span-logo">
+             <img src="{% static 'images/big_logo_resized.png' %}" />
+            </span>
+            </a>            
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent-555" aria-controls="navbarSupportedContent-555"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +56,7 @@
                 </ul>
             </div>
         </nav>
-    <h1 style="margin: auto; width: 28%;">Meet Team Lucky13</h1>
+    <h1 style="margin: auto; width: 43%; color: black; font-weight: normal; font-size: 60">Meet Team Lucky13</h1>
     <br/>
     <br/>
 
