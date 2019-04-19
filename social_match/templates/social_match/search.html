@@ -94,7 +94,7 @@
                     {% if u.picture.isempty or u.picture.name == 'False' %}
                         <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
                     {% else %}
-                        <img height='256' width='256' src="{{ u.picture.url }}">
+                        <img height='65' width='65' src="{{ u.picture.url }}">
                     {% endif %}
                 {% else %}
                     <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
