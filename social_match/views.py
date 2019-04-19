@@ -45,7 +45,7 @@ def home(request):
 
     keywordstr, namestr, liked, commented, filtered = get_filter_form_results(request)
 
-    posts_per_page = 20
+    posts_per_page = 10
     post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
 
     if request.user.is_authenticated:

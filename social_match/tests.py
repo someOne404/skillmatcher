@@ -414,7 +414,7 @@ class PostTest(TestCase):
             ['<Post: Past post>']
         )
 
-    def test_first_20_of_21_questions_appear_in_home(self):
+    def test_first_10_of_21_questions_appear_in_home(self):
         headline = '21 posts'
         message = 'message'
         user = self.create_test_user()
@@ -422,7 +422,7 @@ class PostTest(TestCase):
         response = self.client.get(reverse('social_match:home'))
 
         list = []
-        for i in range(20):
+        for i in range(10):
             list.append('<Post: ' + headline + '>')
 
         self.assertQuerysetEqual(response.context['post_list'], list)

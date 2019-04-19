@@ -45,8 +45,6 @@
                     {% endif %} {% endcomment %}
                 </div>
             </div>
-            </div>
-                {% comment %} {% else %}
                     {% if not check_follow %}
                         <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
                     {% elif check_follow %}
@@ -56,7 +54,7 @@
                         <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
                     {% elif check_block %}
                         <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
-                    {% endif %} {% endcomment %}
+                    {% endif %}
                 {% endif %}
         </div>
 
