@@ -216,6 +216,7 @@ def likepost(request):
             'commented': commented,
             'filtered': filtered,
         }
+        return HttpResponse(post_list)
 
     else:
         template_name = './social_match/posts_ajax/profile_posts.html'

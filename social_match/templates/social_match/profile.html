@@ -4,7 +4,6 @@
 {% load friendshiptags %}
 {% if viewing_user.is_authenticated %}
 
-
 <div class="jumbotron">
     <div class="row">
             <div class="col-md-4 col-sm-12 mb-3">
@@ -21,7 +20,8 @@
 
             <br />
             {% if viewing_user == user %}
-            <div style="display: flex">
+            <div class="container">
+                <div class="row">                
                 <div>
                     <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
                         {% csrf_token %}
@@ -34,7 +34,6 @@
                         <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
                     </form> 
 
-                    
                     {% comment %} <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="file" name="myfile">
@@ -44,9 +43,8 @@
                     {% if uploaded_file_url %}
                         <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
                     {% endif %} {% endcomment %}
-
-
                 </div>
+            </div>
             </div>
                 {% comment %} {% else %}
                     {% if not check_follow %}
@@ -134,22 +132,33 @@
     </div>
 
     <!-- Displaying Notifications -->
-    {% if viewing_user == user %}
-        <hr>
-        <h1 align="center">Notifications</h1>
-        {% if notifications %}
-        <div align="center" class="col-sm" align="left" style="overflow-y: auto; height:400px;">
-            <div id="profile_notifications">
-                {% include 'social_match/notifications_ajax/profile_notifications.html' %}
-            </div>
-         {% else %} <p align="center">No Notifications.</p>
-        {% endif %}
-    {% endif %}
-    </div>
+            <hr>
 
-    <div id="profile_posts">
+    {% if viewing_user == user %}
+        <div class="container">
+            <div class="row">
+            <div align="center" class="col-sm" align="left" style="overflow-y: auto; height:400px;">
+            <h1 class="display-4">Notifications</h1>
+
+            {% if notifications %}
+                    <div id="profile_notifications">
+                        {% include 'social_match/notifications_ajax/profile_notifications.html' %}
+                    </div>
+            {% else %} <p align="center">No Notifications.</p>
+            {% endif %}
+                </div>
+
+                <div class ="col-sm">
+                    {% include 'social_match/posts_ajax/profile_posts.html' %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+     <div id="profile_posts">
         {% include 'social_match/posts_ajax/profile_posts.html' %}
     </div>
+    {% endif %}
+
 
 </div>
 
