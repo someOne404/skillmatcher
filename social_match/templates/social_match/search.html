@@ -7,6 +7,7 @@
 * Availability: https://simpleisbetterthancomplex.com/tutorial/2016/11/28/how-to-filter-querysets-dynamically.html
 ****************************************************************************************-->
 {% extends 'social_match/base.html' %}
+{% load static %}
 {% load widget_tweaks %}
 {% block content %}
 {{ filter.form.media }}
@@ -89,7 +90,16 @@
       {% for u in filter.qs %}
         {% if user.email != u.email%}
         <tr>
-          <td>{{ u.picture }}</td>
+          <td>{% if u.picture %}
+                    {% if u.picture.isempty or u.picture.name == 'False' %}
+                        <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                    {% else %}
+                        <img height='256' width='256' src="{{ u.picture.url }}">
+                    {% endif %}
+                {% else %}
+                    <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                {% endif %}
+          </td>
           <td>{{ u.first_name }}</td>
           <td>{{ u.last_name }}</td>
           <td>{{ u.email }}</td>
