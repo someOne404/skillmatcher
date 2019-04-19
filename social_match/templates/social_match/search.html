@@ -77,6 +77,7 @@
   <table class="table table-bordered">
     <thead>
       <tr>
+        <th>Profile Photo</th>
         <th>First name</th>
         <th>Last name</th>
         <th>Email</th>
@@ -88,6 +89,7 @@
       {% for u in filter.qs %}
         {% if user.email != u.email%}
         <tr>
+          <td>{{ u.picture }}</td>
           <td>{{ u.first_name }}</td>
           <td>{{ u.last_name }}</td>
           <td>{{ u.email }}</td>

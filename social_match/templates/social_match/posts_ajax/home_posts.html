@@ -32,7 +32,8 @@
                 {% if post.post_edited %}
                 Last edited on: {{post.date_edited}}
                 {% endif %}
-            <br>{{ post.likes.count }} Like{{ post.likes.count|pluralize }}
+            <br> <a data-toggle="modal" data-target="#likesModal">
+{{ post.likes.count }} Like{{ post.likes.count|pluralize }} </a>
             </p>
             <div style="display: flex">
 
@@ -113,4 +114,37 @@
     {% else %}
     <p>No posts are available.</p>
     {% endif %}
+</div>
+
+{% comment %} Likes Modal {% endcomment %}
+<div class="modal fade" id="likesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">People Who Liked Your Post:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+        <div>hello</div>
+
+      </div>
+    </div>
+  </div>
 </div>

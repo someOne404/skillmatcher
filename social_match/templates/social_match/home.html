@@ -17,7 +17,6 @@
             <div id="home_posts">
                 {% include 'social_match/posts_ajax/home_posts.html' %}
             </div>
-
             <div class="col-sm">
                 <!-- Filtering Posts -->
                 <h1>Filter Posts:</h1>
@@ -46,7 +45,7 @@
                 <hr>
 
                 <!-- Displaying Notifications -->
-                <div id="home_notifications_header">
+                {% comment %} <div id="home_notifications_header">
                     {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
                 </div>
                 {% if notifications %}
@@ -54,7 +53,7 @@
                     <div id="home_notifications">
                         {% include 'social_match/notifications_ajax/home_notifications.html' %}
                     </div>
-                {% endif %}
+                {% endif %} {% endcomment %}
                 </div>
             </div>
         </div>

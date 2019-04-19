@@ -1,12 +1,11 @@
 {% load static %}
 
-<hr>
 <div align="center">
         <h4 class="display-4">Posts:</h4>
         {% if post_list %}
         {% for post in post_list %}
         {% if viewing_user == user or post.post_active %}
-            <div class="card" align="left" style="width: 800px;">
+            <div class="card" align="left" style="width: 600px;">
                 <div class="card-body">
                 <h5 class="card-title" style="display: flex"> 
                     {% if viewing_user.picture %}
