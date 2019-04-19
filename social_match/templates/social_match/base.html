@@ -45,6 +45,43 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.3/js/mdb.min.js"></script>
     <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+
+        .typewriter h1 {
+        display: flex;
+        overflow: hidden; /* Ensures the content is not revealed until the animation */
+        border-right: .05em solid black;
+        white-space: nowrap; /* Keeps the content on a single line */
+        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+        animation: typing 3.5s steps(30, end), blink-caret 0.5s step-end infinite;
+        }
+
+        /* The typing effect */
+        @keyframes typing {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+        }
+
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+        from,
+        to {
+            border-color: transparent;
+        }
+        50% {
+            border-color: black;
+        }
+        }
+        </style>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#subtitle").fadeIn("slow");
+            });
+        </script>
     {% include 'social_match/ajax.html' %}
 </head>
 
@@ -142,8 +179,12 @@
     </div>    
     </div>
     <div style="margin-top:125px">
-        <h1 style="margin: auto; width: 83%; color: black; font-weight: normal; font-size: 90">Lucky 13's Social Matcher</h1>
-        <h1 style="margin: auto; width: 46%; color: #EEEEEE; font-weight: bold">Connecting students one by one</h2>
+        <div class="typewriter" style="margin: auto; width: 83%;">
+            <h1 id="splash" style="color: black; font-weight: normal; font-size: 90">Lucky 13's Social Matcher</h1>
+        </div>
+        <div id="subtitle" style="margin: auto; width: 46%;">
+            <h1 style="color: #EEEEEE; font-weight: bold" id="subtitle">Connecting students one by one</h2>
+        </div>
     </div>
     {% endif %}
 
