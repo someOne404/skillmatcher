@@ -46,16 +46,28 @@
     <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
-
-        .typewriter h1 {
+        #subtitle{
+            margin: auto; 
+            width: 46%;
+        }
+        .typewriter h1,h2 {
         display: flex;
         overflow: hidden; /* Ensures the content is not revealed until the animation */
         border-right: .05em solid black;
+        letter-spacing: .01em; /* Adjust as needed */
         white-space: nowrap; /* Keeps the content on a single line */
         margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-        animation: typing 3.5s steps(30, end), blink-caret 0.5s step-end infinite;
+        animation: typing 2.0s steps(30, end), blink-caret 0.5s step-end infinite;
         }
-
+        .typewriter2 h1,h2 {
+        display: flex;
+        overflow: hidden; /* Ensures the content is not revealed until the animation */
+        border-right: .05em solid black;
+        letter-spacing: .01em; /* Adjust as needed */
+        white-space: nowrap; /* Keeps the content on a single line */
+        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+        animation: typing 0.5s steps(30, end), blink-caret 0.5s step-end infinite;
+        }
         /* The typing effect */
         @keyframes typing {
         from {
@@ -76,12 +88,15 @@
             border-color: black;
         }
         }
-        </style>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                $("#subtitle").fadeIn("slow");
-            });
-        </script>
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#subtitle").fadeIn(3000).delay("slow").removeAttr('style');
+            $(".createpost").fadeIn(500).delay("slow").removeAttr('style');
+            $(".photo").fadeIn(500).delay("slow").removeAttr('style');   
+            $(".info").fadeIn(1000).delay("slow").removeAttr('style');        
+        });
+    </script>
     {% include 'social_match/ajax.html' %}
 </head>
 
@@ -182,8 +197,8 @@
         <div class="typewriter" style="margin: auto; width: 83%;">
             <h1 id="splash" style="color: black; font-weight: normal; font-size: 90">Lucky 13's Social Matcher</h1>
         </div>
-        <div id="subtitle" style="margin: auto; width: 46%;">
-            <h1 style="color: #EEEEEE; font-weight: bold" id="subtitle">Connecting students one by one</h2>
+        <div id="subtitle" style="display: none">
+            <h1 style="color: #EEEEEE; font-weight: bold">Connecting students one by one</h2>
         </div>
     </div>
     {% endif %}

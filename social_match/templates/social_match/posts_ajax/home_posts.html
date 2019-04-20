@@ -10,11 +10,13 @@
         posts commented on: {{ commented }} <br><br>
         </h5>
     {% else %}
-        <h1>All Posts:</h1>
+    <div class="typewriter" style="margin: auto; width: 31%;">
+        <h1 >All Posts:</h1>
+    </div>
     {% endif %}
     {% if post_list %}
     {% for post in post_list %}
-    <div class="card" style="width: 35rem;">
+    <div class="card card2" style="display: none">
         <div class="card-body">
             <h5 class="card-title" style="display: flex"> 
                 {% if post.user.picture %}

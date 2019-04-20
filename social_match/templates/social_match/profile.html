@@ -7,44 +7,45 @@
 <div class="jumbotron">
     <div class="row">
             <div class="col-md-4 col-sm-12 mb-3">
-                {% if viewing_user.picture %}
-                    {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
-                        <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                <div class="photo" style="display: none">
+                    {% if viewing_user.picture %}
+                        {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
+                            <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                        {% else %}
+                            <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                        {% endif %}
                     {% else %}
-                        <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                        <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+    {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                     {% endif %}
-                {% else %}
-                    <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-{#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
-                {% endif %}
-
             <br />
-            {% if viewing_user == user %}
-            <div class="container">
-                <div class="row">                
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                    </form>
-                </div>
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
-                    </form> 
+                {% if viewing_user == user %}
+                <div class="container">
+                    <div class="row">                
+                    <div>
+                        <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                            {% csrf_token %}
+                            <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
+                        </form>
+                    </div>
+                    <div>
+                        <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                            {% csrf_token %}
+                            <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
+                        </form> 
 
-                    {% comment %} <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="file" name="myfile">
-                        <button class="btn btn-light" type="submit">Upload</button>
-                    </form>
+                        {% comment %} <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="file" name="myfile">
+                            <button class="btn btn-light" type="submit">Upload</button>
+                        </form>
 
-                    {% if uploaded_file_url %}
-                        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
-                    {% endif %} {% endcomment %}
+                        {% if uploaded_file_url %}
+                            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                        {% endif %} {% endcomment %}
+                    </div>
                 </div>
-            </div>
+                </div>
             </div>
                 {% comment %} {% else %}
                     {% if not check_follow %}
@@ -61,7 +62,7 @@
         </div>
 
   
-            <div class="col-md-8 col-sm-12 mb-3">
+            <div class="col-md-8 col-sm-12 mb-3 info" style="display:none">
                 <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
                 <h5>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</h5>
                 <h5><strong>Majors:</strong>
@@ -121,7 +122,7 @@
 
 
             <hr>
-                <h2 class="display-5">Contacts</h2>
+                <h3 class="display-5">Contacts</h2>
                 <h5><strong>Email:</strong> {{ viewing_user.email }}</h5>
                 <h5><strong>Phone number:</strong> {{ viewing_user.phone }}</h5>
 
