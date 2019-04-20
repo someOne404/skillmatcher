@@ -1,7 +1,9 @@
 {% extends 'social_match/base.html' %}
 {% block content %}
 <div style="padding-left: 50px">
-    <h2>Edit your post!</h2>
+    <div class="typewriter" style="margin:0 auto; width:17%">
+        <h2>Edit your post!</h2>
+    </div>
     <form method="POST">{% csrf_token %}
         <div>
             <h5>Headline:</h5>
