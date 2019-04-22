@@ -205,7 +205,7 @@ def likepost(request):
 
         keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
 
-        posts_per_page = 20
+        posts_per_page = 10
         post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
 
         context = {
@@ -270,7 +270,7 @@ def commentpost(request):
 
         keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
 
-        posts_per_page = 20
+        posts_per_page = 10
         post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
 
         context = {
