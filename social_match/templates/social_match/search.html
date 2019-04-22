@@ -45,7 +45,9 @@
     <script type="text/javascript">
         $(document).ready(function(){
         $(".row").fadeIn(500).delay("slow").removeAttr('style');   
-        $(".buttons").fadeIn(500).delay("slow").removeAttr('style');   
+        $(".buttons").fadeIn(500).delay("slow").removeAttr('style');  
+        $(".search").fadeIn(500).delay("slow").removeAttr('style');   
+
         });
     </script>
   <form method="get">
@@ -115,45 +117,47 @@
     </div>
   </form>
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Profile Photo</th>
-        <th>First name</th>
-        <th>Last name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Profile</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for u in filter.qs %}
-        {% if user.email != u.email%}
+  <div class = "search" style="display:none">
+    <table class="table table-bordered">
+      <thead>
         <tr>
-          <td>{% if u.picture %}
-                    {% if u.picture.isempty or u.picture.name == 'False' %}
-                        <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-                    {% else %}
-                        <img height='65' width='65' src="{{ u.picture.url }}">
-                    {% endif %}
-                {% else %}
-                    <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-                {% endif %}
-          </td>
-          <td>{{ u.first_name }}</td>
-          <td>{{ u.last_name }}</td>
-          <td>{{ u.email }}</td>
-          <td>{{ u.phone}}</td>
-          <td><a href="{% url 'social_match:profile' u.id %}"><button type="button" class="btn btn-info">View</button></a></td>
+          <th>Profile Photo</th>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Profile</th>
         </tr>
-        {% endif %}
-      {% empty %}
-        <tr>
-          <td colspan="5">No data</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for u in filter.qs %}
+          {% if user.email != u.email%}
+          <tr>
+            <td>{% if u.picture %}
+                      {% if u.picture.isempty or u.picture.name == 'False' %}
+                          <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                      {% else %}
+                          <img height='65' width='65' src="{{ u.picture.url }}">
+                      {% endif %}
+                  {% else %}
+                      <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                  {% endif %}
+            </td>
+            <td>{{ u.first_name }}</td>
+            <td>{{ u.last_name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone}}</td>
+            <td><a href="{% url 'social_match:profile' u.id %}"><button type="button" class="btn btn-info">View</button></a></td>
+          </tr>
+          {% endif %}
+        {% empty %}
+          <tr>
+            <td colspan="5">No data</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  <div>
 
 {% endif%}
 {% endblock %}
