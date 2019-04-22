@@ -6,7 +6,7 @@
 
 
 <div class="jumbotron">
-    <div class="row">
+        <div class="row">
             <div class="col-md-4 col-sm-12 mb-3">
                 {% if viewing_user.picture %}
                     {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
@@ -18,7 +18,7 @@
                     <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
 {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}
-
+            
             <br />
             {% if viewing_user == user %}
             <div style="display: flex">
@@ -59,10 +59,10 @@
                     {% elif check_block %}
                         <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
                     {% endif %} {% endcomment %}
-                {% endif %}
+            {% endif %}
         </div>
 
-  
+        
             <div class="col-md-8 col-sm-12 mb-3">
                 <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
                 <h5>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</h5>
@@ -138,7 +138,7 @@
         <hr>
         <h1 align="center">Notifications</h1>
         {% if notifications %}
-            <div id="profile_notifications">
+            <div id="profile_notifications" style="margin:0 auto; width:15%" align="center">
                 {% include 'social_match/notifications_ajax/profile_notifications.html' %}
             </div>
          {% else %} <p align="center">No Notifications.</p>
