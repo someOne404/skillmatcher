@@ -46,7 +46,7 @@
                 <hr>
 
                 <!-- Displaying Notifications -->
-                <div id="home_notifications_header">
+                {% comment %} <div id="home_notifications_header">
                     {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
                 </div>
                 {% if notifications %}
@@ -55,7 +55,7 @@
                         {% include 'social_match/notifications_ajax/home_notifications.html' %}
                     </div>
                 {% endif %}
-                </div>
+                </div> {% endcomment %}
             </div>
         </div>
     </div>

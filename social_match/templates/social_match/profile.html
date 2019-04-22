@@ -4,51 +4,50 @@
 {% load friendshiptags %}
 {% if viewing_user.is_authenticated %}
 
-
 <div class="jumbotron">
     <div class="row">
             <div class="col-md-4 col-sm-12 mb-3">
-                {% if viewing_user.picture %}
-                    {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
-                        <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                <div class="photo" style="display: none">
+                    {% if viewing_user.picture %}
+                        {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
+                            <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                        {% else %}
+                            <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                        {% endif %}
                     {% else %}
-                        <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                        <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+    {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                     {% endif %}
-                {% else %}
-                    <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-{#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
-                {% endif %}
-
             <br />
-            {% if viewing_user == user %}
-            <div style="display: flex">
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                    </form>
+                {% if viewing_user == user %}
+                <div class="container">
+                    <div class="row">                
+                    <div>
+                        <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                            {% csrf_token %}
+                            <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
+                        </form>
+                    </div>
+                    <div>
+                        <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                            {% csrf_token %}
+                            <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
+                        </form> 
+
+                        {% comment %} <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="file" name="myfile">
+                            <button class="btn btn-light" type="submit">Upload</button>
+                        </form>
+
+                        {% if uploaded_file_url %}
+                            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                        {% endif %} {% endcomment %}
+                    </div>
                 </div>
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
-                    </form> 
-
-                    
-                    {% comment %} <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="file" name="myfile">
-                        <button class="btn btn-light" type="submit">Upload</button>
-                    </form>
-
-                    {% if uploaded_file_url %}
-                        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
-                    {% endif %} {% endcomment %}
-
-
                 </div>
             </div>
-                {% else %}
+                {% comment %} {% else %}
                     {% if not check_follow %}
                         <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
                     {% elif check_follow %}
@@ -58,12 +57,12 @@
                         <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
                     {% elif check_block %}
                         <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
-                    {% endif %}
+                    {% endif %} {% endcomment %}
                 {% endif %}
         </div>
 
   
-            <div class="col-md-8 col-sm-12 mb-3">
+            <div class="col-md-8 col-sm-12 mb-3 info" style="display:none">
                 <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
                 <h5>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</h5>
                 <h5><strong>Majors:</strong>
@@ -123,7 +122,7 @@
 
 
             <hr>
-                <h2 class="display-5">Contacts</h2>
+                <h3 class="display-5">Contacts</h2>
                 <h5><strong>Email:</strong> {{ viewing_user.email }}</h5>
                 <h5><strong>Phone number:</strong> {{ viewing_user.phone }}</h5>
 
@@ -134,22 +133,31 @@
     </div>
 
     <!-- Displaying Notifications -->
-    {% if viewing_user == user %}
-        <hr>
-        <h1 align="center">Notifications</h1>
-        {% if notifications %}
-        <div align="center" class="col-sm" align="left" style="overflow-y: auto; max-height:400px;">
-            <div id="profile_notifications">
-                {% include 'social_match/notifications_ajax/profile_notifications.html' %}
-            </div>
-         {% else %} <p align="center">No Notifications.</p>
-        {% endif %}
-    {% endif %}
-    </div>
+            <hr>
 
-    <div id="profile_posts">
+    {% if viewing_user == user %}
+        <div class="container">
+            <div class="row">
+                <div class="col-sm"  style="overflow-y: auto; height:400px;">
+                    <h1 class="display-4">Notifications:</h1>
+                    {% if notifications %}
+                            <div id="profile_notifications">
+                                {% include 'social_match/notifications_ajax/profile_notifications.html' %}
+                            </div>
+                    {% else %} <p >No Notifications.</p>
+                    {% endif %}
+                </div>
+                <div class ="col-sm">
+                    {% include 'social_match/posts_ajax/profile_posts.html' %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+     <div id="profile_posts">
         {% include 'social_match/posts_ajax/profile_posts.html' %}
     </div>
+    {% endif %}
+
 
 </div>
 

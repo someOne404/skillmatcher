@@ -7,14 +7,53 @@
 * Availability: https://simpleisbetterthancomplex.com/tutorial/2016/11/28/how-to-filter-querysets-dynamically.html
 ****************************************************************************************-->
 {% extends 'social_match/base.html' %}
+{% load static %}
 {% load widget_tweaks %}
 {% block content %}
 {{ filter.form.media }}
 {% if user.is_authenticated %}
+<style>
+        .typewriter h1,h2 {
+          display: flex;
+          overflow: hidden; /* Ensures the content is not revealed until the animation */
+          border-right: .05em solid black;
+          letter-spacing: .01em; /* Adjust as needed */
+          white-space: nowrap; /* Keeps the content on a single line */
+          margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+          animation: typing 0.4s steps(30, end), blink-caret 0.5s step-end infinite;
+        }
+        /* The typing effect */
+        @keyframes typing {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+        }
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+        from,
+        to {
+            border-color: transparent;
+        }
+        50% {
+            border-color: black;
+        }
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $(".row").fadeIn(500).delay("slow").removeAttr('style');   
+        $(".buttons").fadeIn(500).delay("slow").removeAttr('style');   
+        });
+    </script>
   <form method="get">
     <div class="well">
-      <h2 style="margin-top: 0">Search</h2>
-      <div class="row">
+      <div class="typewriter" style="margin: auto; width: 8%;">
+      <h2 >Search</h2>
+      </div>
+      <div class="row" style="display: none">
         <div class="form-group col-sm-4 col-md-3">
           {{ filter.form.first_name.label_tag }}
           {% render_field filter.form.first_name class="form-control" %}
@@ -32,7 +71,7 @@
           {% render_field filter.form.class_standing class="form-control" %}
         </div>
       </div>
-      <div class="row">
+      <div class="row" style="display: none">
         <div class="form-group col-sm-4 col-md-2">
           {{ filter.form.graduation_year.label_tag }}
           {% render_field filter.form.graduation_year class="form-control" %}
@@ -50,7 +89,7 @@
           {% render_field filter.form.courses class="form-control" %}
         </div>
       </div>
-      <div class="row">
+      <div class="row" style="display: none">
         <div class="form-group col-sm-4 col-md-3">
           {{ filter.form.skills.label_tag }}
           {% render_field filter.form.skills class="form-control" %}
@@ -64,19 +103,22 @@
           {% render_field filter.form.activities class="form-control" %}
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">
-        <span class="glyphicon glyphicon-search"></span> Search
-      </button>
-      <a href="{% url 'social_match:resetsearch' %}">
-      <button type="button" class="btn btn-light">
-      Reset
-      </button></a>
+      <div class="buttons" style="display: none">
+        <button type="submit" class="btn btn-primary">
+          <span class="glyphicon glyphicon-search"></span> Search
+        </button>
+        <a href="{% url 'social_match:resetsearch' %}">
+        <button type="button" class="btn btn-light">
+        Reset
+        </button></a>
+      </div>
     </div>
   </form>
 
   <table class="table table-bordered">
     <thead>
       <tr>
+        <th>Profile Photo</th>
         <th>First name</th>
         <th>Last name</th>
         <th>Email</th>
@@ -88,6 +130,16 @@
       {% for u in filter.qs %}
         {% if user.email != u.email%}
         <tr>
+          <td>{% if u.picture %}
+                    {% if u.picture.isempty or u.picture.name == 'False' %}
+                        <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                    {% else %}
+                        <img height='65' width='65' src="{{ u.picture.url }}">
+                    {% endif %}
+                {% else %}
+                    <img style='display: block; margin: auto;' height='65' width='65' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                {% endif %}
+          </td>
           <td>{{ u.first_name }}</td>
           <td>{{ u.last_name }}</td>
           <td>{{ u.email }}</td>
