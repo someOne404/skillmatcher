@@ -30,6 +30,43 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.3/js/mdb.min.js"></script>
     <script type="text/javascript" src="{% static 'js/base.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        .hidden{
+            display: none;
+        }
+        .typewriter h1 {
+        display: flex;
+        overflow: hidden; /* Ensures the content is not revealed until the animation */
+        border-right: .05em solid black;
+        letter-spacing: .01em; /* Adjust as needed */
+        white-space: nowrap; /* Keeps the content on a single line */
+        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+        animation: typing 1.25s steps(30, end), blink-caret 0.5s step-end infinite;
+        }
+        /* The typing effect */
+        @keyframes typing {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+        }
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+        from,
+        to {
+            border-color: transparent;
+        }
+        50% {
+            border-color: black;
+        }
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $("#developer").fadeIn(1000).delay("slow").removeAttr('style');        });
+    </script>
 </head>
 <body>
 <div><img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" />
@@ -56,12 +93,14 @@
                 </ul>
             </div>
         </nav>
-    <h1 style="margin: auto; width: 43%; color: black; font-weight: normal; font-size: 60">Meet Team Lucky13</h1>
+    <div class="typewriter" style="margin: auto; width: 43%;">
+        <h1 style="color: black; font-weight: normal; font-size: 60">Meet Team Lucky13</h1>
+    </div>
     <br/>
     <br/>
 
-    <div class="container">
-  <div class="row">
+<div class="container" >
+  <div id="developer" class="row" style="display: none">
     <div class="col-sm">
         <div class="card card-cascade">
             <div class="view view-cascade overlay">
