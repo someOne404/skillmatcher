@@ -1,12 +1,11 @@
 {% load static %}
 
-<hr>
 <div align="center">
         <h4 class="display-4">Posts:</h4>
         {% if post_list %}
         {% for post in post_list %}
         {% if viewing_user == user or post.post_active %}
-            <div class="card" align="left" style="width: 800px;">
+            <div class="card" align="left" style="width: 600px;">
                 <div class="card-body">
                 <h5 class="card-title" style="display: flex"> 
                     {% if viewing_user.picture %}
@@ -60,8 +59,8 @@
                     <div style="overflow-y: auto; max-height:180px;">
                     {% for comment in post.comments.all %}
                     <p style="margin-left: 25px">
-                        {% if comment.user.picture %}
-                            <img height='20' width='20' src="{{ comment.user.picture.url }}">
+                        {% if post.user.picture %}
+                            <img height='20' width='20' src="{{ post.user.picture.url }}">
                         {% else %}
                             <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
                             {#<i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
