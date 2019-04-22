@@ -137,12 +137,14 @@
     {% if viewing_user == user %}
         <hr>
         <h1 align="center">Notifications</h1>
+        <div style="overflow-y: auto; max-height:400px;">
         {% if notifications %}
             <div id="profile_notifications" style="margin:0 auto; width:15%" align="center">
                 {% include 'social_match/notifications_ajax/profile_notifications.html' %}
             </div>
          {% else %} <p align="center">No Notifications.</p>
         {% endif %}
+        </div>
     {% endif %}
     <hr>
 
