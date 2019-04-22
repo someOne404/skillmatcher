@@ -12,60 +12,17 @@
 </head> -->
 
 <body>
-    <style>
-        .hidden{
-            display: none;
-        }
-        .card2{
-            width: 35rem;
-        }
-        .typewriter h1 {
-        display: flex;
-        overflow: hidden; /* Ensures the content is not revealed until the animation */
-        border-right: .05em solid black;
-        letter-spacing: .01em; /* Adjust as needed */
-        white-space: nowrap; /* Keeps the content on a single line */
-        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-        animation: typing 0.5s steps(30, end), blink-caret 0.5s step-end infinite;
-        }
-        /* The typing effect */
-        @keyframes typing {
-        from {
-            width: 0;
-        }
-        to {
-            width: 100%;
-        }
-        }
-        /* The typewriter cursor effect */
-        @keyframes blink-caret {
-        from,
-        to {
-            border-color: transparent;
-        }
-        50% {
-            border-color: black;
-        }
-        }
-    </style>
-    <script type="text/javascript">
-        $(document).ready(function(){
-        $(".card").fadeIn(1000).delay("slow").removeAttr('style');   
-        $(".filterposts").fadeIn(500).delay("slow").removeAttr('style');    
-        });
-    </script>
     <div class="container">
         <div class="row">
             <div id="home_posts">
                 {% include 'social_match/posts_ajax/home_posts.html' %}
             </div>
+
             <div class="col-sm">
                 <!-- Filtering Posts -->
-                <div class="typewriter" style="margin: auto; width: 41%;">
-                    <h1>Filter Posts:</h1>
-                </div>
+                <h1>Filter Posts:</h1>
 
-                <form method="POST" class="filterposts" style="display: none">{% csrf_token %}
+                <form method="POST">{% csrf_token %}
                     <br>
                     <div>
                         <h5>Name: </h5>{{ form.name }}
@@ -89,7 +46,7 @@
                 <hr>
 
                 <!-- Displaying Notifications -->
-                {% comment %} <div id="home_notifications_header">
+                <div id="home_notifications_header">
                     {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
                 </div>
                 {% if notifications %}
@@ -97,7 +54,7 @@
                     <div id="home_notifications">
                         {% include 'social_match/notifications_ajax/home_notifications.html' %}
                     </div>
-                {% endif %} {% endcomment %}
+                {% endif %}
                 </div>
             </div>
         </div>
