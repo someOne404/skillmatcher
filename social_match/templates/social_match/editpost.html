@@ -1,7 +1,9 @@
 {% extends 'social_match/base.html' %}
 {% block content %}
 <div style="padding-left: 50px">
-    <h2>Edit your post!</h2>
+    <div class="typewriter" style="margin:0 auto; width:17%">
+        <h2>Edit your post!</h2>
+    </div>
     <form method="POST">{% csrf_token %}
         <div>
             <h5>Headline:</h5>
@@ -16,8 +18,8 @@
             {{ form.post_active }}
         </div>
         </br>
-
         <button class="btn btn-primary" type="submit">Save Changes</button>
+        <input type="hidden" name="return_to" value="{{return_to}}">
     </form>
 </div>
 {% endblock %}

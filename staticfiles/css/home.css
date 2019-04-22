@@ -29,3 +29,8 @@ body {
   bottom: 0px;
   width: 100%;
 }
+
+.span-logo {
+    height: 30px;
+    width: 10px;
+}

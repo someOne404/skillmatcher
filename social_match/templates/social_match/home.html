@@ -12,16 +12,59 @@
 </head> -->
 
 <body>
+    <style>
+        .hidden{
+            display: none;
+        }
+        .card2{
+            width: 35rem;
+        }
+        .typewriter h1 {
+        display: flex;
+        overflow: hidden; /* Ensures the content is not revealed until the animation */
+        border-right: .05em solid black;
+        letter-spacing: .01em; /* Adjust as needed */
+        white-space: nowrap; /* Keeps the content on a single line */
+        margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+        animation: typing 0.5s steps(30, end), blink-caret 0.5s step-end infinite;
+        }
+        /* The typing effect */
+        @keyframes typing {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+        }
+        /* The typewriter cursor effect */
+        @keyframes blink-caret {
+        from,
+        to {
+            border-color: transparent;
+        }
+        50% {
+            border-color: black;
+        }
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $(".card").fadeIn(1000).delay("slow").removeAttr('style');   
+        //$(".filterposts").fadeIn(500).delay("slow").removeAttr('style');    
+        });
+    </script>
     <div class="container">
         <div class="row">
             <div id="home_posts">
-                {% include 'social_match/home_posts.html' %}
+                {% include 'social_match/posts_ajax/home_posts.html' %}
             </div>
 
             <div class="col-sm">
                 <!-- Filtering Posts -->
-                <h1>Filter Posts:</h1>
-
+                <div class="typewriter" style="margin: auto; width: 41%;">
+                    <h1>Filter Posts:</h1>
+                </div>
                 <form method="POST">{% csrf_token %}
                     <br>
                     <div>
@@ -44,33 +87,18 @@
 
                 <br />
                 <hr>
+
                 <!-- Displaying Notifications -->
-                <h1>You have <strong>{{ notifications|length }}</strong> unread notification{{notifications|pluralize}}.</h1>
+                {% comment %} <div id="home_notifications_header">
+                    {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
+                </div>
                 {% if notifications %}
-                <div style="overflow-y: auto; height:400px;">
-                {% for notification in notifications %}
-                <div class="card" style="width: 30rem;">
-                    <div class="card-body">
-                        {% if notification.verb == "liked" %}
-                            <h5><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> liked your post:</h5>
-                            <p class="card-text">{{notification.target.headline}}</p>
-                        {% endif %}
-                        {% if notification.verb == "commented" %}
-                            <h5><strong>{{notification.actor.first_name}} {{notification.actor.last_name}}</strong> commented on your post:</h5>
-                            <p class="card-text">{{notification.target.headline}}<br>
-                                {{notification.action_object.text}}</p>
-                        {% endif %}
-                        <form class="centerDiv" action="{% url 'social_match:notifications' notification.id %}" method="GET">
-                            {% csrf_token %}
-                            <input type="hidden" name="return_to" value="home">
-                            <input class="btn btn-light btn-sm" type="submit" value="Mark as read" name="read">
-                            <input class="btn btn-light btn-sm" type="submit" value="Delete" name="delete">
-                        </form>
+                <div style="overflow-y: auto; max-height:400px;">
+                    <div id="home_notifications">
+                        {% include 'social_match/notifications_ajax/home_notifications.html' %}
                     </div>
-                </div>
-                {% endfor %}
-                </div>
                 {% endif %}
+                </div> {% endcomment %}
             </div>
         </div>
     </div>

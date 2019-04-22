@@ -5,9 +5,11 @@
     {% if confirmation %}
     {{confirmation}} Create another:
     {% else %}
+    <div style="margin: auto; width: 17%;" class="typewriter2">
     <h2>Create a post!</h2>
+    </div>
     {% endif %}
-    <form method="POST">{% csrf_token %}
+    <form class="createpost" method="POST" style="display:none">{% csrf_token %}
 
         <div>
             <h5>Headline:</h5>

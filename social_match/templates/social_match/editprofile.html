@@ -2,60 +2,63 @@
 {% block content %}
     {{ form.media }}
 <div>
-    <h2>Edit your Profile!</h2>
+    <div style="margin:0 auto; width: 20%">
+        <h2>Edit your Profile!</h2>
+    </div>
+    <div style="padding-left: 20px">
     <form method="POST" enctype="multipart/form-data">{% csrf_token %}
         </br>
         <div>
-            First Name:
+            <strong>First Name:</strong>
             {{ form.first_name }}
         </div>
         <div>
-            Last Name:
+            <strong>Last Name:</strong>
             {{ form.last_name }}
         </div>
         <div>
-            Phone:
+            <strong>Phone:</strong>
             {{ form.phone }}
             format: +9999999999
         </div>
         <div>
-            Class Standing:
+            <strong>Class Standing:</strong>
             {{ form.class_standing }}
         </div>
         <div>
-            Graduation Year:
+            <strong>Graduation Year:</strong>
             {{ form.graduation_year }}
         </div>
         <div>
-            Majors:
+            <strong>Majors:</strong>
             {{ form.majors }}
         </div>
         <div>
-            Minors:
+            <strong>Minors:</strong>
             {{ form.minors }}
         </div>
         <div>
-            Courses:
+            <strong>Courses:</strong>
             {{ form.courses }}
         </div>
         <div>
-            Skills:
+            <strong>Skills:</strong>
             {{ form.skills }}
         </div>
         <div>
-            Interests:
+            <strong>Interests:</strong>
             {{ form.interests }}
         </div>
         <div>
-            Activities:
+            <strong>Activities:</strong>
             {{ form.activities }}
         </div>
         <div>
-            Active:
+            <strong>Active:</strong>
             {{ form.status_active }}
         </div>
         <div>
-            Picture:
+            <strong>Picture:</strong>
             {{ form.picture }}
         </div>
 
@@ -65,5 +68,6 @@
         <a class="btn btn-light" href="{% url 'social_match:profile' %}">Cancel</a>
 
     </form>
+    </div>
 </div>
 {% endblock %}
