@@ -7,18 +7,19 @@
 
 <div class="jumbotron">
         <div class="row">
-            <div class="col-md-4 col-sm-12 mb-3">
-                {% if viewing_user.picture %}
-                    {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
-                        <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+            <div class="photo" style="display:none">
+                <div class="col-md-4 col-sm-12 mb-3">
+                    {% if viewing_user.picture %}
+                        {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
+                            <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                        {% else %}
+                            <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                        {% endif %}
                     {% else %}
-                        <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                        <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+    {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                     {% endif %}
-                {% else %}
-                    <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-{#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
-                {% endif %}
-            
+            </div>
             <br />
             {% if viewing_user == user %}
             <div style="display: flex">
@@ -64,7 +65,10 @@
 
         
             <div class="col-md-8 col-sm-12 mb-3">
-                <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
+                <div class="info" style="display:none">
+                    <h1 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
+                </div>
+                <div class="info2" style="display:none">
                 <h5>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</h5>
                 <h5>Majors:
                     {% for major in viewing_user.majors.all %}
@@ -126,6 +130,7 @@
                 <h4 class="display-5">Contact:</h4>
                 <h5>Email: {{ viewing_user.email }}</h5>
                 <h5>Phone number: {{ viewing_user.phone }}</h5>
+                </div>
 
             <br />
 
@@ -135,23 +140,36 @@
 
     <!-- Displaying Notifications -->
     {% if viewing_user == user %}
-        <hr>
-        <h1 align="center">Notifications</h1>
-        <div style="overflow-y: auto; max-height:400px;">
-        {% if notifications %}
-            {% comment %} <div id="profile_notifications" style="margin:0 auto; width:15%" align="center"> {% endcomment %}
-            <div id="profile_notifications" align="center">
-                {% include 'social_match/notifications_ajax/profile_notifications.html' %}
+        {% comment %} <hr> {% endcomment %}
+        <div class="info3" style="display:none">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        <h1 class="display-4" align="center">Notifications:</h1>
+                        <div style="overflow-y: auto; max-height:400px;">
+                            {% if notifications %}
+                                {% comment %} <div id="profile_notifications" style="margin:0 auto; width:15%" align="center"> {% endcomment %}
+                                <div id="profile_notifications" align="center">
+                                    {% include 'social_match/notifications_ajax/profile_notifications.html' %}
+                                </div>
+                            {% else %} <p align="center">No Notifications.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div id="profile_posts">
+                                {% include 'social_match/posts_ajax/profile_posts.html' %}
+                        </div>
+                    </div>
+                </div>
             </div>
-         {% else %} <p align="center">No Notifications.</p>
-        {% endif %}
         </div>
     {% endif %}
     <hr>
 
-    <div id="profile_posts">
+    {% comment %} <div id="profile_posts">
         {% include 'social_match/posts_ajax/profile_posts.html' %}
-    </div>
+    </div> {% endcomment %}
 
 </div>
 
