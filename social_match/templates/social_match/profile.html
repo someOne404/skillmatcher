@@ -136,9 +136,10 @@
             <hr>
 
     {% if viewing_user == user %}
-        <div class="container">
-            <div class="row">
-                <div class="col-sm"  style="overflow-y: auto; height:400px;">
+        {% comment %} <div class="container"> {% endcomment %}
+            {% comment %} <div class="row"> {% endcomment %}
+                {% comment %} <div class="col-sm"  style="overflow-y: auto; height:400px;"> {% endcomment %}
+                <div style="margin: 0 auto; width:20%;">
                     <h1 class="display-4">Notifications:</h1>
                     {% if notifications %}
                             <div id="profile_notifications">
@@ -147,11 +148,12 @@
                     {% else %} <p >No Notifications.</p>
                     {% endif %}
                 </div>
+                {% comment %} </div> {% endcomment %}
                 <div class ="col-sm">
                     {% include 'social_match/posts_ajax/profile_posts.html' %}
                 </div>
-            </div>
-        </div>
+            {% comment %} </div> {% endcomment %}
+        {% comment %} </div> {% endcomment %}
     {% else %}
      <div id="profile_posts">
         {% include 'social_match/posts_ajax/profile_posts.html' %}
