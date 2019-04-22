@@ -138,17 +138,15 @@
     {% if viewing_user == user %}
         <div class="container">
             <div class="row">
-            <div align="center" class="col-sm" align="left" style="overflow-y: auto; height:400px;">
-            <h1 class="display-4">Notifications</h1>
-
-            {% if notifications %}
-                    <div id="profile_notifications">
-                        {% include 'social_match/notifications_ajax/profile_notifications.html' %}
-                    </div>
-            {% else %} <p align="center">No Notifications.</p>
-            {% endif %}
+                <div class="col-sm"  style="overflow-y: auto; height:400px;">
+                    <h1 class="display-4">Notifications:</h1>
+                    {% if notifications %}
+                            <div id="profile_notifications">
+                                {% include 'social_match/notifications_ajax/profile_notifications.html' %}
+                            </div>
+                    {% else %} <p >No Notifications.</p>
+                    {% endif %}
                 </div>
-
                 <div class ="col-sm">
                     {% include 'social_match/posts_ajax/profile_posts.html' %}
                 </div>
