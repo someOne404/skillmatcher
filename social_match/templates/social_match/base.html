@@ -47,7 +47,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
         #subtitle{
-            margin: auto; 
+            margin: auto;
             width: 46%;
         }
         .typewriter h1,h2 {
@@ -92,10 +92,10 @@
         $(document).ready(function(){
             $("#subtitle").fadeIn(3000).delay("slow").removeAttr('style');
             $(".createpost").fadeIn(500).delay("slow").removeAttr('style');
-            $(".photo").fadeIn(1000).delay("slow").removeAttr('style');  
-            $(".info").fadeIn(1000).delay("slow").removeAttr('style');        
-            $(".info2").fadeIn(1500).delay("slow").removeAttr('style');  
-            $(".info3").fadeIn(2000).delay("slow").removeAttr('style');  
+            $(".photo").fadeIn(1000).delay("slow").removeAttr('style');
+            $(".info").fadeIn(1000).delay("slow").removeAttr('style');
+            $(".info2").fadeIn(1500).delay("slow").removeAttr('style');
+            $(".info3").fadeIn(2000).delay("slow").removeAttr('style');
         });
     </script>
     {% include 'social_match/ajax.html' %}
@@ -105,7 +105,7 @@
 
     <div>
         {% if user.is_authenticated %}
-        <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
+        <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange accent-4">
             <a class="navbar-brand" href="{% url 'social_match:home' %}">
             <span class="span-logo">
             <img src="{% static 'images/big_logo_resized.png' %}" />
@@ -131,7 +131,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
+                    <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
                             aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell"></i> </a>
@@ -166,9 +166,8 @@
             {% block content %}
             {% endblock %}
         {% else %}
-        
         <img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" />
-        <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange lighten-1">
+        <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange accent-4">
             <a class="navbar-brand" href="{% url 'social_match:home' %}">
             <span class="span-logo">
              <img src="{% static 'images/big_logo_resized.png' %}" />
@@ -205,7 +204,7 @@
     {% endif %}
 
     <div class="footer">
-        <footer class="page-footer font-small orange lighten-1">
+        <footer class="page-footer font-small stylish-color">
 
             <!-- Footer Links -->
             <div class="container-fluid text-center text-md-left">
@@ -259,4 +258,3 @@
 </body>
 
 </html>
-

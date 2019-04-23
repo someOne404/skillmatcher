@@ -5,50 +5,50 @@
 {% if viewing_user.is_authenticated %}
 
 
-<div class="jumbotron">
-        <div class="row">
-            <div class="photo" style="display:none">
-                <div class="col-md-4 col-sm-12 mb-3">
-                    {% if viewing_user.picture %}
-                        {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
-                            <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-                        {% else %}
-                            <img height='256' width='256' src="{{ viewing_user.picture.url }}">
-                        {% endif %}
-                    {% else %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-3 col-sm-12 mb-3">
+                {% if viewing_user.picture %}
+                    {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
                         <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-    {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
+                    {% else %}
+                        <img height='256' width='256' src="{{ viewing_user.picture.url }}">
                     {% endif %}
-            </div>
+                {% else %}
+                    <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+{#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
+                {% endif %}
+
             <br />
             {% if viewing_user == user %}
-            <div style="display: flex">
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                    </form>
-                </div>
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
-                    </form> 
-
-                    
-                    {% comment %} <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="file" name="myfile">
-                        <button class="btn btn-light" type="submit">Upload</button>
-                    </form>
-
-                    {% if uploaded_file_url %}
-                        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
-                    {% endif %} {% endcomment %}
-
-
-                </div>
+            <div>
+                <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                    {% csrf_token %}
+                    <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
+                </form>
             </div>
+            <div>
+                <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                    {% csrf_token %}
+                    <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
+                </form>
+
+
+                {% comment %} <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="myfile">
+                    <button class="btn btn-light" type="submit">Upload</button>
+                </form>
+
+                {% if uploaded_file_url %}
+                    <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                {% endcomment %}
+
+
+
+            </div>
+        </div>
                 {% comment %} {% else %}
                     {% if not check_follow %}
                         <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
@@ -63,37 +63,37 @@
             {% endif %}
         </div>
 
-        
-            <div class="col-md-8 col-sm-12 mb-3">
-                <div class="info" style="display:none">
-                    <h1 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
-                </div>
-                <div class="info2" style="display:none">
+  
+        <div class="col-md-8 col-sm-12 mb-3">
+            <div class="info" style="display:none">
+                <h1 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
+            </div>
+            <div class="info2" style="display:none">
                 <h5>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</h5>
                 <h5>Majors:
                     {% for major in viewing_user.majors.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->
+                                <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->,
+                                <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5>Minors:
                     {% for minor in viewing_user.minors.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->
+                                <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->,
+                                <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5>Courses:
                     {% for course in viewing_user.courses.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->
+                                <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->,
+                                <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
@@ -126,16 +126,17 @@
                 </h5>
 
 
-            <hr>
+                <hr>
                 <h4 class="display-5">Contact:</h4>
                 <h5>Email: {{ viewing_user.email }}</h5>
                 <h5>Phone number: {{ viewing_user.phone }}</h5>
-                </div>
+            </div>
 
             <br />
 
 
-        </div>
+            </div>
+        <div class="col-md-1"></div>
     </div>
 
     <!-- Displaying Notifications -->

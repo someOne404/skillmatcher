@@ -50,21 +50,21 @@
     </style>
     <script type="text/javascript">
         $(document).ready(function(){
-        $(".card").fadeIn(1000).delay("slow").removeAttr('style');   
-        //$(".filterposts").fadeIn(500).delay("slow").removeAttr('style');    
+        $(".card").fadeIn(1000).delay("slow").removeAttr('style');
+        //$(".filterposts").fadeIn(500).delay("slow").removeAttr('style');
         });
     </script>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div id="home_posts">
+            <div class="col-md-1"></div>
+            <div id="home_posts" class="col-sm-12 col-md-7">
                 {% include 'social_match/posts_ajax/home_posts.html' %}
             </div>
 
-            <div class="col-sm">
+            <div id='filter_posts' class="col-sm-12 col-md-3">
                 <!-- Filtering Posts -->
-                <div class="typewriter" style="margin: auto; width: 41%;">
-                    <h1>Filter Posts:</h1>
-                </div>
+                <h3>Filter Posts</h3>
+
                 <form method="POST">{% csrf_token %}
                     <br>
                     <div>
@@ -87,7 +87,6 @@
 
                 <br />
                 <hr>
-
                 <!-- Displaying Notifications -->
                 {% comment %} <div id="home_notifications_header">
                     {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
@@ -100,6 +99,7 @@
                 {% endif %}
                 </div> {% endcomment %}
             </div>
+            <div class="col-md-1"></div>
         </div>
     </div>
 
