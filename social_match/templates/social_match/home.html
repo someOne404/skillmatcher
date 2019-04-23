@@ -1,4 +1,5 @@
 {% extends 'social_match/base.html' %}
+{% load widget_tweaks %}
 {% block content %}
 <html lang="en">
 
@@ -54,9 +55,9 @@
         //$(".filterposts").fadeIn(500).delay("slow").removeAttr('style');
         });
     </script>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
-            <div class="col-md-1"></div>
+{#            <div class="col-md-1"></div>#}
             <div id="home_posts" class="col-sm-12 col-md-7">
                 {% include 'social_match/posts_ajax/home_posts.html' %}
             </div>
@@ -67,26 +68,27 @@
 
                 <form method="POST">{% csrf_token %}
                     <br>
-                    <div>
-                        <h5>Name: </h5>{{ form.name }}
-                    </div><br>
-                    <div>
-                        <h5>Keywords: </h5>{{ form.keywords }}<br>
+                    <div class="form-group">
+                        <label>Name: </label>{% render_field form.name class='form-control' %}
+                    </div>
+                    <div class="form-group">
+                        <label>Keywords: </label>{% render_field form.keywords class='form-control' %}<br>
                         Separate keywords by a space
                     </div><br>
-                    <div>
-                        <h5>Posts I've liked: {{ form.liked }}</h5>
+                    <div class="form-check">
+                        {% render_field form.liked class='form-check-input' %}
+                        <label class="form-check-label">Posts I've liked</label>
                     </div>
-                    <div>
-                        <h5>Posts I've commented on: {{ form.commented }}</h5>
+                    <div class="form-check">
+                        {% render_field form.commented class='form-check-input' %}
+                        <label class="form-check-label">Posts I've commented on</label>
                     </div>
 
-                    <button class="btn btn-primary btn-sm" type="submit" name="filter">Filter</button>
-                    <button class="btn btn-primary btn-sm" type="submit" name="clear">Clear Filter</button>
+                    <button class="btn btn-primary btn-md" type="submit" name="filter"><i class="fas fa-search"></i></button>
+                    <button class="btn btn-primary btn-md" type="submit" name="clear">Clear</button>
                 </form>
 
                 <br />
-                <hr>
                 <!-- Displaying Notifications -->
                 {% comment %} <div id="home_notifications_header">
                     {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
@@ -99,7 +101,7 @@
                 {% endif %}
                 </div> {% endcomment %}
             </div>
-            <div class="col-md-1"></div>
+{#            <div class="col-md-1"></div>#}
         </div>
     </div>
 

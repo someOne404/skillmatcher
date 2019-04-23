@@ -45,3 +45,7 @@ div.card .card-img-top {
     height: 30px;
     width: 10px;
 }
+
+.card-info {
+  font-size:0.8rem;
+}

@@ -67,6 +67,7 @@
                     success: function(response){
                         $('#home_posts').html(response)
                         console.log($('#home_posts').html(response['form']));
+                        $('#comment-text').focus();
                     },
                     error: function(rs, e){
                         console.log(rs.responseText);
@@ -88,6 +89,7 @@
                     success: function(response){
                         $('#profile_posts').html(response)
                         console.log($('#profile_posts').html(response['form']));
+                        $('#comment-text').focus();
                     },
                     error: function(rs, e){
                         console.log(rs.responseText);
@@ -119,6 +121,7 @@
                         console.log(rs.responseText);
                     },
                 });
+
             });
 
         $(document).on('click', '#submitcomment-profile', function(event){
