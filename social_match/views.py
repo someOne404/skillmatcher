@@ -41,10 +41,19 @@ def home(request):
     template_name = './social_match/home.html'
     form = PostSearchForm()
 
-    keywordstr, namestr, following, liked, commented, filtered = get_filter_form_results(request)
+    if request.user.is_authenticated:
+        keywordstr, namestr, following, liked, commented, filtered = get_filter_form_results(request)
 
-    posts_per_page = 10
-    post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
+        posts_per_page = 10
+        post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
+    else:
+        post_list = []
+        keywordstr = ''
+        namestr = ''
+        following = False
+        liked = False
+        commented = False
+        filtered = False
 
     context = {
         'post_list': post_list,
@@ -70,6 +79,9 @@ def resetsearch(request):
     return render(request, './social_match/search.html')
 
 def profile(request, user_id=None):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('social_match:home'))
+
     user = request.user
     viewing_user = user
 
