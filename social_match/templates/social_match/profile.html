@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 {% load friendshiptags %}
+{% load socialmatchtags %}
 {% if viewing_user.is_authenticated %}
 
 
@@ -22,44 +23,50 @@
             </div>
             <br />
             {% if viewing_user == user %}
-            <div style="display: flex">
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                    </form>
-                </div>
-                <div>
-                    <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                        {% csrf_token %}
-                        <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
-                    </form> 
+                <div style="display: flex">
+                    <div>
+                        <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                            {% csrf_token %}
+                            <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
+                        </form>
+                    </div>
+                    <div>
+                        <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
+                            {% csrf_token %}
+                            <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
+                        </form>
 
                     
-                    {% comment %} <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <input type="file" name="myfile">
-                        <button class="btn btn-light" type="submit">Upload</button>
-                    </form>
+                        {% comment %} <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="file" name="myfile">
+                            <button class="btn btn-light" type="submit">Upload</button>
+                        </form>
 
-                    {% if uploaded_file_url %}
-                        <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
-                    {% endif %} {% endcomment %}
+                        {% if uploaded_file_url %}
+                            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                        {% endif %} {% endcomment %}
 
 
-                </div>
+                    </div>
             </div>
-                {% comment %} {% else %}
+                <div>
+                    <a data-toggle="modal" data-target="#followingModal">Following: {{ following|length}} user{{ following|pluralize }}.</a>
+                    <br>
+                    <a data-toggle="modal" data-target="#blockingModal">Blocking: {{ blocking|length }} user{{ blocking|pluralize }}.</a>
+                </div>
+                {% else %}
                     {% if not check_follow %}
                         <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
                     {% elif check_follow %}
                         <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
                     {% endif %}
+
                     {% if not check_block %}
                         <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
                     {% elif check_block %}
                         <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
-                    {% endif %} {% endcomment %}
+                    {% endif %}
             {% endif %}
         </div>
 
@@ -134,16 +141,48 @@
 
             <br />
 
-
         </div>
     </div>
 
     <hr>
-
     <div id="profile_posts">
         {% include 'social_match/posts_ajax/profile_posts.html' %}
     </div>
 
+</div>
+
+{% comment %} Following Modal {% endcomment %}
+<div class="modal fade" id="followingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">People Who You Are Following:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %} Blocking Modal {% endcomment %}
+<div class="modal fade" id="blockingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">People Who You Have Blocked:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endif %}
