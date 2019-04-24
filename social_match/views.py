@@ -305,40 +305,14 @@ def notifications(request):
     if request.POST.get('type') == 'delete':
         notification.delete()
 
-    template = request.POST.get('t')
     section = request.POST.get('section')
-    if template == "home":
-        if section == 'list':
-            template_name = './social_match/notifications_ajax/home_notifications.html'
-
-            request_user = User.objects.get(id=request.user.id)
-            notifications = Notification.objects.filter(recipient=request_user, unread=True)
-
-        else:
-            template_name = './social_match/notifications_ajax/home_notifications_header.html'
-
-            request_user = User.objects.get(id=request.user.id)
-            notifications = Notification.objects.filter(recipient=request_user, unread=True)
+    if section == 'list':
+        template_name = './social_match/notifications_ajax/notifications.html'
     else:
-        template_name = './social_match/notifications_ajax/profile_notifications.html'
-
-        user_id = request.POST.get('u')
-        user = request.user
-        viewing_user = user
-        if not user_id:  # accessing user's own profile
-            user = request.user
-            if not request.user.is_authenticated:
-                return HttpResponseRedirect(reverse('social_match:home'))
-        else:
-            try:
-                viewing_user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                return render(request, './social_match/404.html')
-
-        notifications = Notification.objects.filter(recipient=viewing_user)
+        template_name = './social_match/notifications_ajax/notifications_header.html'
 
     if request.is_ajax():
-        html = render_to_string(template_name, {'notifications':notifications}, request=request)
+        html = render_to_string(template_name, request=request)
         return JsonResponse({'form': html})
 
 def editprofile(request, user_id):

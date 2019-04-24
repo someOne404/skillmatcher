@@ -14,9 +14,10 @@
             {% endif %}
             <form class="centerDiv" action="{% url 'social_match:notifications' %}" method="GET">
                 {% csrf_token %}
-                <input type="hidden" name="return_to" value="home">
-                <input class="btn btn-light btn-sm" type="submit" value="Mark as read" id="readnotif-home" data-t="home" data-nid="{{notification.id}}">
-                <input class="btn btn-light btn-sm" type="submit" value="Delete" id="deletenotif-home" data-t="home" data-nid="{{notification.id}}">
+                {% if notification.unread %}
+                <input class="btn btn-light btn-sm" type="submit" value="Mark as read" id="readnotif" data-nid="{{notification.id}}">
+                {% endif %}
+                <input class="btn btn-light btn-sm" type="submit" value="Delete" id="deletenotif" data-nid="{{notification.id}}">
             </form>
         </div>
     </div>
