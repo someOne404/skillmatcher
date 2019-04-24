@@ -113,7 +113,6 @@ def profile(request, user_id=None):
             'post_list':post_list,
             'uploaded_file_url': uploaded_file_url
         })
-    
     return render(request, template_name, {
         'user': user,
         'viewing_user': viewing_user,
@@ -122,6 +121,8 @@ def profile(request, user_id=None):
         'check_follow': check_follow,
         'check_block': check_block,
         'post_list': post_list,
+        'following': following_list,
+        'blocking': blocking_list,
     })
 
 def createpost(request):
@@ -533,7 +534,9 @@ def post_filter(keywordstr, namestr, liked, commented, user_id):
         if_any |= Q(comments__user__id=user_id)
     if_all &= if_any
 
-    posts = Post.objects.filter(if_all).distinct().order_by('-date')
+    blocked = Block.objects.blocking(User.objects.get(id=user_id))
+    print(blocked)
+    posts = Post.objects.filter(if_all).distinct().order_by('-date').exclude(user__in=blocked)
     return posts
 
 def get_home_post_list(keywordstr, namestr, liked, commented, page, user_id, posts_per_page):
@@ -645,3 +648,18 @@ def likeHandler(sender, instance, action, pk_set, **kwargs):
             notify.send(target=instance, sender=user_sender, recipient=user_recipient, verb='liked')
 
 m2m_changed.connect(likeHandler, sender=Post.likes.through)
+
+# "save" signal handling for being followed by someone
+def followHandler(sender, instance, created, **kwargs):
+    user_sender = User.objects.get(id=instance.follower.id)
+    user_receiver = User.objects.get(id=instance.followee.id)
+
+    # target: post commented on
+    # action_object: comment created on post
+    # sender: user following another user
+    # recipient: user being followed and receiving notification
+    # verb: action description
+    notify.send(sender=user_sender, recipient=user_receiver, verb='followed')
+
+
+post_save.connect(followHandler, sender=Follow)

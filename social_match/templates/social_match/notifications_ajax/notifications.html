@@ -4,14 +4,18 @@
     <div class="card" align="center" style="width: 25rem;">
         <div class="card-body">
             {% if notification.verb == "liked" %}
-            <a href="{% url 'social_match:profile' notification.actor.id %}">{{notification.actor.first_name}} {{notification.actor.last_name}}</a> liked your post:
-            <p class="card-text">{{notification.target.headline}}</p>
+                <a href="{% url 'social_match:profile' notification.actor.id %}">{{notification.actor.first_name}} {{notification.actor.last_name}}</a> liked your post:
+                <p class="card-text">{{notification.target.headline}}</p>
             {% endif %}
             {% if notification.verb == "commented" %}
-            <h5><strong><a href="{% url 'social_match:profile' notification.actor.id %}" class="primary">{{notification.actor.first_name}} {{notification.actor.last_name}}</a></strong> commented on your post:</h5>
-            <p class="card-text">{{notification.target.headline}}<br>
-                {{notification.action_object.text}}</p>
+                <h5><strong><a href="{% url 'social_match:profile' notification.actor.id %}" class="primary">{{notification.actor.first_name}} {{notification.actor.last_name}}</a></strong> commented on your post:</h5>
+                <p class="card-text">{{notification.target.headline}}<br>
+                    {{notification.action_object.text}}</p>
             {% endif %}
+            {% if notification.verb == "followed" %}
+                <h5><strong><a href="{% url 'social_match:profile' notification.actor.id %}" class="primary">{{notification.actor.first_name}} {{notification.actor.last_name}}</a></strong> followed you</h5>
+            {% endif %}
+
             <form class="centerDiv" action="{% url 'social_match:notifications' %}" method="GET">
                 {% csrf_token %}
                 {% if notification.unread %}
