@@ -105,8 +105,6 @@ def profile(request, user_id=None):
     else:
         check_block = False
 
-
-
     posts_per_page = 5
     post_list = get_profile_post_list(viewing_user, posts_per_page, request.GET.get('p'))
 

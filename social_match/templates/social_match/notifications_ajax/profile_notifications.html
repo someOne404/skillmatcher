@@ -1,9 +1,9 @@
 {% if notifications %}
 {% for notification in notifications %}
-<div class="card" style="width: 30rem;">
+<div class="card" style="width: 20rem;">
     <div class="card-body">
         {% if notification.verb == "liked" %}
-        <h5 class="card-title"><strong><a href="{% url 'social_match:profile' notification.actor.id %}" class="primary">{{notification.actor.first_name}} {{notification.actor.last_name}}</a></strong> liked your post:</h5>
+        <h6 class="card-title"><strong><a href="{% url 'social_match:profile' notification.actor.id %}" class="primary">{{notification.actor.first_name}} {{notification.actor.last_name}}</a></strong> liked your post:</h6>
         {{notification.target.headline}}
         {% endif %}
         {% if notification.verb == "commented" %}
