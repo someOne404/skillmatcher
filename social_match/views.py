@@ -41,16 +41,17 @@ def home(request):
     template_name = './social_match/home.html'
     form = PostSearchForm()
 
-    keywordstr, namestr, liked, commented, filtered = get_filter_form_results(request)
+    keywordstr, namestr, following, liked, commented, filtered = get_filter_form_results(request)
 
     posts_per_page = 10
-    post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
+    post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
 
     context = {
         'post_list': post_list,
         'form': form,
         'keywords': keywordstr,
         'names': namestr,
+        'following': following,
         'liked': liked,
         'commented': commented,
         'filtered': filtered,
@@ -190,15 +191,16 @@ def likepost(request):
     if template == "home":
         template_name = './social_match/posts_ajax/home_posts.html'
 
-        keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+        keywordstr, namestr, following, liked, commented, filtered = get_filter_inputs(request)
 
         posts_per_page = 10
-        post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
+        post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
 
         context = {
             'post_list': post_list,
             'keywords': keywordstr,
             'names': namestr,
+            'following': following,
             'liked': liked,
             'commented': commented,
             'filtered': filtered,
@@ -255,15 +257,16 @@ def commentpost(request):
     if template == "home":
         template_name = './social_match/posts_ajax/home_posts.html'
 
-        keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+        keywordstr, namestr, following, liked, commented, filtered = get_filter_inputs(request)
 
         posts_per_page = 10
-        post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
+        post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
 
         context = {
             'post_list': post_list,
             'keywords': keywordstr,
             'names': namestr,
+            'following': following,
             'liked': liked,
             'commented': commented,
             'filtered': filtered,
@@ -516,7 +519,9 @@ def get_profile_post_list(viewing_user, posts_per_page, page):
     post_list = paginator.get_page(page)
     return post_list
 
-def post_filter(keywordstr, namestr, liked, commented, user_id):
+def post_filter(keywordstr, namestr, following, liked, commented, user_id):
+    following_list = Follow.objects.following(User.objects.get(id=user_id))
+
     if_all = Q(date__lte=timezone.now(), post_active=True)
     if_any = Q()
 
@@ -528,6 +533,8 @@ def post_filter(keywordstr, namestr, liked, commented, user_id):
     for name in names:
         if_any |= Q(user__first_name__icontains=name)
         if_any |= Q(user__last_name__icontains=name)
+    if following:
+        if_any |= Q(user__in=following_list)
     if liked:
         if_any |= Q(likes__id=user_id)
     if commented:
@@ -535,12 +542,12 @@ def post_filter(keywordstr, namestr, liked, commented, user_id):
     if_all &= if_any
 
     blocked = Block.objects.blocking(User.objects.get(id=user_id))
-    print(blocked)
     posts = Post.objects.filter(if_all).distinct().order_by('-date').exclude(user__in=blocked)
+
     return posts
 
-def get_home_post_list(keywordstr, namestr, liked, commented, page, user_id, posts_per_page):
-    posts = post_filter(keywordstr, namestr, liked, commented, user_id)
+def get_home_post_list(keywordstr, namestr, following, liked, commented, page, user_id, posts_per_page):
+    posts = post_filter(keywordstr, namestr, following, liked, commented, user_id)
     paginator = Paginator(posts, posts_per_page)
     post_list = paginator.get_page(page)
 
@@ -553,6 +560,10 @@ def get_filter_inputs(request):
             filtered = True
         else:
             filtered = False
+        if request.GET.get('fol') == "True":
+            following = True
+        else:
+            following = False
         if request.GET.get('l') == "True":
             liked = True
         else:
@@ -572,6 +583,10 @@ def get_filter_inputs(request):
             filtered = True
         else:
             filtered = False
+        if request.POST.get('fol') == "True":
+            following = True
+        else:
+            following = False
         if request.POST.get('l') == "True":
             liked = True
         else:
@@ -590,13 +605,14 @@ def get_filter_inputs(request):
         filtered = False
         keywordstr = ""
         namestr = ""
+        following = False
         liked = False
         commented = False
 
-    return keywordstr, namestr, liked, commented, filtered
+    return keywordstr, namestr, following, liked, commented, filtered
 
 def get_filter_form_results(request):
-    keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+    keywordstr, namestr, following, liked, commented, filtered = get_filter_inputs(request)
 
     if request.method == 'POST':
         if 'filter' in request.POST:
@@ -604,6 +620,7 @@ def get_filter_form_results(request):
             if form.is_valid():
                 keywordstr = form.cleaned_data['keywords']
                 namestr = form.cleaned_data['name']
+                following = form.cleaned_data['following']
                 liked = form.cleaned_data['liked']
                 commented = form.cleaned_data['commented']
                 filtered = True
@@ -611,10 +628,11 @@ def get_filter_form_results(request):
             filtered = False
             keywordstr = ""
             namestr = ""
+            following = False
             liked = False
             commented = False
 
-    return keywordstr, namestr, liked, commented, filtered
+    return keywordstr, namestr, following, liked, commented, filtered
 
 # "save" signal handling for comments created on Posts
 def commentHandler(sender, instance, created, **kwargs):

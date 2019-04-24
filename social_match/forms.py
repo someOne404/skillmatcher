@@ -31,6 +31,7 @@ class CommentPostForm(forms.ModelForm):
 class PostSearchForm(forms.Form):
     name = forms.CharField(max_length=50, required=False)
     keywords = forms.CharField(max_length=200, required=False)
+    following = forms.BooleanField(required=False)
     liked = forms.BooleanField(required=False)
     commented = forms.BooleanField(required=False)
 

@@ -5,6 +5,7 @@
                 var pk = $(this).attr('value');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -13,7 +14,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:likepost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -54,6 +55,7 @@
                 var pk = $(this).attr('value');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -62,7 +64,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -100,6 +102,7 @@
                 var pk = $(this).attr('value');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -109,7 +112,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -148,6 +151,7 @@
                 var pk = $(this).attr('data-cid');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -156,7 +160,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'deletecomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'deletecomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -188,11 +192,6 @@
                     },
                 });
             });
-
-
-
-
-
 
 
 
