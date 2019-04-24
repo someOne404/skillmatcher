@@ -8,6 +8,7 @@ def add_variable_to_context(request):
         unread_notifications = Notification.objects.filter(recipient=request_user, unread=True).count()
     else:
         notifications = []
+        unread_notifications = 0
     return{
         'notifications': notifications,
         'unread': unread_notifications,
