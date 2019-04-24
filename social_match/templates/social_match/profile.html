@@ -133,22 +133,6 @@
         </div>
     </div>
 
-    <!-- Displaying Notifications -->
-    {% if viewing_user == user %}
-        <hr>
-        <h1 align="center">Notifications</h1>
-        <div style="overflow-y: auto; max-height:400px;">
-        {% if notifications %}
-            {% comment %} <div id="profile_notifications" style="margin:0 auto; width:15%" align="center"> {% endcomment %}
-            <div id="profile_notifications" align="center">
-                {% include 'social_match/notifications_ajax/profile_notifications.html' %}
-            </div>
-         {% else %} <p align="center">No Notifications.</p>
-        {% endif %}
-        </div>
-    {% endif %}
-    <hr>
-
     <div id="profile_posts">
         {% include 'social_match/posts_ajax/profile_posts.html' %}
     </div>
