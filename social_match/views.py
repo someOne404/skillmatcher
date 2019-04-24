@@ -520,7 +520,9 @@ def get_profile_post_list(viewing_user, posts_per_page, page):
     return post_list
 
 def post_filter(keywordstr, namestr, following, liked, commented, user_id):
-    following_list = Follow.objects.following(User.objects.get(id=user_id))
+    user = get_object_or_404(User, id=user_id)
+    #following_list = Follow.objects.following(User.objects.get(id=user_id))
+    following_list = Follow.objects.following(user)
 
     if_all = Q(date__lte=timezone.now(), post_active=True)
     if_any = Q()
@@ -541,7 +543,8 @@ def post_filter(keywordstr, namestr, following, liked, commented, user_id):
         if_any |= Q(comments__user__id=user_id)
     if_all &= if_any
 
-    blocked = Block.objects.blocking(User.objects.get(id=user_id))
+    #blocked = Block.objects.blocking(User.objects.get(id=user_id))
+    blocked = Block.objects.blocking(user)
     posts = Post.objects.filter(if_all).distinct().order_by('-date').exclude(user__in=blocked)
 
     return posts

@@ -96,9 +96,9 @@
         <div class="pagination">
             <span class="step-links">
                 {% if post_list.has_previous %}
-                    <a href="?p=1&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">&laquo; first</a> -
+                    <a href="?p=1&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">&laquo; first</a> -
                     {% if post_list.previous_page_number != 1 %}
-                        <a href="?p={{post_list.previous_page_number}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">previous</a>
+                        <a href="?p={{post_list.previous_page_number}}&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">previous</a>
                     {% endif %}
                 {% endif %}
 
@@ -108,9 +108,9 @@
 
                 {% if post_list.has_next %}
                     {% if post_list.next_page_number != post_list.paginator.num_pages %}
-                        <a href="?p={{post_list.next_page_number}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">next</a> -
+                        <a href="?p={{post_list.next_page_number}}&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">next</a> -
                     {% endif %}
-                <a href="?p={{post_list.paginator.num_pages}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">last &raquo;</a>
+                <a href="?p={{post_list.paginator.num_pages}}&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">last &raquo;</a>
                 {% endif %}
             </span>
         </div>

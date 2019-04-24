@@ -360,39 +360,49 @@ class PostTest(TestCase):
         self.assertTrue(form.is_valid())
 
     def test_no_posts(self):
-        response = self.client.get(reverse('social_match:home'))
-        self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['post_list'], [])
+        #response = self.client.get(reverse('social_match:home'))
+        #self.assertEqual(response.status_code, 200)
+        #self.assertQuerysetEqual(response.context['post_list'], [])
+
+        user = self.create_test_user()
+        posts = post_filter('', '', False, False, False, user.id)
+        self.assertQuerysetEqual(posts, [])
 
     def test_past_post(self):
         headline = 'Past post'
         message = 'should appear in home page'
         user = self.create_test_user()
         create_post(headline=headline, message=message, user=user, days=-30)
-        response = self.client.get(reverse('social_match:home'))
-        self.assertQuerysetEqual(
-            response.context['post_list'],
-            ['<Post: Past post>']
-        )
+        #response = self.client.get(reverse('social_match:home'))
+        #self.assertQuerysetEqual(
+        #    response.context['post_list'],
+        #    ['<Post: Past post>']
+        #)
+        posts = post_filter('', '', False, False, False, user.id)
+        self.assertQuerysetEqual(posts, ['<Post: Past post>'])
 
     def test_current_post(self):
         headline = 'posted today'
         message = 'should appear in home page'
         user = self.create_test_user()
         create_post(headline=headline, message=message, user=user, days=0)
-        response = self.client.get(reverse('social_match:home'))
-        self.assertQuerysetEqual(
-            response.context['post_list'],
-            ['<Post: posted today>']
-        )
+        #response = self.client.get(reverse('social_match:home'))
+        #self.assertQuerysetEqual(
+        #    response.context['post_list'],
+        #    ['<Post: posted today>']
+        #)
+        posts = post_filter('', '', False, False, False, user.id)
+        self.assertQuerysetEqual(posts, ['<Post: posted today>'])
 
     def test_future_post(self):
         headline = 'Future post'
         message = 'should not appear in home page'
         user = self.create_test_user()
         create_post(headline=headline, message=message, user=user, days=30)
-        response = self.client.get(reverse('social_match:home'))
-        self.assertQuerysetEqual(response.context['post_list'], [])
+        #response = self.client.get(reverse('social_match:home'))
+        #self.assertQuerysetEqual(response.context['post_list'], [])
+        posts = post_filter('', '', False, False, False, user.id)
+        self.assertQuerysetEqual(posts, [])
 
     def test_future_post_and_past_post(self):
         user = self.create_test_user()
@@ -408,24 +418,29 @@ class PostTest(TestCase):
             user = user,
             days = 30
         )
-        response = self.client.get(reverse('social_match:home'))
-        self.assertQuerysetEqual(
-            response.context['post_list'],
-            ['<Post: Past post>']
-        )
+        #response = self.client.get(reverse('social_match:home'))
+        #self.assertQuerysetEqual(
+        #    response.context['post_list'],
+        #    ['<Post: Past post>']
+        #)
+        posts = post_filter('', '', False, False, False, user.id)
+        self.assertQuerysetEqual(posts, ['<Post: Past post>'])
+
 
     def test_first_10_of_21_questions_appear_in_home(self):
         headline = '21 posts'
         message = 'message'
         user = self.create_test_user()
         create_many_posts(headline, message, user, 21)
-        response = self.client.get(reverse('social_match:home'))
+        #response = self.client.get(reverse('social_match:home'))
+        posts = get_home_post_list('', '', False, False, False, 1, user.id, 10)
 
         list = []
         for i in range(10):
             list.append('<Post: ' + headline + '>')
 
-        self.assertQuerysetEqual(response.context['post_list'], list)
+        #self.assertQuerysetEqual(response.context['post_list'], list)
+        self.assertQuerysetEqual(posts, list)
 
     def test_no_likes_on_new_Post(self):
         headline = 'headline'
@@ -483,7 +498,7 @@ class FilterPostTest(TestCase):
         user = self.create_test_user()
         create_post(headline, message, user, days=0)
 
-        posts = post_filter('line', '', False, False, user.id)
+        posts = post_filter('line', '', False, False, False, user.id)
         expected_posts = ['<Post: ' + headline + '>']
 
         self.assertQuerysetEqual(posts, expected_posts)
@@ -494,7 +509,7 @@ class FilterPostTest(TestCase):
         user = self.create_test_user()
         create_post(headline, message, user, days=0)
 
-        posts = post_filter('line', '', False, False, user.id)
+        posts = post_filter('line', '', False, False, False, user.id)
         expected_posts = []
 
         self.assertQuerysetEqual(posts, expected_posts)
@@ -505,7 +520,7 @@ class FilterPostTest(TestCase):
         user = self.create_test_user()
         create_post(headline, message, user, days=0)
 
-        posts = post_filter('', user.first_name, False, False, user.id)
+        posts = post_filter('', user.first_name, False, False, False, user.id)
         expected_posts = ['<Post: ' + headline + '>']
 
         self.assertQuerysetEqual(posts, expected_posts)
@@ -513,7 +528,7 @@ class FilterPostTest(TestCase):
     def test_post_filter_by_name_with_no_results(self):
         user = self.create_test_user()
 
-        posts = post_filter('', user.first_name, False, False, user.id)
+        posts = post_filter('', user.first_name, False, False, False, user.id)
         expected_posts = []
 
         self.assertQuerysetEqual(posts, expected_posts)
@@ -525,7 +540,7 @@ class FilterPostTest(TestCase):
         post = create_post(headline, message, user, days=0)
         post.likes.add(user.id)
 
-        posts = post_filter('', '', True, False, user.id)
+        posts = post_filter('', '', False, True, False, user.id)
         expected_posts = ['<Post: ' + headline + '>']
 
         self.assertQuerysetEqual(posts, expected_posts)
@@ -536,7 +551,7 @@ class FilterPostTest(TestCase):
         user = self.create_test_user()
         create_post(headline, message, user, days=0)
 
-        posts = post_filter('', '', True, False, user.id)
+        posts = post_filter('', '', False, True, False, user.id)
         expected_posts = []
 
         self.assertQuerysetEqual(posts, expected_posts)
@@ -550,7 +565,7 @@ class FilterPostTest(TestCase):
         text = 'comment'
         create_comment(text, user, post)
 
-        posts = post_filter('', '', False, True, user.id)
+        posts = post_filter('', '', False, False, True, user.id)
         expected_posts = ['<Post: ' + headline + '>']
 
         self.assertQuerysetEqual(posts, expected_posts)
@@ -561,7 +576,7 @@ class FilterPostTest(TestCase):
         user = self.create_test_user()
         post = create_post(headline, message, user, days=0)
 
-        posts = post_filter('', '', False, True, user.id)
+        posts = post_filter('', '', False, False, True, user.id)
         expected_posts = []
 
         self.assertQuerysetEqual(posts, expected_posts)
