@@ -33,11 +33,9 @@ User = get_user_model()
 def base(request):
     return HttpResponseRedirect(reverse('social_match:home'))
 
-
 def about(request):
     template_name = './social_match/about.html'
     return render(request, template_name)
-
 
 def home(request):
     template_name = './social_match/home.html'
@@ -48,12 +46,6 @@ def home(request):
     posts_per_page = 10
     post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
 
-    if request.user.is_authenticated:
-        request_user = User.objects.get(id=request.user.id)
-        notifications = Notification.objects.filter(recipient=request_user, unread=True)
-    else:
-        notifications = []
-
     context = {
         'post_list': post_list,
         'form': form,
@@ -62,7 +54,6 @@ def home(request):
         'liked': liked,
         'commented': commented,
         'filtered': filtered,
-        'notifications': notifications,
     }
     return render(request, template_name, context)
 
@@ -108,8 +99,6 @@ def profile(request, user_id=None):
     posts_per_page = 5
     post_list = get_profile_post_list(viewing_user, posts_per_page, request.GET.get('p'))
 
-    notifications = Notification.objects.filter(recipient=viewing_user)
-
     template_name = './social_match/profile.html'
 
     #uploading files
@@ -133,7 +122,6 @@ def profile(request, user_id=None):
         'check_follow': check_follow,
         'check_block': check_block,
         'post_list': post_list,
-        'notifications': notifications,
     })
 
 def createpost(request):
