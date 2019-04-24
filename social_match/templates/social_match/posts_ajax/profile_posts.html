@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialmatchtags %}
 
 <div align="center">
         <h4 class="display-4">Posts:</h4>
@@ -30,31 +31,37 @@
                     {% endif %}</p>
                     <div style="display: flex">
 
-                    <form action="{% url 'social_match:likepost' %}" method="post">
-                        {% csrf_token %}
-                        {% if user in post.likes.all %}
-                        <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Unlike</button>
-                        {% else %}
-                        <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Like</button>
+                        {% comment %} check if viewer is blocked by poster {% endcomment %}
+                        {% blocked_by post.user request.user as blocked %}
+
+                        {% if not blocked %}
+                            <form action="{% url 'social_match:likepost' %}" method="post">
+                                {% csrf_token %}
+                                {% if user in post.likes.all %}
+                                <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Unlike</button>
+                                {% else %}
+                                <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Like</button>
+                                {% endif %}
+                            </form>
+
+                            {% if form != None and post_id == post.id %}
+                                <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
+                                {% csrf_token %}
+                                {{ form.text }}
+                                <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}"  data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Comment</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'social_match:commentpost' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Comment</button>
+                                </form>
+                            {% endif %}
                         {% endif %}
-                    </form>
-
-                    {% if form != None and post_id == post.id %}
-                        <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
-                        {% csrf_token %}
-                        {{ form.text }}
-                        <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}"  data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Comment</button>
-                        </form>
-                    {% else %}
-                        <form action="{% url 'social_match:commentpost' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Comment</button>
-                        </form>
-                    {% endif %}
-
-                    <a class ="btn-lg" href="/editpost/{{post.id}}?return=profile">
-                        <i class="fas fa-edit"></i></i>
-                    </a>
+                        {% if viewing_user == user %}
+                        <a class ="btn-lg" href="/editpost/{{post.id}}?return=profile">
+                            <i class="fas fa-edit"></i></i>
+                        </a>
+                        {% endif %}
                 </div>
                     <div style="overflow-y: auto; max-height:180px;">
                     {% for comment in post.comments.all %}
