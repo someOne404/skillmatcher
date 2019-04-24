@@ -687,12 +687,17 @@ def followHandler(sender, instance, created, **kwargs):
     user_sender = User.objects.get(id=instance.follower.id)
     user_receiver = User.objects.get(id=instance.followee.id)
 
-    # target: post commented on
-    # action_object: comment created on post
-    # sender: user following another user
-    # recipient: user being followed and receiving notification
-    # verb: action description
-    notify.send(sender=user_sender, recipient=user_receiver, verb='followed')
+    # only send notification is sender is not blocked by receiver
+    blocking = Block.objects.blocking(user_receiver)
+    is_blocked = user_sender in blocking
+
+    if not is_blocked:
+        # target: post commented on
+        # action_object: comment created on post
+        # sender: user following another user
+        # recipient: user being followed and receiving notification
+        # verb: action description
+        notify.send(sender=user_sender, recipient=user_receiver, verb='followed')
 
 
 post_save.connect(followHandler, sender=Follow)

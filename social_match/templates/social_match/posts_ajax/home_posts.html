@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialmatchtags %}
 
 <div class="col-sm">
     {% if filtered %}
@@ -38,28 +39,33 @@
             <br> <a data-toggle="modal" data-target="#likesModal">
                 {{ post.likes.count }} Like{{ post.likes.count|pluralize }} </a>
             </p>
+
             <div style="display: flex">
+                {% comment %} check if viewer is blocked by poster {% endcomment %}
+                {% blocked_by post.user request.user as blocked %}
 
-                <form action="{% url 'social_match:likepost' %}" method="post">
-                    {% csrf_token %}
-                    {% if user in post.likes.all %}
-                    <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-fol="{{following}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Unlike</button>
+                {% if not blocked %}
+                    <form action="{% url 'social_match:likepost' %}" method="post">
+                        {% csrf_token %}
+                        {% if user in post.likes.all %}
+                        <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-fol="{{following}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Unlike</button>
+                        {% else %}
+                        <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-fol="{{following}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Like</button>
+                        {% endif %}
+                    </form>
+
+                    {% if form != None and post_id == post.id %}
+                        <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
+                            {% csrf_token %}
+                            {{ form.text }}
+                            <button type="submit" id="submitcomment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-fol="{{following}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Comment</button>
+                        </form>
                     {% else %}
-                    <button type="submit" id="like-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-fol="{{following}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Like</button>
-                    {% endif %}
-                </form>
-
-                {% if form != None and post_id == post.id %}
-                    <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
-                        {% csrf_token %}
-                        {{ form.text }}
-                        <button type="submit" id="submitcomment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-fol="{{following}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm">Comment</button>
-                    </form>
-                {% else %}
-                    <form action="{% url 'social_match:commentpost' %}" method="post">
-                        {% csrf_token %}
+                        <form action="{% url 'social_match:commentpost' %}" method="post">
+                            {% csrf_token %}
                         <button type="submit" id="comment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-fol="{{following}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-sm">Comment</button>
-                    </form>
+                        </form>
+                    {% endif %}
                 {% endif %}
 
                 {% if post.user == user %}
