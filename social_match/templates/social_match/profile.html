@@ -23,17 +23,10 @@
             </div>
             <br />
             {% if viewing_user == user %}
-                <div style="display: flex">
-                    <div>
+                <div style="display: flex; margin-left: 23%; margin-top: -30px" >
                         <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
                             {% csrf_token %}
                             <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
-                        </form>
-                    </div>
-                    <div>
-                        <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                            {% csrf_token %}
-                            <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
                         </form>
 
                     
@@ -46,14 +39,10 @@
                         {% if uploaded_file_url %}
                             <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
                         {% endif %} {% endcomment %}
-
-
-                    </div>
-            </div>
-                <div>
-                    <a data-toggle="modal" data-target="#followingModal">Following: {{ following|length}} user{{ following|pluralize }}.</a>
-                    <br>
-                    <a data-toggle="modal" data-target="#blockingModal">Blocking: {{ blocking|length }} user{{ blocking|pluralize }}.</a>
+                </div>
+                <div style="margin-left: 28%" >
+                    <div>Following:<a data-toggle="modal" data-target="#followingModal" style="color:blue"> {{ following|length}} user{{ following|pluralize }}.</a></div>
+                    <div>Blocking:<a data-toggle="modal" data-target="#blockingModal" style="color:blue"> {{ blocking|length }} user{{ blocking|pluralize }}.</a></div>
                 </div>
                 {% else %}
                     {% if not check_follow %}
