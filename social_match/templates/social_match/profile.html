@@ -62,7 +62,7 @@
         
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="info" style="display:none">
-                    <h1 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
+                    <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
                 </div>
                 <div class="info2" style="display:none">
                 <h5><strong>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</strong></h5>
