@@ -25,7 +25,6 @@
                     <img height='30' width='30' src="{{ post.user.picture.url }}">
                 {% else %}
                     <img height='30' width='30' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-                    {#<i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
                 {% endif %}
                 <div style="width:10px"></div>             
                 <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>:
@@ -36,9 +35,50 @@
                 {% if post.post_edited %}
                 Last edited on: {{post.date_edited}}
                 {% endif %}
-            <br> <a data-toggle="modal" data-target="#likesModal">
+            <br> <a data-toggle="modal" data-target="#a{{post.id}}">
                 {{ post.likes.count }} Like{{ post.likes.count|pluralize }} </a>
             </p>
+            {% comment %} Modal! {% endcomment %}
+            <div class="modal fade" id="a{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">People Who Liked Your Post:</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <div class="container">
+                            {% for user in post.likes.all %}
+                                <div class="row">
+                                     <div class="card card2">
+                                        <div class="card-body" style="display:flex">
+                                            <h5 class="card-title" style="display: flex">
+                                                {% if user.picture %}
+                                                    <img height='20' width='20' src="{{ user.picture.url }}">
+                                                {% else %}
+                                                    <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                                {% endif %}
+                                            </h5>
+                                            <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                            <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {% comment %} End of Modal! {% endcomment %}
 
             <div style="display: flex">
                 {% comment %} check if viewer is blocked by poster {% endcomment %}
@@ -123,21 +163,4 @@
     {% else %}
     <p>No posts are available.</p>
     {% endif %}
-</div>
-
-{% comment %} Likes Modal {% endcomment %}
-<div class="modal fade" id="likesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">People Who Liked Your Post:</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      </div>
-    </div>
-  </div>
 </div>
