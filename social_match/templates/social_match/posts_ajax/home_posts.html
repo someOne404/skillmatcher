@@ -36,7 +36,7 @@
                 <p style="float:right">Edited {{ post.date_edited }}</p>
             {% else %}
                 <p style="float:right">Posted {{ post.date }}</p>
-            {% endif %}f
+            {% endif %}
             <div style="clear: both;"></div>
             <form style="display:inline" action="{% url 'social_match:likepost' %}" method="post">
                 {% csrf_token %}
