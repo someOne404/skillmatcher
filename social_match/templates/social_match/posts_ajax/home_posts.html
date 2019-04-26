@@ -36,7 +36,7 @@
                 Last edited on: {{post.date_edited}}
                 {% endif %}
             <br> 
-            <a data-toggle="modal" data-target="#a{{post.id}}">
+            <a data-toggle="modal" data-target="#a{{post.id}}" style="color: blue">
                 {{ post.likes.count }} Like{{ post.likes.count|pluralize }} </a>
             </p>
             {% comment %} Modal! {% endcomment %}
