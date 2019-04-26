@@ -35,7 +35,8 @@
                 {% if post.post_edited %}
                 Last edited on: {{post.date_edited}}
                 {% endif %}
-            <br> <a data-toggle="modal" data-target="#a{{post.id}}">
+            <br> 
+            <a data-toggle="modal" data-target="#a{{post.id}}">
                 {{ post.likes.count }} Like{{ post.likes.count|pluralize }} </a>
             </p>
             {% comment %} Modal! {% endcomment %}
@@ -50,7 +51,7 @@
                             </button>
                         </div>
                         
-                        <div class="modal-body">
+                        <div class="modal-body" style="overflow: auto">
                             <div class="container">
                             {% for user in post.likes.all %}
                                 <div class="row">
@@ -78,7 +79,7 @@
                     </div>
                 </div>
             </div>
-    {% comment %} End of Modal! {% endcomment %}
+            {% comment %} End of Modal! {% endcomment %}
 
             <div style="display: flex">
                 {% comment %} check if viewer is blocked by poster {% endcomment %}
