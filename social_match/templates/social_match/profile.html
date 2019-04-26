@@ -40,24 +40,24 @@
                         {% if uploaded_file_url %}
                             <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
                         {% endif %} {% endcomment %}
-                </div>
-                <div style="margin-left: 28%" >
-                    <div>Following:<a data-toggle="modal" data-target="#followingModal" style="color:blue"> {{ following|length}} user{{ following|pluralize }}.</a></div>
-                    <div>Blocking:<a data-toggle="modal" data-target="#blockingModal" style="color:blue"> {{ blocking|length }} user{{ blocking|pluralize }}.</a></div>
-                </div>
-                {% else %}
-                    {% if not check_follow %}
-                        <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
-                    {% elif check_follow %}
-                        <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
-                    {% endif %}
-
-                    {% if not check_block %}
-                        <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
-                    {% elif check_block %}
-                        <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
-                    {% endif %}
+            </div>
+            <div>
+                <div>Following:<a data-toggle="modal" data-target="#followingModal" style="color:blue"> {{ following|length}} user{{ following|pluralize }}.</a></div>
+                <div>Blocking:<a data-toggle="modal" data-target="#blockingModal" style="color:blue"> {{ blocking|length }} user{{ blocking|pluralize }}.</a></div>
+            </div>
+        {% else %}
+            {% if not check_follow %}
+                <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
+            {% elif check_follow %}
+                <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
             {% endif %}
+
+            {% if not check_block %}
+                <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
+            {% elif check_block %}
+                <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
+            {% endif %}
+        {% endif %}
         </div>
 
         
