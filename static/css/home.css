@@ -1,10 +1,12 @@
 html {
   min-height: 100%;
   position: relative;
+  background-color: #eceff1;
 }
 
 body {
   margin-bottom: 60px !important;
+  background-color: #eceff1 !important;
 }
 
 .splash {
@@ -30,7 +32,26 @@ body {
   width: 100%;
 }
 
+div > .container-fluid, .container {
+  margin-top: 3rem !important;
+}
+
+div.card .card-img-top {
+  width: 100% !important;
+  height: 14rem !important;
+  object-fit: contain !important;
+}
 .span-logo {
     height: 30px;
     width: 10px;
+}
+
+.card-info {
+  font-size:0.8rem;
+}
+
+.card .list-group {
+  max-height: 300px;
+  overflow:scroll;
+  -webkit-overflow-scrolling: touch;
 }

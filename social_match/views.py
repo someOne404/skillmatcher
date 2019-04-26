@@ -33,9 +33,11 @@ User = get_user_model()
 def base(request):
     return HttpResponseRedirect(reverse('social_match:home'))
 
+
 def about(request):
     template_name = './social_match/about.html'
     return render(request, template_name)
+
 
 def home(request):
     template_name = './social_match/home.html'
@@ -126,6 +128,7 @@ def profile(request, user_id=None):
             'post_list':post_list,
             'uploaded_file_url': uploaded_file_url
         })
+
     return render(request, template_name, {
         'user': user,
         'viewing_user': viewing_user,
@@ -224,6 +227,7 @@ def likepost(request):
         user_id = request.POST.get('u')
         if not user_id:  # accessing user's own profile
             user = request.user
+            viewing_user = user
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('social_match:home'))
         else:
@@ -291,6 +295,7 @@ def commentpost(request):
         user_id = request.POST.get('u')
         if not user_id:  # accessing user's own profile
             user = request.user
+            viewing_user = user
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('social_match:home'))
         else:
@@ -321,6 +326,7 @@ def notifications(request):
     if request.POST.get('type') == 'delete':
         notification.delete()
 
+    template = request.POST.get('t')
     section = request.POST.get('section')
     if section == 'list':
         template_name = './social_match/notifications_ajax/notifications.html'
@@ -352,9 +358,9 @@ def editprofile(request, user_id):
             user.interests.set(form.cleaned_data.get('interests'))
             user.courses.set(form.cleaned_data.get('courses'))
             user.activities.set(form.cleaned_data.get('activities'))
-      
+
             user.status_active = form.cleaned_data.get('status_active')
-      
+
             user.save()
 
             return HttpResponseRedirect('/profile')

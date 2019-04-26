@@ -1,135 +1,128 @@
 {% load static %}
+{% load widget_tweaks %}
 {% load socialmatchtags %}
 
 <div align="center">
-        <h4 class="display-4">Posts:</h4>
+        <h3 class="display-4">Posts:</h3>
         {% if post_list %}
         {% for post in post_list %}
         {% if viewing_user == user or post.post_active %}
-            <div class="card" align="left" style="width: 500px;">
+            <div class="card" align="left">
+                <div class="card-header">
+                    <h4 class="card-title" style="display:inline">
+                        {% if not post.post_active %}
+                            <span class="badge badge-info">Archived</span><br>
+                        {% endif %}
+                        <strong>{{ post.headline }}</strong>
+
+                    </h4>
+                    {% if post.user == user %}
+                    <a class ="btn-md" style="margin-left:20px;" href="/editpost/{{post.id}}?return=profile">
+                            <i class="fas fa-edit"></i></i>
+                    </a><br>
+                    {% endif %}
+                    <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>
+                </div>
+
                 <div class="card-body">
-                <h5 class="card-title" style="display: flex"> 
-                    {% if viewing_user.picture %}
-                        <img height='30' width='30' src="{{ viewing_user.picture.url }}">
+                    <p class="lead">{{ post.message }}</p>
+                </div>
+
+                <div class="card-footer">
+                    <a data-toggle="modal" data-target="#a{{post.id}}" style="color: blue">
+                        <p style="float:left">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</p>
+                    </a>
+                    {% if post.post_edited %}
+                        <p style="float:right">Edited {{ post.date_edited }}</p>
                     {% else %}
-                        <img height='30' width='30' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-    {#                    <i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
-                    {% endif %}   
-                    <div style="width:10px"></div>             
-                    <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>: {{ post.headline }}
-                </h5>   
-                <p>{{ post.message }}</p>
-                <p class="card-text">Posted on {{post.date}}<br>
-                {% if post.post_edited %}
-                Last edited on: {{post.date_edited}}
-                {% endif %}<br>
-                    {% if not post.post_active %}
-                    Archived
-                    {% endif %}<br>
+                        <p style="float:right">Posted {{ post.date }}</p>
+                    {% endif %}
 
-                <a data-toggle="modal" data-target="#a{{post.id}}" style="color: blue">
-                    {{ post.likes.count }} Like{{ post.likes.count|pluralize }} 
-                </a>
-                            {% comment %} Modal! {% endcomment %}
-            <div class="modal fade" id="a{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">People Who Liked This Post:</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        
-                        <div class="modal-body" style="overflow: auto;">
-                            <div class="container">
-                                {% if post.likes.all %}
-                            {% for user in post.likes.all %}
-                                <div class="row">
-                                     <div class="card card2">
-                                        <div class="card-body" style="display:flex">
-                                            <h5 class="card-title" style="display: flex">
-                                                {% if user.picture %}
-                                                    <img height='20' width='20' src="{{ user.picture.url }}">
-                                                {% else %}
-                                                    <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-                                                {% endif %}
-                                            </h5>
-                                            <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
-                                            <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+                    <div style="clear: both;"></div>
 
+                    <form style="display:inline" action="{% url 'social_match:likepost' %}" method="post">
+                        {% csrf_token %}
+                        {% if user in post.likes.all %}
+                        <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-md"><i class="fas fa-thumbs-down"></i></button>
+                        {% else %}
+                              <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-md"><i class="fas fa-thumbs-up"></i></button>
+                        {% endif %}
+                    </form>
+
+                    {% if form != None and post_id == post.id %}
+                        <form style="display:inline" action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
+                        {% csrf_token %}
+                        {% render_field form.text %}
+                        <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-md"><i class="fas fa-comment"></i></button>
+                        </form>
+                    {% else %}
+                        <form style="display:inline" action="{% url 'social_match:commentpost' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-primary btn-md"><i class="fas fa-comment"></i></button>
+                        </form>
+                    {% endif %}
+
+
+                </div>
+
+                 {% comment %} Likes Modal! {% endcomment %}
+                <div class="modal fade" id="a{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">People Who Liked This Post:</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body" style="overflow: auto;">
+                                <div class="container">
+                                    {% if post.likes.all %}
+                                {% for user in post.likes.all %}
+                                    <div class="row">
+                                         <div class="card card2">
+                                            <div class="card-body" style="display:flex">
+                                                <h5 class="card-title" style="display: flex">
+                                                    {% if user.picture %}
+                                                        <img height='20' width='20' src="{{ user.picture.url }}">
+                                                    {% else %}
+                                                        <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                                    {% endif %}
+                                                </h5>
+                                                <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                                <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                                            </div>
                                         </div>
                                     </div>
+                                {% endfor %}
+                                {% else %}
+                                    No likes yet!
+                                {% endif %}
                                 </div>
-                            {% endfor %}
-                            {% else %}
-                                No likes yet!
-                            {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
                     </div>
                 </div>
-            </div>
-            {% comment %} End of Modal! {% endcomment %}
-                    {% comment %} {{ post.likes.count }} Like{{ post.likes.count|pluralize }} {% endcomment %}
-                </p>
-                    <div style="display: flex">
+                {% comment %} End of Modal! {% endcomment %}
 
-                        {% comment %} check if viewer is blocked by poster {% endcomment %}
-                        {% blocked_by post.user request.user as blocked %}
+                <ul class="list-group list-group-flush">
 
-                        {% if not blocked %}
-                            <form action="{% url 'social_match:likepost' %}" method="post">
-                                {% csrf_token %}
-                                {% if user in post.likes.all %}
-                                <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Unlike</button>
-                                {% else %}
-                                <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Like</button>
-                                {% endif %}
-                            </form>
-
-                            {% if form != None and post_id == post.id %}
-                                <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
-                                {% csrf_token %}
-                                {{ form.text }}
-                                <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}"  data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Comment</button>
-                                </form>
-                            {% else %}
-                                <form action="{% url 'social_match:commentpost' %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Comment</button>
-                                </form>
-                            {% endif %}
-                        {% endif %}
-                        {% if viewing_user == user %}
-                        <a class ="btn-lg" href="/editpost/{{post.id}}?return=profile">
-                            <i class="fas fa-edit"></i></i>
-                        </a>
-                        {% endif %}
-                </div>
-                    <div style="overflow-y: auto; max-height:180px;">
                     {% for comment in post.comments.all %}
-                    <p style="margin-left: 25px">
-                        {% if post.user.picture %}
-                            <img height='20' width='20' src="{{ post.user.picture.url }}">
-                        {% else %}
-                            <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-                            {#<i class="fas fa-viewing_user fa-10x img-thumbnail"></i>#}
-                        {% endif %}
-                        <a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>:
-                        {{ comment.text }} <br><font size ='1'>{{ comment.date }}</font>
+                        <li class="list-group-item"><p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
+                        <br><span class="card-info">{{ comment.date }}</span>
                         {% if request.user == comment.user %}
-                            <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-profile" data-cid="{{comment.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="primary">
-                                <font size ='1'><i class="fas fa-trash"></i></font></a>
+                        <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-profile" data-cid="{{comment.id}}" data-t="profile" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
+                            <i class="fas fa-trash"></i></a>
                         {% endif %}
-                    </p>
+                        </p></li>
                     {% endfor %}
-                    </div>
-                </div>
+                </ul>
 
             </div>
         {% endif %}
@@ -156,5 +149,7 @@
                 {% endif %}
             </span>
         </div>
+        {% else %}
+            <p>No posts yet. <a href="{% url 'social_match:createpost' %}">Create a post.</a></p>
         {% endif %}
     </div>
