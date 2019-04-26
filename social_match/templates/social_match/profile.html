@@ -153,13 +153,26 @@
       </div>
       <div class="modal-body">
           {% following_list request.user as following %}
-          <div>
+          <div class="container">
               {% if following %}
-                <ul>
                 {% for user in following %}
-                    <li><a href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a></li>
+                    <div class="row">
+                        <div class="card card2">
+                            <div class="card-body" style="display:flex">
+                                <h5 class="card-title" style="display: flex">
+                                    {% if user.picture %}
+                                    <img height='20' width='20' src="{{ user.picture.url }}">
+                                    {% else %}
+                                    <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                    {% endif %}
+                                </h5>
+                                <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-                </ul>
               {% else %}
                 You are not following anyone.
               {% endif %}
@@ -186,7 +199,22 @@
               {% if blocking %}
                 <ul>
                 {% for user in blocking %}
-                    <li><a href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a></li>
+                    <div class="row">
+                        <div class="card card2">
+                            <div class="card-body" style="display:flex">
+                                <h5 class="card-title" style="display: flex">
+                                    {% if user.picture %}
+                                    <img height='20' width='20' src="{{ user.picture.url }}">
+                                    {% else %}
+                                    <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                    {% endif %}
+                                </h5>
+                                <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
                 </ul>
               {% else %}

@@ -33,7 +33,7 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">People Who Liked Your Post:</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">People Who Liked This Post:</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                             </button>
@@ -41,6 +41,7 @@
                         
                         <div class="modal-body" style="overflow: auto;">
                             <div class="container">
+                                {% if post.likes.all %}
                             {% for user in post.likes.all %}
                                 <div class="row">
                                      <div class="card card2">
@@ -59,6 +60,9 @@
                                     </div>
                                 </div>
                             {% endfor %}
+                            {% else %}
+                                No likes yet!
+                            {% endif %}
                             </div>
                         </div>
                         <div class="modal-footer">
