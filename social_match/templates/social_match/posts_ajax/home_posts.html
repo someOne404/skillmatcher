@@ -1,17 +1,19 @@
 {% load static %}
 {% load widget_tweaks %}
+{% load socialmatchtags %}
 
-<div>
+<div class="col-sm">
     {% if filtered %}
-        <h3>Showing filter results for:</h3>
-        <h5>
+        <h3>Showing filter results for...</h3>
+        <h3>
         name: {{ names }} <br>
         keywords: {{ keywords }} <br>
+        followed users: {{ following }} <br>
         posts liked: {{ liked }} <br>
         posts commented on: {{ commented }} <br><br>
-        </h5>
+        </h3>
     {% else %}
-    <h3 >All Posts</h3>
+    <h2 >All Posts</h2>
     {% endif %}
     {% if post_list %}
     {% for post in post_list %}
@@ -19,7 +21,7 @@
         <div class="card-header">
             <h4 class="card-title" style="display:inline"><strong>{{ post.headline }}</strong></h4>
             {% if post.user == user %}
-            <a class ="btn-md" style="margin-left:20px;" href="{% url 'social_match:editpost' post.id %}">
+            <a class ="btn-md" style="margin-left:20px;" href="/editpost/{{post.id}}?return=home">
                     <i class="fas fa-edit"></i></i>
             </a><br>
             {% endif %}
@@ -31,7 +33,9 @@
         </div>
 
         <div class="card-footer">
-            <p style="float:left">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</p>
+            <a data-toggle="modal" data-target="#a{{post.id}}" style="color: blue">
+                <p style="float:left">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</p>
+            </a>
             {% if post.post_edited %}
                 <p style="float:right">Edited {{ post.date_edited }}</p>
             {% else %}
@@ -62,6 +66,52 @@
 
         </div>
 
+        {% comment %} Likes Modal! {% endcomment %}
+        <div class="modal fade" id="a{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">People Who Liked This Post:</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body" style="overflow: auto">
+                        {% if post.likes.all %}
+                        <div class="container">
+                        {% for user in post.likes.all %}
+                            <div class="row">
+                                 <div class="card card2">
+                                    <div class="card-body" style="display:flex">
+                                        <h5 class="card-title" style="display: flex">
+                                            {% if user.picture %}
+                                                <img height='20' width='20' src="{{ user.picture.url }}">
+                                            {% else %}
+                                                <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                            {% endif %}
+                                        </h5>
+                                        <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                        <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        {% else %}
+                            No likes yet!
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} End of Modal! {% endcomment %}
+
         <ul class="list-group list-group-flush">
 
             {% for comment in post.comments.all %}
@@ -82,9 +132,9 @@
         <div class="pagination">
             <span class="step-links">
                 {% if post_list.has_previous %}
-                    <a href="?p=1&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">&laquo; first</a> -
+                    <a href="?p=1&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">&laquo; first</a> -
                     {% if post_list.previous_page_number != 1 %}
-                        <a href="?p={{post_list.previous_page_number}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">previous</a>
+                        <a href="?p={{post_list.previous_page_number}}&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">previous</a>
                     {% endif %}
                 {% endif %}
 
@@ -94,30 +144,13 @@
 
                 {% if post_list.has_next %}
                     {% if post_list.next_page_number != post_list.paginator.num_pages %}
-                        <a href="?p={{post_list.next_page_number}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">next</a> -
+                        <a href="?p={{post_list.next_page_number}}&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">next</a> -
                     {% endif %}
-                <a href="?p={{post_list.paginator.num_pages}}&k={{keywords}}&n={{names}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">last &raquo;</a>
+                <a href="?p={{post_list.paginator.num_pages}}&k={{keywords}}&n={{names}}&fol={{following}}&l={{liked}}&c={{commented}}&f={{filtered}}" class="primary">last &raquo;</a>
                 {% endif %}
             </span>
         </div>
     {% else %}
     <p>No posts are available.</p>
     {% endif %}
-</div>
-
-{% comment %} Likes Modal {% endcomment %}
-<div class="modal fade" id="likesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">People Who Liked Your Post:</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-      </div>
-    </div>
-  </div>
 </div>

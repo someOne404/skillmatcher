@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 {% load friendshiptags %}
+{% load socialmatchtags %}
 {% if viewing_user.is_authenticated %}
 
 
@@ -28,74 +29,72 @@
                 </form>
             </div>
             <div>
-                <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
-                    {% csrf_token %}
-                    <input class="btn btn-light" type="submit" value="Upload Photo" name="prof_profile">
-                </form>
 
+                    
+                    {% comment %} <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="myfile">
+                        <button class="btn btn-light" type="submit">Upload</button>
+                    </form>
 
-                {% comment %} <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="file" name="myfile">
-                    <button class="btn btn-light" type="submit">Upload</button>
-                </form>
+                        {% if uploaded_file_url %}
+                            <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+                        {% endif %} {% endcomment %}
+                </div>
+                <div style="margin-left: 28%" >
+                    <div>Following:<a data-toggle="modal" data-target="#followingModal" style="color:blue"> {{ following|length}} user{{ following|pluralize }}.</a></div>
+                    <div>Blocking:<a data-toggle="modal" data-target="#blockingModal" style="color:blue"> {{ blocking|length }} user{{ blocking|pluralize }}.</a></div>
+                </div>
+                {% else %}
+                    {% if not check_follow %}
+                        <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
+                    {% elif check_follow %}
+                        <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
+                    {% endif %}
 
-                {% if uploaded_file_url %}
-                    <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
-                {% endcomment %}
-
-
-
-            </div>
-        {% else %}
-{#                    {% if not check_follow %}#}
-{#                        <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>#}
-{#                    {% elif check_follow %}#}
-{#                        <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>#}
-{#                    {% endif %}#}
-{#                    {% if not check_block %}#}
-{#                        <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>#}
-{#                    {% elif check_block %}#}
-{#                        <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>#}
-{#                    {% endif %} {% endcomment %}#}
-        {% endif %}
+                    {% if not check_block %}
+                        <a href="{% url 'social_match:block' viewing_user.id %}" method="post" name="block"><button type="button" class="btn btn-info">Block</button></a>
+                    {% elif check_block %}
+                        <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
+                    {% endif %}
+            {% endif %}
         </div>
 
-  
-        <div class="col-md-8 col-sm-12 mb-3">
-            <div class="info" style="display:none">
-                <h1 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h1>
-            </div>
-            <div class="info2" style="display:none">
-                <h5>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</h5>
-                <h5>Majors:
+        
+            <div class="col-md-8 col-sm-12 mb-3">
+                <div class="info" style="display:none">
+                    <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
+                </div>
+                <div class="info2" style="display:none">
+                <h5><strong>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</strong></h5>
+                <h5><strong>Majors: </strong>
                     {% for major in viewing_user.majors.all %}
                         {% if forloop.last %}
-                                <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->
+                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->
                         {% else %}
-                                <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->,
+                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Minors:
+                <h5><strong>Minors: </strong>
                     {% for minor in viewing_user.minors.all %}
                         {% if forloop.last %}
-                                <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->
+                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->
                         {% else %}
-                                <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->,
+                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Courses:
+                <h5><strong>Courses: </strong>
                     {% for course in viewing_user.courses.all %}
                         {% if forloop.last %}
-                                <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->
+                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->
                         {% else %}
-                                <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->,
+                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->,
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Skills:
+                <h5><strong>Skills: </strong>
                     {% for skill in viewing_user.skills.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ skill.name }}<!--</a>-->
@@ -104,7 +103,7 @@
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Interests:
+                <h5><strong>Interests: </strong>
                     {% for interest in viewing_user.interests.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ interest.name }}<!--</a>-->
@@ -113,7 +112,7 @@
                         {% endif %}
                     {% endfor %}
                 </h5>
-                <h5>Activities:
+                <h5><strong>Activities: </strong>
                     {% for activity in viewing_user.activities.all %}
                         {% if forloop.last %}
                             <!--<a class='link' href="#">-->{{ activity.name }}<!--</a>-->
@@ -124,24 +123,108 @@
                 </h5>
 
 
-                <hr>
-                <h4 class="display-5">Contact:</h4>
-                <h5>Email: {{ viewing_user.email }}</h5>
-                <h5>Phone number: {{ viewing_user.phone }}</h5>
-            </div>
+            <hr>
+                <h4 class="display-5"><strong>Contact: </strong></h4>
+                <h5><strong>Email: </strong> {{ viewing_user.email }}</h5>
+                <h5><strong>Phone: </strong> {{ viewing_user.phone }}</h5>
+                </div>
 
             <br />
-
 
         </div>
     </div>
 
     <hr>
-
     <div id="profile_posts">
         {% include 'social_match/posts_ajax/profile_posts.html' %}
     </div>
 
+</div>
+
+{% comment %} Following Modal {% endcomment %}
+<div class="modal fade" id="followingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">People Who You Are Following:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          {% following_list request.user as following %}
+          <div class="container">
+              {% if following %}
+                {% for user in following %}
+                    <div class="row">
+                        <div class="card card2">
+                            <div class="card-body" style="display:flex">
+                                <h5 class="card-title" style="display: flex">
+                                    {% if user.picture %}
+                                    <img height='20' width='20' src="{{ user.picture.url }}">
+                                    {% else %}
+                                    <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                    {% endif %}
+                                </h5>
+                                <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+              {% else %}
+                You are not following anyone.
+              {% endif %}
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% comment %} Blocking Modal {% endcomment %}
+<div class="modal fade" id="blockingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">People Who You Have Blocked:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          {% blocking_list request.user as blocking%}
+          <div>
+              {% if blocking %}
+                <ul>
+                {% for user in blocking %}
+                    <div class="row">
+                        <div class="card card2">
+                            <div class="card-body" style="display:flex">
+                                <h5 class="card-title" style="display: flex">
+                                    {% if user.picture %}
+                                    <img height='20' width='20' src="{{ user.picture.url }}">
+                                    {% else %}
+                                    <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                    {% endif %}
+                                </h5>
+                                <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </ul>
+              {% else %}
+                You are not blocking anyone.
+              {% endif %}
+          </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endif %}

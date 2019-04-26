@@ -1,5 +1,6 @@
 {% load static %}
 {% load widget_tweaks %}
+{% load socialmatchtags %}
 
 <div align="center">
         <h3 class="display-4">Posts:</h3>
@@ -28,7 +29,9 @@
                 </div>
 
                 <div class="card-footer">
-                    <p style="float:left">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</p>
+                    <a data-toggle="modal" data-target="#a{{post.id}}" style="color: blue">
+                        <p style="float:left">{{ post.likes.count }} like{{ post.likes.count|pluralize }}</p>
+                    </a>
                     {% if post.post_edited %}
                         <p style="float:right">Edited {{ post.date_edited }}</p>
                     {% else %}
@@ -61,6 +64,52 @@
 
 
                 </div>
+
+                 {% comment %} Likes Modal! {% endcomment %}
+                <div class="modal fade" id="a{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">People Who Liked This Post:</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body" style="overflow: auto;">
+                                <div class="container">
+                                    {% if post.likes.all %}
+                                {% for user in post.likes.all %}
+                                    <div class="row">
+                                         <div class="card card2">
+                                            <div class="card-body" style="display:flex">
+                                                <h5 class="card-title" style="display: flex">
+                                                    {% if user.picture %}
+                                                        <img height='20' width='20' src="{{ user.picture.url }}">
+                                                    {% else %}
+                                                        <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                                    {% endif %}
+                                                </h5>
+                                                <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                                <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                {% else %}
+                                    No likes yet!
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment %} End of Modal! {% endcomment %}
 
                 <ul class="list-group list-group-flush">
 

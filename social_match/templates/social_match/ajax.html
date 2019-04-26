@@ -5,6 +5,7 @@
                 var pk = $(this).attr('value');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -13,7 +14,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:likepost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -54,6 +55,7 @@
                 var pk = $(this).attr('value');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -62,7 +64,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'comment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -102,6 +104,7 @@
                 var pk = $(this).attr('value');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -111,7 +114,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'text':text, 'type':'submitcomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -151,6 +154,7 @@
                 var pk = $(this).attr('data-cid');
                 var k = $(this).attr('data-k');
                 var n = $(this).attr('data-n');
+                var fol = $(this).attr('data-fol');
                 var l = $(this).attr('data-l');
                 var c = $(this).attr('data-c');
                 var f = $(this).attr('data-f');
@@ -159,7 +163,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:commentpost" %}',
-                    data: {'id':pk, 'k':k, 'n':n, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'deletecomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'k':k, 'n':n, 'fol':fol, 'l':l, 'c':c, 'f':f, 'p':p, 't':t, 'type':'deletecomment', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
                         $('#home_posts').html(response)
@@ -192,36 +196,36 @@
                 });
             });
 
-        $(document).on('click', '#readnotif-home', function(event){
+
+
+        $(document).on('click', '#readnotif', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('data-nid');
-                var t = $(this).attr('data-t');
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:notifications" %}',
-                    data: {'id':pk, 't':t, 'section':'list', 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'section':'list', 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
-                        $('#home_notifications').html(response)
-                        console.log($('#home_notifications').html(response['form']));
+                        $('#notifications').html(response)
+                        console.log($('#notifications').html(response['form']));
                     },
                     error: function(rs, e){
                         console.log(rs.responseText);
                     },
                 });
             });
-        $(document).on('click', '#readnotif-home', function(event){
+        $(document).on('click', '#readnotif', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('data-nid');
-                var t = $(this).attr('data-t');
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:notifications" %}',
-                    data: {'id':pk, 't':t, 'section':'header', 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'section':'header', 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
-                        $('#home_notifications_header').html(response)
-                        console.log($('#home_notifications_header').html(response['form']));
+                        $('#notifications_header').html(response)
+                        console.log($('#notifications_header').html(response['form']));
                     },
                     error: function(rs, e){
                         console.log(rs.responseText);
@@ -229,36 +233,34 @@
                 });
             });
 
-         $(document).on('click', '#deletenotif-home', function(event){
+         $(document).on('click', '#deletenotif', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('data-nid');
-                var t = $(this).attr('data-t');
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:notifications" %}',
-                    data: {'id':pk, 't':t, 'section':'list', 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'section':'list', 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
-                        $('#home_notifications').html(response)
-                        console.log($('#home_notifications').html(response['form']));
+                        $('#notifications').html(response)
+                        console.log($('#notifications').html(response['form']));
                     },
                     error: function(rs, e){
                         console.log(rs.responseText);
                     },
                 });
             });
-        $(document).on('click', '#deletenotif-home', function(event){
+        $(document).on('click', '#deletenotif', function(event){
                 event.preventDefault();
                 var pk = $(this).attr('data-nid');
-                var t = $(this).attr('data-t');
                 $.ajax({
                     type: 'POST',
                     url: '{% url "social_match:notifications" %}',
-                    data: {'id':pk, 't':t, 'section':'header', 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    data: {'id':pk, 'section':'header', 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
                     dataType: 'json',
                     success: function(response){
-                        $('#home_notifications_header').html(response)
-                        console.log($('#home_notifications_header').html(response['form']));
+                        $('#notifications_header').html(response)
+                        console.log($('#notifications_header').html(response['form']));
                     },
                     error: function(rs, e){
                         console.log(rs.responseText);
@@ -266,42 +268,4 @@
                 });
             });
 
-        $(document).on('click', '#readnotif-profile', function(event){
-                event.preventDefault();
-                var pk = $(this).attr('data-nid');
-                var t = $(this).attr('data-t');
-                var u = $(this).attr('data-u');
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "social_match:notifications" %}',
-                    data: {'id':pk, 't':t, 'u':u, 'type':'read', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                    dataType: 'json',
-                    success: function(response){
-                        $('#profile_notifications').html(response)
-                        console.log($('#profile_notifications').html(response['form']));
-                    },
-                    error: function(rs, e){
-                        console.log(rs.responseText);
-                    },
-                });
-            });
-        $(document).on('click', '#deletenotif-profile', function(event){
-                event.preventDefault();
-                var pk = $(this).attr('data-nid');
-                var t = $(this).attr('data-t');
-                var u = $(this).attr('data-u');
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "social_match:notifications" %}',
-                    data: {'id':pk, 't':t, 'u':u, 'type':'delete', 'csrfmiddlewaretoken': '{{ csrf_token }}'},
-                    dataType: 'json',
-                    success: function(response){
-                        $('#profile_notifications').html(response)
-                        console.log($('#profile_notifications').html(response['form']));
-                    },
-                    error: function(rs, e){
-                        console.log(rs.responseText);
-                    },
-                });
-            });
     </script>

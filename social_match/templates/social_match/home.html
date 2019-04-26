@@ -57,7 +57,6 @@
     </script>
     <div class="container">
         <div class="row">
-{#            <div class="col-md-1"></div>#}
             <div id="home_posts" class="col-sm-12 col-md-7">
                 {% include 'social_match/posts_ajax/home_posts.html' %}
             </div>
@@ -76,6 +75,10 @@
                         <p clas="text-muted">Separate keywords by a space</p>
                     </div><br>
                     <div class="form-check">
+                        {% render_field form.following class='form-check-input' %}
+                        <label class="form-check-label">Posts by users I'm following</label>
+                    </div>
+                    <div class="form-check">
                         {% render_field form.liked class='form-check-input' %}
                         <label class="form-check-label">Posts I've liked</label>
                     </div>
@@ -89,6 +92,8 @@
                 </form>
 
                 <br />
+                <hr>
+
                 <!-- Displaying Notifications -->
                 {% comment %} <div id="home_notifications_header">
                     {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
@@ -101,7 +106,6 @@
                 {% endif %}
                 </div> {% endcomment %}
             </div>
-{#            <div class="col-md-1"></div>#}
         </div>
     </div>
 
