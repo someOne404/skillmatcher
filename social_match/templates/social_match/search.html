@@ -14,15 +14,6 @@
 {{ filter.form.media }}
 {% if user.is_authenticated %}
     <style>
-        .typewriter h1,h2 {
-          display: flex;
-          overflow: hidden; /* Ensures the content is not revealed until the animation */
-          border-right: .05em solid black;
-          letter-spacing: .01em; /* Adjust as needed */
-          white-space: nowrap; /* Keeps the content on a single line */
-          margin: 0 auto; /* Gives that scrolling effect as the typing happens */
-          animation: typing 0.4s steps(30, end), blink-caret 0.5s step-end infinite;
-        }
         /* The typing effect */
         @keyframes typing {
         from {
@@ -45,49 +36,81 @@
     </style>
     <script type="text/javascript">
         $(document).ready(function(){
-        $(".row").fadeIn(500).delay("slow").removeAttr('style');
-        $(".buttons").fadeIn(500).delay("slow").removeAttr('style');
-        $(".search").fadeIn(500).delay("slow").removeAttr('style');
+            $(".row").fadeIn(500).delay("slow").removeAttr('style');
+            $(".buttons").fadeIn(500).delay("slow").removeAttr('style');
+        // $(".search").fadeIn(500).delay("slow").removeAttr('style');
 
         });
     </script>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-sm-12 col-md-7">
-            <div>
+        <div class="col-sm-12 col-md-8 order-sm-1 order-2">
+            <div class="row justify-content-start">
                 {% for u in filter.qs %}
-                    <div class="card" style="width:18rem !important;">
-                    {% if u.picture %}
-                        {% if u.picture.isempty or u.picture.name == 'False' %}
-                            <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                    <div class="col-auto mb-3">
+                        <div class="card" style="width:15rem !important;">
+                        {% if u.picture %}
+                            {% if u.picture.isempty or u.picture.name == 'False' %}
+                                <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                            {% else %}
+                                <img class="card-img-top" src="{{ u.picture.url }}">
+                            {% endif %}
                         {% else %}
-                            <img class="card-img-top" src="{{ u.picture.url }}">
+                            <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
                         {% endif %}
-                    {% else %}
-                        <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
-                    {% endif %}
-                        <div class="card-body">
-                            <p class="card-title"><a href="{% url 'social_match:profile' u.id %}">{{ u.first_name }} {{ u.last_name }}</a></p>
-                            <p>{% if u.class_standing %} {{ u.get_class_standing_display }}, {% endif %}Class of {{ u.graduation_year }}</p>
-                            {% for major in u.majors.all %}
-                                {% if forloop.last %}
-                                    <p style="display:inline">{{ major.name }}</p>
-                                {% else %}
-                                    <p style="display:inline">{{ major.name }}</p>,
-                                {% endif %}
-                            {% endfor %}
+                            <div class="card-body">
+                                <p class="card-title"><a href="{% url 'social_match:profile' u.id %}">{{ u.first_name }} {{ u.last_name }}</a></p>
+                                <p>{% if u.class_standing %} {{ u.get_class_standing_display }}, {% endif %}Class of {{ u.graduation_year }}</p>
+                                {% for major in u.majors.all %}
+                                    {% if forloop.last %}
+                                        <p style="display:inline">{{ major.name }}</p>
+                                    {% else %}
+                                        <p style="display:inline">{{ major.name }}</p>,
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
+
                 {% empty %}
                     <h3>No users available</h3>
                 {% endfor %}
+
+                <div class="col-auto mb-3">
+                    <div class="card" style="width:15rem !important">
+                        <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                        <div class="card-body">
+                            <p class="card-title">Test user</p>
+                            <p>Second Year, Class of 2021</p>
+                            <p>Biomedical Engineering, Computer Science, Commerce, Economics</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-auto mb-3">
+                    <div class="card" style="width:15rem !important">
+                        <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                        <div class="card-body">
+                            <p class="card-title">Test user</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-auto mb-3">
+                    <div class="card" style="width:15rem !important">
+                        <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                        <div class="card-body">
+                            <p class="card-title">Test user</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
-        <div class="col-sm-12 col-md-3 jumbotron">
+        <div class="col-sm-12 col-md-4 order-1 jumbotron">
             <form method="get">
-              <h2 style="margin-top: 0">Search</h2>
+                <h3 style="margin-top: 0"><strong>Search</strong></h3>
 
                     <div class="form-group">
                       {{ filter.form.first_name.label_tag }}
@@ -133,16 +156,16 @@
                       {{ filter.form.activities.label_tag }}
                       {% render_field filter.form.activities class="form-control" %}
                     </div>
-              <button type="submit" class="btn btn-primary">
-                <span class="glyphicon glyphicon-search"></span> Search
-              </button>
-              <a href="{% url 'social_match:resetsearch' %}">
-              <button type="button" class="btn btn-light">
-              Reset
-              </button></a>
-          </form>
-        <div class="col-md-1"></div>
+                    <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                    </button>
+                    <a href="{% url 'social_match:resetsearch' %}">
+                    <button type="button" class="btn btn-light">
+                    <i class = "fas fa-redo"></i>
+                    </button></a>
+            </form>
         </div>
+
     </div>
   </form>
 
