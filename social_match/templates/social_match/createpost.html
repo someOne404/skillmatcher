@@ -1,23 +1,23 @@
 {% extends 'social_match/base.html' %}
+{% load widget_tweaks %}
 {% block content %}
 {% if user.is_authenticated %}
 <div class="container">
     {% if confirmation %}
-    {{confirmation}} Create another:
+        {{confirmation}} Create another:
     {% else %}
-    <div style="margin: auto; width: 17%;" class="typewriter2">
-    <h2>Create a post!</h2>
-    </div>
+        <h3>Create a post</h3>
+        <p>Want to form a study group? Collaborate on a project? Let others know.</p>
     {% endif %}
     <form class="createpost" method="POST" style="display:none">{% csrf_token %}
 
         <div class="form-group">
-            <h5>Headline:</h5>
-            {{ form.headline }}
+            <label>Title: </label>
+            {% render_field form.headline class='form-control' %}
         </div><br>
         <div class="form-group">
-            <h5>Message:</h5>
-            {{ form.message }}
+            <label>Message:</label>
+            {% render_field form.message class='form-control' %}
         </div>
         </br>
 
