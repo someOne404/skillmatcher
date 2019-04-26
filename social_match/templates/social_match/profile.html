@@ -62,7 +62,7 @@
         
             <div class="col-md-8 col-sm-12 mb-3">
                 <div class="info" style="display:none">
-                    <h1 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
+                    <h4 class="display-4">{{ viewing_user.first_name }} {{ viewing_user.last_name }}</h4>
                 </div>
                 <div class="info2" style="display:none">
                 <h5><strong>{% if viewing_user.class_standing %} {{ viewing_user.get_class_standing_display }}, {% endif %}Class of {{ viewing_user.graduation_year }}</strong></h5>
@@ -152,6 +152,18 @@
         </button>
       </div>
       <div class="modal-body">
+          {% following_list request.user as following %}
+          <div>
+              {% if following %}
+                <ul>
+                {% for user in following %}
+                    <li><a href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a></li>
+                {% endfor %}
+                </ul>
+              {% else %}
+                You are not following anyone.
+              {% endif %}
+          </div>
       </div>
     </div>
   </div>
@@ -169,6 +181,18 @@
         </button>
       </div>
       <div class="modal-body">
+          {% blocking_list request.user as blocking%}
+          <div>
+              {% if blocking %}
+                <ul>
+                {% for user in blocking %}
+                    <li><a href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a></li>
+                {% endfor %}
+                </ul>
+              {% else %}
+                You are not blocking anyone.
+              {% endif %}
+          </div>
       </div>
     </div>
   </div>
