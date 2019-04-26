@@ -33,36 +33,37 @@ User = get_user_model()
 def base(request):
     return HttpResponseRedirect(reverse('social_match:home'))
 
-
 def about(request):
     template_name = './social_match/about.html'
     return render(request, template_name)
-
 
 def home(request):
     template_name = './social_match/home.html'
     form = PostSearchForm()
 
-    keywordstr, namestr, liked, commented, filtered = get_filter_form_results(request)
-
-    posts_per_page = 10
-    post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
-
     if request.user.is_authenticated:
-        request_user = User.objects.get(id=request.user.id)
-        notifications = Notification.objects.filter(recipient=request_user, unread=True)
+        keywordstr, namestr, following, liked, commented, filtered = get_filter_form_results(request)
+
+        posts_per_page = 10
+        post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.GET.get('p'), request.user.id, posts_per_page)
     else:
-        notifications = []
+        post_list = []
+        keywordstr = ''
+        namestr = ''
+        following = False
+        liked = False
+        commented = False
+        filtered = False
 
     context = {
         'post_list': post_list,
         'form': form,
         'keywords': keywordstr,
         'names': namestr,
+        'following': following,
         'liked': liked,
         'commented': commented,
         'filtered': filtered,
-        'notifications': notifications,
     }
     return render(request, template_name, context)
 
@@ -78,6 +79,9 @@ def resetsearch(request):
     return render(request, './social_match/search.html')
 
 def profile(request, user_id=None):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('social_match:home'))
+
     user = request.user
     viewing_user = user
 
@@ -105,12 +109,8 @@ def profile(request, user_id=None):
     else:
         check_block = False
 
-
-
     posts_per_page = 5
     post_list = get_profile_post_list(viewing_user, posts_per_page, request.GET.get('p'))
-
-    notifications = Notification.objects.filter(recipient=viewing_user)
 
     template_name = './social_match/profile.html'
 
@@ -126,7 +126,6 @@ def profile(request, user_id=None):
             'post_list':post_list,
             'uploaded_file_url': uploaded_file_url
         })
-    
     return render(request, template_name, {
         'user': user,
         'viewing_user': viewing_user,
@@ -135,7 +134,8 @@ def profile(request, user_id=None):
         'check_follow': check_follow,
         'check_block': check_block,
         'post_list': post_list,
-        'notifications': notifications,
+        'following': following_list,
+        'blocking': blocking_list,
     })
 
 def createpost(request):
@@ -203,15 +203,16 @@ def likepost(request):
     if template == "home":
         template_name = './social_match/posts_ajax/home_posts.html'
 
-        keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+        keywordstr, namestr, following, liked, commented, filtered = get_filter_inputs(request)
 
         posts_per_page = 10
-        post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
+        post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
 
         context = {
             'post_list': post_list,
             'keywords': keywordstr,
             'names': namestr,
+            'following': following,
             'liked': liked,
             'commented': commented,
             'filtered': filtered,
@@ -268,15 +269,16 @@ def commentpost(request):
     if template == "home":
         template_name = './social_match/posts_ajax/home_posts.html'
 
-        keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+        keywordstr, namestr, following, liked, commented, filtered = get_filter_inputs(request)
 
         posts_per_page = 10
-        post_list = get_home_post_list(keywordstr, namestr, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
+        post_list = get_home_post_list(keywordstr, namestr, following, liked, commented, request.POST.get('p'), request.user.id, posts_per_page)
 
         context = {
             'post_list': post_list,
             'keywords': keywordstr,
             'names': namestr,
+            'following': following,
             'liked': liked,
             'commented': commented,
             'filtered': filtered,
@@ -319,40 +321,14 @@ def notifications(request):
     if request.POST.get('type') == 'delete':
         notification.delete()
 
-    template = request.POST.get('t')
     section = request.POST.get('section')
-    if template == "home":
-        if section == 'list':
-            template_name = './social_match/notifications_ajax/home_notifications.html'
-
-            request_user = User.objects.get(id=request.user.id)
-            notifications = Notification.objects.filter(recipient=request_user, unread=True)
-
-        else:
-            template_name = './social_match/notifications_ajax/home_notifications_header.html'
-
-            request_user = User.objects.get(id=request.user.id)
-            notifications = Notification.objects.filter(recipient=request_user, unread=True)
+    if section == 'list':
+        template_name = './social_match/notifications_ajax/notifications.html'
     else:
-        template_name = './social_match/notifications_ajax/profile_notifications.html'
-
-        user_id = request.POST.get('u')
-        user = request.user
-        viewing_user = user
-        if not user_id:  # accessing user's own profile
-            user = request.user
-            if not request.user.is_authenticated:
-                return HttpResponseRedirect(reverse('social_match:home'))
-        else:
-            try:
-                viewing_user = User.objects.get(id=user_id)
-            except User.DoesNotExist:
-                return render(request, './social_match/404.html')
-
-        notifications = Notification.objects.filter(recipient=viewing_user)
+        template_name = './social_match/notifications_ajax/notifications_header.html'
 
     if request.is_ajax():
-        html = render_to_string(template_name, {'notifications':notifications}, request=request)
+        html = render_to_string(template_name, request=request)
         return JsonResponse({'form': html})
 
 def editprofile(request, user_id):
@@ -555,7 +531,11 @@ def get_profile_post_list(viewing_user, posts_per_page, page):
     post_list = paginator.get_page(page)
     return post_list
 
-def post_filter(keywordstr, namestr, liked, commented, user_id):
+def post_filter(keywordstr, namestr, following, liked, commented, user_id):
+    user = get_object_or_404(User, id=user_id)
+    #following_list = Follow.objects.following(User.objects.get(id=user_id))
+    following_list = Follow.objects.following(user)
+
     if_all = Q(date__lte=timezone.now(), post_active=True)
     if_any = Q()
 
@@ -567,17 +547,22 @@ def post_filter(keywordstr, namestr, liked, commented, user_id):
     for name in names:
         if_any |= Q(user__first_name__icontains=name)
         if_any |= Q(user__last_name__icontains=name)
+    if following:
+        if_any |= Q(user__in=following_list)
     if liked:
         if_any |= Q(likes__id=user_id)
     if commented:
         if_any |= Q(comments__user__id=user_id)
     if_all &= if_any
 
-    posts = Post.objects.filter(if_all).distinct().order_by('-date')
+    #blocked = Block.objects.blocking(User.objects.get(id=user_id))
+    blocked = Block.objects.blocking(user)
+    posts = Post.objects.filter(if_all).distinct().order_by('-date').exclude(user__in=blocked)
+
     return posts
 
-def get_home_post_list(keywordstr, namestr, liked, commented, page, user_id, posts_per_page):
-    posts = post_filter(keywordstr, namestr, liked, commented, user_id)
+def get_home_post_list(keywordstr, namestr, following, liked, commented, page, user_id, posts_per_page):
+    posts = post_filter(keywordstr, namestr, following, liked, commented, user_id)
     paginator = Paginator(posts, posts_per_page)
     post_list = paginator.get_page(page)
 
@@ -590,6 +575,10 @@ def get_filter_inputs(request):
             filtered = True
         else:
             filtered = False
+        if request.GET.get('fol') == "True":
+            following = True
+        else:
+            following = False
         if request.GET.get('l') == "True":
             liked = True
         else:
@@ -609,6 +598,10 @@ def get_filter_inputs(request):
             filtered = True
         else:
             filtered = False
+        if request.POST.get('fol') == "True":
+            following = True
+        else:
+            following = False
         if request.POST.get('l') == "True":
             liked = True
         else:
@@ -627,13 +620,14 @@ def get_filter_inputs(request):
         filtered = False
         keywordstr = ""
         namestr = ""
+        following = False
         liked = False
         commented = False
 
-    return keywordstr, namestr, liked, commented, filtered
+    return keywordstr, namestr, following, liked, commented, filtered
 
 def get_filter_form_results(request):
-    keywordstr, namestr, liked, commented, filtered = get_filter_inputs(request)
+    keywordstr, namestr, following, liked, commented, filtered = get_filter_inputs(request)
 
     if request.method == 'POST':
         if 'filter' in request.POST:
@@ -641,6 +635,7 @@ def get_filter_form_results(request):
             if form.is_valid():
                 keywordstr = form.cleaned_data['keywords']
                 namestr = form.cleaned_data['name']
+                following = form.cleaned_data['following']
                 liked = form.cleaned_data['liked']
                 commented = form.cleaned_data['commented']
                 filtered = True
@@ -648,10 +643,11 @@ def get_filter_form_results(request):
             filtered = False
             keywordstr = ""
             namestr = ""
+            following = False
             liked = False
             commented = False
 
-    return keywordstr, namestr, liked, commented, filtered
+    return keywordstr, namestr, following, liked, commented, filtered
 
 # "save" signal handling for comments created on Posts
 def commentHandler(sender, instance, created, **kwargs):
@@ -685,3 +681,23 @@ def likeHandler(sender, instance, action, pk_set, **kwargs):
             notify.send(target=instance, sender=user_sender, recipient=user_recipient, verb='liked')
 
 m2m_changed.connect(likeHandler, sender=Post.likes.through)
+
+# "save" signal handling for being followed by someone
+def followHandler(sender, instance, created, **kwargs):
+    user_sender = User.objects.get(id=instance.follower.id)
+    user_receiver = User.objects.get(id=instance.followee.id)
+
+    # only send notification is sender is not blocked by receiver
+    blocking = Block.objects.blocking(user_receiver)
+    is_blocked = user_sender in blocking
+
+    if not is_blocked:
+        # target: post commented on
+        # action_object: comment created on post
+        # sender: user following another user
+        # recipient: user being followed and receiving notification
+        # verb: action description
+        notify.send(sender=user_sender, recipient=user_receiver, verb='followed')
+
+
+post_save.connect(followHandler, sender=Follow)

@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialmatchtags %}
 
 <div align="center">
         <h4 class="display-4">Posts:</h4>
@@ -19,42 +20,96 @@
                 </h5>   
                 <p>{{ post.message }}</p>
                 <p class="card-text">Posted on {{post.date}}<br>
-                    {% if post.post_edited %}
-                    Last edited on: {{post.date_edited}}
+                {% if post.post_edited %}
+                Last edited on: {{post.date_edited}}
+                {% endif %}<br>
+                    {% if not post.post_active %}
+                    Archived
                     {% endif %}<br>
 
-                    {{ post.likes.count }} Like{{ post.likes.count|pluralize }}
+                <a data-toggle="modal" data-target="#a{{post.id}}" style="color: blue">
+                    {{ post.likes.count }} Like{{ post.likes.count|pluralize }} 
+                </a>
+                            {% comment %} Modal! {% endcomment %}
+            <div class="modal fade" id="a{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">People Who Liked This Post:</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        
+                        <div class="modal-body" style="overflow: auto;">
+                            <div class="container">
+                                {% if post.likes.all %}
+                            {% for user in post.likes.all %}
+                                <div class="row">
+                                     <div class="card card2">
+                                        <div class="card-body" style="display:flex">
+                                            <h5 class="card-title" style="display: flex">
+                                                {% if user.picture %}
+                                                    <img height='20' width='20' src="{{ user.picture.url }}">
+                                                {% else %}
+                                                    <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                                {% endif %}
+                                            </h5>
+                                            <a style="margin-left:20px" href="{% url 'social_match:profile' user.id %}" class="primary">{{user.first_name}} {{user.last_name}}</a>
+                                            <p style="margin-left:20px" class="card-text">{% if user.class_standing %} {{ user.get_class_standing_display }}, {% endif %}Class of {{ user.graduation_year }}</p>
 
-                    {% if not post.post_active %}
-                    <br><br>Archived
-                    {% endif %}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% else %}
+                                No likes yet!
+                            {% endif %}
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% comment %} End of Modal! {% endcomment %}
+                    {% comment %} {{ post.likes.count }} Like{{ post.likes.count|pluralize }} {% endcomment %}
+                </p>
                     <div style="display: flex">
 
-                    <form action="{% url 'social_match:likepost' %}" method="post">
-                        {% csrf_token %}
-                        {% if user in post.likes.all %}
-                        <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Unlike</button>
-                        {% else %}
-                        <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Like</button>
+                        {% comment %} check if viewer is blocked by poster {% endcomment %}
+                        {% blocked_by post.user request.user as blocked %}
+
+                        {% if not blocked %}
+                            <form action="{% url 'social_match:likepost' %}" method="post">
+                                {% csrf_token %}
+                                {% if user in post.likes.all %}
+                                <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Unlike</button>
+                                {% else %}
+                                <button type="submit" id="like-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Like</button>
+                                {% endif %}
+                            </form>
+
+                            {% if form != None and post_id == post.id %}
+                                <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
+                                {% csrf_token %}
+                                {{ form.text }}
+                                <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}"  data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Comment</button>
+                                </form>
+                            {% else %}
+                                <form action="{% url 'social_match:commentpost' %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Comment</button>
+                                </form>
+                            {% endif %}
                         {% endif %}
-                    </form>
-
-                    {% if form != None and post_id == post.id %}
-                        <form action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
-                        {% csrf_token %}
-                        {{ form.text }}
-                        <button type="submit" id="submitcomment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}"  data-p="{{post_list.number}}" class="btn btn-outline-primary btn-rounded waves-effect btn-sm"">Comment</button>
-                        </form>
-                    {% else %}
-                        <form action="{% url 'social_match:commentpost' %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" id="comment-profile" value="{{post.id}}" data-t="profile" data-u="{{viewing_user.id}}" data-p="{{post_list.number}}" class="btn btn-primary btn-sm">Comment</button>
-                        </form>
-                    {% endif %}
-
-                    <a class ="btn-lg" href="/editpost/{{post.id}}?return=profile">
-                        <i class="fas fa-edit"></i></i>
-                    </a>
+                        {% if viewing_user == user %}
+                        <a class ="btn-lg" href="/editpost/{{post.id}}?return=profile">
+                            <i class="fas fa-edit"></i></i>
+                        </a>
+                        {% endif %}
                 </div>
                     <div style="overflow-y: auto; max-height:180px;">
                     {% for comment in post.comments.all %}

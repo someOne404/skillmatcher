@@ -96,6 +96,7 @@
             $(".info").fadeIn(1000).delay("slow").removeAttr('style');        
             $(".info2").fadeIn(1500).delay("slow").removeAttr('style');  
             $(".info3").fadeIn(2000).delay("slow").removeAttr('style');  
+            $("#profile_posts").fadeIn(1000).delay("slow").removeAttr('style');  
         });
     </script>
     {% include 'social_match/ajax.html' %}
@@ -136,15 +137,14 @@
                             aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-bell"></i> </a>
                         <div class="dropdown-menu dropdown-menu-right dropdown-info"
-                            aria-labelledby="navbarDropdownMenuLink-4">
-                            <div id="home_notifications_header">
-                                {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
+                            aria-labelledby="navbarDropdownMenuLink-4" style="position:absolute;">
+                            <div id="notifications_header" align="center" style="width: 25rem;">
+                                {% include 'social_match/notifications_ajax/notifications_header.html' %}
                             </div>
-                            {% if notifications %}
-                            <div style="overflow-y: auto; height:400px;">
-                                <div id="home_notifications">
-                                    {% include 'social_match/notifications_ajax/home_notifications.html' %}
-                                </div>
+                            {% if notifications %}<hr>
+                            <div id="notifications">
+                                {% include 'social_match/notifications_ajax/notifications.html' %}
+                            </div>
                             {% endif %}
                         </div>
                     </li>

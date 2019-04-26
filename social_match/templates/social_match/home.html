@@ -75,6 +75,9 @@
                         Separate keywords by a space
                     </div><br>
                     <div>
+                        <h5>Posted by users I'm following: {{ form.following }}</h5>
+                    </div>
+                    <div>
                         <h5>Posts I've liked: {{ form.liked }}</h5>
                     </div>
                     <div>
@@ -88,17 +91,6 @@
                 <br />
                 <hr>
 
-                <!-- Displaying Notifications -->
-                {% comment %} <div id="home_notifications_header">
-                    {% include 'social_match/notifications_ajax/home_notifications_header.html' %}
-                </div>
-                {% if notifications %}
-                <div style="overflow-y: auto; max-height:400px;">
-                    <div id="home_notifications">
-                        {% include 'social_match/notifications_ajax/home_notifications.html' %}
-                    </div>
-                {% endif %}
-                </div> {% endcomment %}
             </div>
         </div>
     </div>
