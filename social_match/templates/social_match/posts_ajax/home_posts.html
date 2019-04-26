@@ -23,8 +23,9 @@
             {% if post.user == user %}
             <a class ="btn-md" style="margin-left:20px;" href="/editpost/{{post.id}}?return=home">
                     <i class="fas fa-edit"></i></i>
-            </a><br>
+            </a>
             {% endif %}
+            <br>
             <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>
         </div>
 
