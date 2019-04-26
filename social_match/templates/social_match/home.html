@@ -69,11 +69,11 @@
                 <form method="POST">{% csrf_token %}
                     <br>
                     <div class="form-group">
-                        <label>Name: </label>{% render_field form.name class='form-control' %}
+                        <label>Author: </label>{% render_field form.name class='form-control' %}
                     </div>
                     <div class="form-group">
-                        <label>Keywords: </label>{% render_field form.keywords class='form-control' %}<br>
-                        Separate keywords by a space
+                        <label>Keywords: </label>{% render_field form.keywords class='form-control'%}<br>
+                        <p clas="text-muted">Separate keywords by a space</p>
                     </div><br>
                     <div class="form-check">
                         {% render_field form.liked class='form-check-input' %}
@@ -85,7 +85,7 @@
                     </div>
 
                     <button class="btn btn-primary btn-md" type="submit" name="filter"><i class="fas fa-search"></i></button>
-                    <button class="btn btn-primary btn-md" type="submit" name="clear">Clear</button>
+                    <button class="btn btn-primary btn-md" type="submit" name="clear"><i class="fas fa-redo"></i></button>
                 </form>
 
                 <br />

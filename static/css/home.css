@@ -49,3 +49,9 @@ div.card .card-img-top {
 .card-info {
   font-size:0.8rem;
 }
+
+.card .list-group {
+  max-height: 300px;
+  overflow:scroll;
+  -webkit-overflow-scrolling: touch;
+}
