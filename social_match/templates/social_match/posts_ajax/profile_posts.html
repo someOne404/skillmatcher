@@ -23,6 +23,9 @@
                 {% if post.post_edited %}
                 Last edited on: {{post.date_edited}}
                 {% endif %}<br>
+                    {% if not post.post_active %}
+                    Archived
+                    {% endif %}<br>
 
                 <a data-toggle="modal" data-target="#a{{post.id}}" style="color: blue">
                     {{ post.likes.count }} Like{{ post.likes.count|pluralize }} 
@@ -73,10 +76,7 @@
             </div>
             {% comment %} End of Modal! {% endcomment %}
                     {% comment %} {{ post.likes.count }} Like{{ post.likes.count|pluralize }} {% endcomment %}
-
-                    {% if not post.post_active %}
-                    <br><br>Archived
-                    {% endif %}</p>
+                </p>
                     <div style="display: flex">
 
                         {% comment %} check if viewer is blocked by poster {% endcomment %}
