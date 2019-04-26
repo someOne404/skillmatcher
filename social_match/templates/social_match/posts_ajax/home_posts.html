@@ -36,7 +36,7 @@
                 <p style="float:right">Edited {{ post.date_edited }}</p>
             {% else %}
                 <p style="float:right">Posted {{ post.date }}</p>
-            {% endif %}
+            {% endif %}f
             <div style="clear: both;"></div>
             <form style="display:inline" action="{% url 'social_match:likepost' %}" method="post">
                 {% csrf_token %}
@@ -50,7 +50,7 @@
             {% if form != None and post_id == post.id %}
                 <form style="display:inline" action = "{% url 'social_match:commentpost' %}" method="post" id="comment-form">
                 {% csrf_token %}
-                {% render_field form.text autofocus="true" %}
+                {% render_field form.text %}
                 <button type="submit" id="submitcomment-home" value="{{post.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="btn btn-outline-primary btn-rounded waves-effect btn-md"><i class="fas fa-comment"></i></button>
                 </form>
             {% else %}
