@@ -156,8 +156,9 @@
       </div>
       <div class="modal-body">
           {% following_list request.user as following %}
-          <div class="container">
+          <div>
               {% if following %}
+              <ul>
                 {% for user in following %}
                     <div class="row">
                         <div class="card card2">
@@ -176,6 +177,7 @@
                         </div>
                     </div>
                 {% endfor %}
+                  </ul>
               {% else %}
                 You are not following anyone.
               {% endif %}
