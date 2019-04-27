@@ -350,7 +350,6 @@ def editprofile(request, user_id):
             user.phone = form.cleaned_data.get('phone')
             user.class_standing = form.cleaned_data.get('class_standing')
             user.graduation_year = form.cleaned_data.get('graduation_year')
-            user.picture = form.cleaned_data.get('picture')
 
             user.majors.set(form.cleaned_data.get('majors'))
             user.minors.set(form.cleaned_data.get('minors'))
@@ -360,6 +359,11 @@ def editprofile(request, user_id):
             user.activities.set(form.cleaned_data.get('activities'))
 
             user.status_active = form.cleaned_data.get('status_active')
+
+            picture = form.cleaned_data.get('picture')
+            if picture != None: # new picture or clear picture
+                user.picture = picture
+            # if picture == None (no edits made), do not save
 
             user.save()
 
