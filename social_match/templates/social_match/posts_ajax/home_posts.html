@@ -5,13 +5,31 @@
 <div class="col-sm">
     {% if filtered %}
         <h3>Showing filter results for...</h3>
-        <h3>
-        name: {{ names }} <br>
-        keywords: {{ keywords }} <br>
-        followed users: {{ following }} <br>
-        posts liked: {{ liked }} <br>
-        posts commented on: {{ commented }} <br><br>
-        </h3>
+        <h5>
+            {% if names %}
+            <b>Name:</b> {{ names }} <br>
+            {% endif %}
+
+            {% if keywords %}
+            <b>Keywords:</b> {{ keywords }} <br>
+            {% endif %}
+
+            <br>
+
+            {% if following %}
+            Posts by users I'm <b>following</b> <br>
+            {% endif %}
+
+            {% if liked %}
+            Posts I've <b>liked</b> <br>
+            {% endif %}
+
+            {% if commented %}
+            Posts I've <b>commented on</b> <br>
+            {% endif %}
+
+            <br>
+        </h5>
     {% else %}
     <h3>All Posts</h3>
     {% endif %}

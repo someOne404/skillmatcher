@@ -1,15 +1,19 @@
 {% load static %}
 <div style="overflow-y: auto; max-height:400px;">
     {% for notification in notifications %}
-    <div class="card" align="center" style="width: 25rem;">
+    <div align="center" style="width: 25rem;">
+        {% if notification.unread %}
+        <div class="card-body" style="background-color:#ececec">
+        {% else %}
         <div class="card-body">
+        {% endif %}
             {% if notification.verb == "liked" %}
                 <h5><a href="{% url 'social_match:profile' notification.actor.id %}" style="font-size:20px; color:blue;">{{notification.actor.first_name}} {{notification.actor.last_name}}</a>liked your post:</h5>
-                <p class="card-text">{{notification.target.headline}}</p>
+            <p class="card-text"><b>{{notification.target.headline}}</b></p>
             {% endif %}
             {% if notification.verb == "commented" %}
                 <h5><a href="{% url 'social_match:profile' notification.actor.id %}" style="font-size:20px; color:blue;">{{notification.actor.first_name}} {{notification.actor.last_name}}</a>commented on your post:</h5>
-                <p class="card-text">{{notification.target.headline}}<br>
+            <p class="card-text"><b>{{notification.target.headline}}</b><br>
                     "{{notification.action_object.text}}"</p>
             {% endif %}
             {% if notification.verb == "followed" %}
@@ -23,7 +27,12 @@
                 {% endif %}
                 <input class="btn btn-light btn-sm" type="submit" value="Delete" id="deletenotif" data-nid="{{notification.id}}">
             </form>
+        {% if notification.unread %}
         </div>
+        {% else %}
+        </div>
+        {% endif %}
     </div>
+        <hr>
     {% endfor %}
 </div>
