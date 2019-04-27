@@ -4,6 +4,9 @@ from django.core.validators import RegexValidator
 from django.utils import timezone
 import datetime
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.templatetags.static import static
+from lucky13 import settings
+import os.path
 
 class Major(models.Model):
     name = models.CharField(max_length=100)
@@ -91,6 +94,19 @@ class User(AbstractUser):
     interests = models.ManyToManyField(Interest, blank=True)
     courses = models.ManyToManyField(Course, blank=True)
     activities = models.ManyToManyField(Activity, blank=True)
+
+    # identify if picture is not set or is missing and return url of default profile picture
+    @property
+    def valid_picture_url(self):
+        if self.picture:
+            dir = settings.BASE_DIR
+            if not os.path.isfile(dir + self.picture.url):
+                return False
+            else:
+                return True
+        else:
+            return False
+
 
 
     def __str__(self):			# error in admin
