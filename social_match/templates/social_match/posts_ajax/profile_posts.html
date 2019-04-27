@@ -9,19 +9,30 @@
         {% if viewing_user == user or post.post_active %}
             <div class="card" align="left">
                 <div class="card-header">
-                    <h4 class="card-title" style="display:inline">
-                        {% if not post.post_active %}
-                            <span class="badge badge-info">Archived</span><br>
-                        {% endif %}
-                        <strong>{{ post.headline }}</strong>
+                    <div class="row no-gutters">
+                        <div class="col-1">
+                            {% if post.user.valid_picture_url %}
+                                <img class="img-fluid" src="{{ post.user.picture.url }}">
+                            {% else %}
+                                <img class="img-fluid" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                            {% endif %}
+                        </div>
+                        <div class="col-11 pl-2">
+                            <h4 class="card-title" style="display:inline">
+                                {% if not post.post_active %}
+                                    <span class="badge badge-info">Archived</span><br>
+                                {% endif %}
+                                <strong>{{ post.headline }}</strong>
 
-                    </h4>
-                    {% if post.user == user %}
-                    <a class ="btn-md" style="margin-left:20px;" href="/editpost/{{post.id}}?return=profile">
-                            <i class="fas fa-edit"></i></i>
-                    </a><br>
-                    {% endif %}
-                    <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>
+                            </h4>
+                            {% if post.user == user %}
+                            <a class ="btn-md" style="margin-left:20px;" href="/editpost/{{post.id}}?return=profile">
+                                    <i class="fas fa-edit"></i></i>
+                            </a><br>
+                            {% endif %}
+                            <a href="{% url 'social_match:profile' post.user.id %}" class="primary">{{post.user.first_name}} {{post.user.last_name}}</a>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-body">
