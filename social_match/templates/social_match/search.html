@@ -46,10 +46,11 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-12 col-md-8 order-sm-1 order-2 px-5">
+            <div style="overflow-y: auto; max-height:1200px; overflow-x: hidden;">
             <div class="row justify-content-start">
                 {% for u in filter.qs %}
                     <div class="col-auto mb-3">
-                        <div class="card" style="width:15rem !important;">
+                        <div class="card" style="width:15rem !important; overflow-y: auto; max-height:380px; min-height:380px; overflow-x: hidden;">
                         {% if u.picture %}
                             {% if u.picture.isempty or u.picture.name == 'False' %}
                                 <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
@@ -60,15 +61,19 @@
                             <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
                         {% endif %}
                             <div class="card-body">
-                                <p class="card-title"><a href="{% url 'social_match:profile' u.id %}">{{ u.first_name }} {{ u.last_name }}</a></p>
+                                <p class="card-title"><strong><a href="{% url 'social_match:profile' u.id %}">{{ u.first_name }} {{ u.last_name }}</a></strong></p>
                                 <p>{% if u.class_standing %} {{ u.get_class_standing_display }}, {% endif %}Class of {{ u.graduation_year }}</p>
-                                {% for major in u.majors.all %}
-                                    {% if forloop.last %}
-                                        <p style="display:inline">{{ major.name }}</p>
-                                    {% else %}
-                                        <p style="display:inline">{{ major.name }}</p>,
-                                    {% endif %}
-                                {% endfor %}
+                                {% if u.majors.all %}
+                                    {% for major in u.majors.all %}
+                                        {% if forloop.last %}
+                                            <p class="text-muted" style="display:inline">{{ major.name }}</p>
+                                        {% else %}
+                                            <p class="text-muted" style="display:inline">{{ major.name }}</p>,
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <p class="text-muted">Undeclared</p>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -108,8 +113,9 @@
 {#                </div>#}
 {#            #}
             </div>
-
+            </div>
         </div>
+
         <div class="col-sm-12 col-md-4 order-1 jumbotron">
             <form method="get">
                 <h3 style="margin-top: 0"><strong>Search</strong></h3>

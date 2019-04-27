@@ -8,12 +8,12 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3 col-sm-12 mb-3">
+        <div class="col-md-4 col-sm-12 mb-3">
                 {% if viewing_user.picture %}
                     {% if viewing_user.picture.isempty or viewing_user.picture.name == 'False' %}
                         <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
                     {% else %}
-                        <img height='256' width='256' src="{{ viewing_user.picture.url }}">
+                        <img style='display: block; margin: auto;' height='256' width='256' src="{{ viewing_user.picture.url }}">
                     {% endif %}
                 {% else %}
                     <img style='display: block; margin: auto;' height='256' width='256' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
@@ -22,7 +22,7 @@
 
             <br />
         {% if viewing_user == user %}
-            <div style="margin-left: 48">
+            <div align="center">
                 <form action="{% url 'social_match:editprofile' user.id %}" method="GET">
                     {% csrf_token %}
                     <input class="btn btn-light" type="submit" value="Edit Profile" name="edit_profile">
@@ -41,11 +41,12 @@
                             <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
                         {% endif %} {% endcomment %}
             </div>
-            <div style="margin-left: 60">
+            <div align="center">
                 <div>Following:<a data-toggle="modal" data-target="#followingModal" style="color:blue"> {{ following|length}} user{{ following|pluralize }}.</a></div>
                 <div>Blocking:<a data-toggle="modal" data-target="#blockingModal" style="color:blue"> {{ blocking|length }} user{{ blocking|pluralize }}.</a></div>
             </div>
         {% else %}
+            <div align="center">
             {% if not check_follow %}
                 <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" name="follow"><button type="button" class="btn btn-info">Follow</button></a>
             {% elif check_follow %}
@@ -57,6 +58,7 @@
             {% elif check_block %}
                 <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
             {% endif %}
+            </div>
         {% endif %}
         </div>
 
@@ -70,54 +72,54 @@
                 <h5><strong>Majors: </strong>
                     {% for major in viewing_user.majors.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->
+                            {{ major.name }}
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ major.name }}<!--</a>-->,
+                            {{ major.name }},
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5><strong>Minors: </strong>
                     {% for minor in viewing_user.minors.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->
+                            {{ minor.name }}
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ minor.name }}<!--</a>-->,
+                            {{ minor.name }},
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5><strong>Courses: </strong>
                     {% for course in viewing_user.courses.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->
+                            {{ course.name }}
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ course.name }}<!--</a>-->,
+                            {{ course.name }},
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5><strong>Skills: </strong>
                     {% for skill in viewing_user.skills.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ skill.name }}<!--</a>-->
+                            {{ skill.name }}
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ skill.name }}<!--</a>-->,
+                            {{ skill.name }},
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5><strong>Interests: </strong>
                     {% for interest in viewing_user.interests.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ interest.name }}<!--</a>-->
+                            {{ interest.name }}
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ interest.name }}<!--</a>-->,
+                            {{ interest.name }},
                         {% endif %}
                     {% endfor %}
                 </h5>
                 <h5><strong>Activities: </strong>
                     {% for activity in viewing_user.activities.all %}
                         {% if forloop.last %}
-                            <!--<a class='link' href="#">-->{{ activity.name }}<!--</a>-->
+                            {{ activity.name }}
                         {% else %}
-                            <!--<a class='link' href="#">-->{{ activity.name }}<!--</a>-->,
+                            {{ activity.name }},
                         {% endif %}
                     {% endfor %}
                 </h5>
