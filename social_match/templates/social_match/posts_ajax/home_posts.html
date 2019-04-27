@@ -116,7 +116,7 @@
                                  <div class="card card2">
                                     <div class="card-body" style="display:flex">
                                         <h5 class="card-title" style="display: flex">
-                                            {% if user.picture %}
+                                            {% if user.valid_picture_url %}
                                                 <img height='20' width='20' src="{{ user.picture.url }}">
                                             {% else %}
                                                 <img height='20' width='20' src="{% static 'images/Portrait_Placeholder_Square.png' %}">
