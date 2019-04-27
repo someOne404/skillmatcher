@@ -161,7 +161,7 @@
                                 <span class="card-info">{{ comment.date }}</span>
                                 {% if request.user == comment.user %}
                                     <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-home" data-cid="{{comment.id}}" data-t="home" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
-                                    <i class="fas fa-trash"></i></a>
+                                        <i class="fas fa-trash"></i></a>
                                 {% endif %}
                             </p>
                         </div>

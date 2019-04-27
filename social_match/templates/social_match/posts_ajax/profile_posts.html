@@ -123,13 +123,30 @@
                 <ul class="list-group list-group-flush">
 
                     {% for comment in post.comments.all %}
-                        <li class="list-group-item"><p><a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
-                        <br><span class="card-info">{{ comment.date }}</span>
-                        {% if request.user == comment.user %}
-                        <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-profile" data-cid="{{comment.id}}" data-t="profile" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
-                            <i class="fas fa-trash"></i></a>
-                        {% endif %}
-                        </p></li>
+                        <li class="list-group-item">
+                            <div class="row no-gutters">
+                                <div class="col-1">
+                                    <div style="max-width: 50px;">
+                                        {% if comment.user.valid_picture_url %}
+                                            <img class="img-fluid" src="{{ comment.user.picture.url }}">
+                                        {% else %}
+                                            <img class="img-fluid" src="{% static 'images/Portrait_Placeholder_Square.png' %}">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-11 pl-2">
+                                    <p>
+                                    <a href="{% url 'social_match:profile' comment.user.id %}" class="primary">{{ comment.user.first_name }} {{ comment.user.last_name }}</a>: {{ comment.text }}
+                                        <br>
+                                        <span class="card-info">{{ comment.date }}</span>
+                                        {% if request.user == comment.user %}
+                                            <a href="{% url 'social_match:commentpost' %}" method="post" id="deletecomment-profile" data-cid="{{comment.id}}" data-t="profile" data-p="{{post_list.number}}" data-k="{{keywords}}" data-n="{{names}}" data-l="{{liked}}" data-c="{{commented}}" data-f="{{filtered}}" class="primary">
+                                                <i class="fas fa-trash"></i></a>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
                     {% endfor %}
                 </ul>
 
