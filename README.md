@@ -9,7 +9,9 @@ You may either use our live heroku deployment of Lucky 13 [here](https://social-
 
 ### Admin access
 You can access Lucky 13's [admin page](https://social-match-lucky13.herokuapp.com/admin) through the following credentials:
+
 Username: admin
+
 Password: password
 
 ### Setting up your profile
