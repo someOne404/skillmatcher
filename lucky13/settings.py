@@ -44,6 +44,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ['virginia.edu']
+SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_EMAILS = ['sherriff@gmail.com']
 
 # Application definition
 
