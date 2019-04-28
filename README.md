@@ -5,7 +5,7 @@ Have you ever wanted a way to find classmates who have a particular skill and ar
 Some key features of Lucky 13 are being able to set up one’s own profile and to search for other users through an array of different filters. Users can also create posts, like posts, comment on posts, and search through all posts by keywords and other filters.
 
 ## Using Lucky 13 on Heroku
-You may either use our live heroku deployment of Lucky 13 [here](https://social-match-lucky13.herokuapp.com/), or read on to learn how to set up the project locally. Note that to login on Heroku and locally, you must be either a UVA student and using an @Virginia.edu email, or Professor Mark Sherriff, and to access the features detailed below, you must be signed in.
+You may either use our live heroku deployment of Lucky 13 [here](https://social-match-lucky13.herokuapp.com/), or read on to learn how to set up the project locally. Note that to login on Heroku and locally, you must be either a UVA student (and using an @Virginia.edu email) or Professor Mark Sherriff, and to access the features detailed below, you must be signed in.
 
 ### Setting up your profile
 After logging in, you can use the navigation bar to go to your profile page. Here, you and other users can see your profile information and posts. You can click the Edit Profile button to add information about yourself to your profile.
