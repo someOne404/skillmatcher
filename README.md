@@ -4,9 +4,24 @@ Have you ever wanted a way to find classmates who have a particular skill and ar
 
 Some key features of Lucky 13 are being able to set up one’s own profile and to search for other users through an array of different filters. Users can also create posts, like posts, comment on posts, and search through all posts by keywords and other filters.
 
-## Getting Started
+## Using Lucky 13 on Heroku
+You may either use our live heroku deployment of Lucky 13 [here](https://social-match-lucky13.herokuapp.com/), or read on to learn how to set up the project locally. Note that to login on Heroku and locally, you must be either a UVA student and using an @Virginia.edu email, or Professor Mark Sherriff, and to access the features detailed below, you must be signed in.
 
-These instructions will help get you a copy of the project up and running on your local machine for development and testing purposes.
+### Setting up your profile
+After logging in, you can use the navigation bar to go to your profile page. Here, you and other users can see your profile information and posts. You can click the Edit Profile button to add information about yourself to your profile.
+
+### Searching within users
+You can navigate to the Search page from the navigation bar. Here, you can use a variety of filters to find other students that match your needs.
+
+### Creating a Post
+You can also create a post by navigating to the Create Post page from the navigation bar. Enter a title and message, then click submit! Your post will be visible to all Lucky 13 users.
+
+### Browsing the home page
+On the home page, you can browse by default all posts by Lucky 13 users chronologically. You can like and comment posts, and additionally see who has liked the post and what they have commented. You can also filter through posts by author, keyword, among other options.
+
+## Setting up your own Lucky 13
+
+These instructions will help guide you in getting a copy of the Lucky 13 project up and running on your local machine if you so wish.
 
 ### Prerequisites
 
