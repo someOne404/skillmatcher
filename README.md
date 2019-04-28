@@ -1,13 +1,12 @@
 # Lucky 13 Skill Matching Platform
 
-Have you ever wanted a way to find classmates who have a particular skill and are willing to help out folks in need? Lucky 13 is a web app where UVA students can create an account and post information about themselves, including what skills/expertise they have. Other students can search on "tags" that will match up students with people that may be able to help. 
+Have you ever wanted a way to find classmates who have a particular skill and are willing to help out other folks in need? Lucky 13 is a web app where UVA students can create an account and post information about themselves, from what skills and expertise they have, to what courses they are taking. Other students can search on tags that will match up students with people that may be able to help. 
 
-Some key features of Lucky 13 is being able to set up one’s own profile and search for other users through an array of filters. 
-Users can also create posts, provide tags for posts, like posts, comment on posts, and search through all posts by keywords or other filters.
+Some key features of Lucky 13 are being able to set up one’s own profile and to search for other users through an array of different filters. Users can also create posts, like posts, comment on posts, and search through all posts by keywords and other filters.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will help get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
 
