@@ -16,28 +16,32 @@ class NotificationInline(admin.TabularInline):
     extra = 0
 
 class UserAdmin(BaseUserAdmin):
-	form = auth_forms.UserChangeForm
-	add_form = auth_forms.UserCreationForm
+    form = auth_forms.UserChangeForm
+    add_form = auth_forms.UserCreationForm
 
-	list_display = ('id', 'email', 'username', 'first_name', 'last_name', )
-	fieldsets = (
-		(None, {'fields': ('email', 'password',)}),
-		('Personal info', {'fields': ('first_name', 'last_name', 'phone', 'graduation_year', 'class_standing', 'picture',
-										'majors', 'minors', 'skills', 'interests', 'courses', 'activities', 'username',
-									  	'date_joined', 'last_login', 'status_active')}),
-		('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions',)}),
-	)
-	inlines = [NotificationInline, PostInline]
-	add_fieldsets = (
-		(None, {
-			'classes': ('wide',),
-			'fields': ('email', 'password', 'first_name', 'last_name',)}
-		 ),
-	)
-	search_fields = ('id', 'email', 'first_name', 'last_name',)
+    list_display = ('id', 'email', 'username', 'first_name', 'last_name', )
+    fieldsets = (
+        (None, {'fields': ('email', 'password',)}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'phone', 'graduation_year', 'class_standing', 'picture',
+                                        'majors', 'minors', 'skills', 'interests', 'courses', 'activities', 'username',
+                                        'date_joined', 'last_login', 'status_active')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions',)}),
+    )
+    inlines = [NotificationInline, PostInline]
 
-	class Meta:
-		model = User
+    #add_fieldsets = (
+#		(None, {
+    #		'classes': ('wide',),
+#			'fields': ('email', 'username', 'password', 'first_name', 'last_name', 'status_active',
+                #	   'class_standing', 'phone', 'graduation_year', 'picture', 'majors', 'minors',
+                  #     'skills', 'interests', 'courses', 'activities', 'groups', 'user_permissions',
+                  #     'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined')}
+         #),
+    #)
+    search_fields = ('id', 'email', 'first_name', 'last_name',)
+
+    class Meta:
+        model = User
 
 class CommentInline(admin.TabularInline):
     model = Comment
