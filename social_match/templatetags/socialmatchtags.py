@@ -18,3 +18,7 @@ def blocking_list(user):
 def following_list(user):
     following = Follow.objects.following(user)
     return following
+
+@register.simple_tag
+def post_comments(post):
+    return post.comments.all().order_by('date')
