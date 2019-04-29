@@ -419,15 +419,22 @@ def follow(request, user_id):
     other = User.objects.get(id=user_id)
     if other not in Follow.objects.following(self):
         Follow.objects.add_follower(self, other)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'follow': True})
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': False})
+
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'follow': True})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': True})
 
 def unfollow(request, user_id):
     self = request.user
     other = User.objects.get(id=user_id)
     if other in Follow.objects.following(self):
         Follow.objects.remove_follower(self, other)
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': True})
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unfollow': True})
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unfollow': True})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_follow': False})
 
 def following(request):
     return render(request, './social_match/following.html')
@@ -441,15 +448,22 @@ def block(request, user_id):
     other = User.objects.get(id=user_id)
     if other not in Block.objects.blocking(self):
         Block.objects.add_block(self, other)
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': False})
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'block': True})
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'block': True})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': True})
 
 def unblock(request, user_id):
     self = request.user
     other = User.objects.get(id=user_id)
     if other in Block.objects.blocking(self):
         Block.objects.remove_block(self, other)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unblock': True})
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': True})
+
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unblock': True})
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'check_block': False})
 
 class MajorAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
