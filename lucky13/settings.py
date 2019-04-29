@@ -40,7 +40,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'x4!_79l1e_1nuv@(r6&cm+j)bze*849qq6xwhunid%n_b)wh^j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -142,6 +142,8 @@ LOGIN_URL = '/auth/login/google-oauth2/'
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/'
 SOCIAL_AUTH_INACTIVE_USER_URL = '/inactive_user/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/login_error/'
+SOCIAL_AUTH_LOGIN_URL = '/login_error/'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '1023798537770-b1ll120var51q75mqvu4u74hih3cmvob.apps.googleusercontent.com'  # Paste CLient Key
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '2t580U5kLvCFV9qab9ypo6IX'  # Paste Secret Key

@@ -165,7 +165,10 @@ def createpost(request):
 
 def editpost(request, post_id):
     template_name = './social_match/editpost.html'
-    post = Post.objects.get(id=post_id)
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return render(request, './social_match/404.html')
 
     if request.method == "POST":
         form = EditPostForm(request.POST)
@@ -339,7 +342,10 @@ def notifications(request):
 
 def editprofile(request, user_id):
     template_name = './social_match/editprofile.html'
-    user = User.objects.get(id=user_id)
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return render(request, './social_match/404.html')
     if request.method == "POST":
         form = EditProfileForm(request.POST, request.FILES)
         if form.has_changed() and form.is_valid():
