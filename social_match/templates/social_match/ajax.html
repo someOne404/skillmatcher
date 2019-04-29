@@ -268,4 +268,40 @@
                 });
             });
 
+        $(document).on('click', '#follow', function(event){
+                event.preventDefault();
+                var user = $(this).attr('data-u');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:follow" %}',
+                    data: {'user':user, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#follow_block').html(response)
+                        console.log($('#follow_block').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#block', function(event){
+                event.preventDefault();
+                var user = $(this).attr('data-u');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:block" %}',
+                    data: {'user':user, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#follow_block').html(response)
+                        console.log($('#follow_block').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
     </script>

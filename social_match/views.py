@@ -414,12 +414,25 @@ def minorlist(request):
     json_data = json.dumps(data)
     return HttpResponse(json_data, content_type='application/json')
 
-def follow(request, user_id):
+#def follow(request, user_id):
+def follow(request):
+    #self = request.user
+    #other = User.objects.get(id=user_id)
+    #if other not in Follow.objects.following(self):
+    #    Follow.objects.add_follower(self, other)
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'follow': True})
+
     self = request.user
-    other = User.objects.get(id=user_id)
+    other = get_object_or_404(User, id=request.POST.get('user'))
     if other not in Follow.objects.following(self):
-        Follow.objects.add_follower(self, other)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'follow': True})
+        Follow.objects.add_follower(self,other)
+
+    template_name = './social_match/follow_block.html'
+    context = {'follow':True}
+
+    if request.is_ajax():
+        html = render_to_string(template_name, context, request=request)
+        return JsonResponse({'form': html})
 
 def unfollow(request, user_id):
     self = request.user
@@ -436,13 +449,26 @@ def follower(request):
     return render(request, './social_match/follower.html')
 
 
-def block(request, user_id):
+#def block(request, user_id):
+def block(request):
+    #self = request.user
+    #other = User.objects.get(id=user_id)
+    #if other not in Block.objects.blocking(self):
+    #    Block.objects.add_block(self, other)
+
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'block': True})
+
     self = request.user
-    other = User.objects.get(id=user_id)
+    other = get_object_or_404(User, id=request.POST.get('user'))
     if other not in Block.objects.blocking(self):
         Block.objects.add_block(self, other)
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'block': True})
+    template_name = './social_match/follow_block.html'
+    context = {'block': True}
+
+    if request.is_ajax():
+        html = render_to_string(template_name, context, request=request)
+        return JsonResponse({'form': html})
 
 def unblock(request, user_id):
     self = request.user
