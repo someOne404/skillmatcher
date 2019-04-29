@@ -268,4 +268,80 @@
                 });
             });
 
+        $(document).on('click', '#follow', function(event){
+                event.preventDefault();
+                var user = $(this).attr('data-u');
+                var block = $(this).attr('data-b');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:follow" %}',
+                    data: {'user':user, 'block':block, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#follow_block').html(response)
+                        console.log($('#follow_block').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#unfollow', function(event){
+                event.preventDefault();
+                var user = $(this).attr('data-u');
+                var block = $(this).attr('data-b');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:unfollow" %}',
+                    data: {'user':user, 'block':block, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#follow_block').html(response)
+                        console.log($('#follow_block').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#block', function(event){
+                event.preventDefault();
+                var user = $(this).attr('data-u');
+                var follow = $(this).attr('data-f');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:block" %}',
+                    data: {'user':user, 'follow':follow, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#follow_block').html(response)
+                        console.log($('#follow_block').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
+        $(document).on('click', '#unblock', function(event){
+                event.preventDefault();
+                var user = $(this).attr('data-u');
+                var follow = $(this).attr('data-f');
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "social_match:unblock" %}',
+                    data: {'user':user, 'follow':follow, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                    dataType: 'json',
+                    success: function(response){
+                        $('#follow_block').html(response)
+                        console.log($('#follow_block').html(response['form']));
+                    },
+                    error: function(rs, e){
+                        console.log(rs.responseText);
+                    },
+                });
+            });
+
     </script>
