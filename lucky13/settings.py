@@ -32,7 +32,6 @@ import django_heroku
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -109,22 +108,25 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -134,8 +136,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',  # for Google authentication
     'social_core.backends.github.GithubOAuth2',  # for Github authentication
     'social_core.backends.facebook.FacebookOAuth2',  # for Facebook authentication
-
-    'django.contrib.auth.backends.ModelBackend',   # don't let inactive users login
+    'django.contrib.auth.backends.ModelBackend',  # don't let inactive users login
     #'django.contrib.auth.backends.AllowAllUsersModelBackend',   # let inactive users login
 )
 LOGIN_URL = '/auth/login/google-oauth2/'
@@ -164,23 +165,19 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
 
 # Add these new lines
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Settings for where to store images (e.g. profile pics)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 # Activate Django-Heroku
 django_heroku.settings(locals(), test_runner=False)
