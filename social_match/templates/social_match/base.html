@@ -53,7 +53,7 @@
             margin: auto; 
             width: 46%;
         }
-        .typewriter h1,h2 {
+        .typewriter h1 {
         display: flex;
         overflow: hidden; /* Ensures the content is not revealed until the animation */
         border-right: .05em solid black;
@@ -62,7 +62,7 @@
         margin: 0 auto; /* Gives that scrolling effect as the typing happens */
         animation: typing 2.0s steps(30, end), blink-caret 0.5s step-end infinite;
         }
-        .typewriter2 h1,h2 {
+        .typewriter2 h1 {
         display: flex;
         overflow: hidden; /* Ensures the content is not revealed until the animation */
         border-right: .05em solid black;
@@ -170,7 +170,8 @@
             {% endblock %}
         {% else %}
         
-        <img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" />
+        {% comment %} SPLASH {% endcomment %}
+        {% comment %} <img class="splash" src="https://usersthink.com/img/99-free-images-large/06-usersthink-stock-image.jpg" /> {% endcomment %}
         <nav class="mb-1 navbar navbar-expand-lg navbar-dark orange accent-4">
             <a class="navbar-brand" href="{% url 'social_match:home' %}">
             <span class="span-logo">

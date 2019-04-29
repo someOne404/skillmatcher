@@ -38,6 +38,7 @@
         $(document).ready(function(){
             $(".row").fadeIn(500).delay("slow").removeAttr('style');
             $(".buttons").fadeIn(500).delay("slow").removeAttr('style');
+            $(".c").fadeIn(300).delay("slow").removeAttr('style');
         // $(".search").fadeIn(500).delay("slow").removeAttr('style');
 
         });
@@ -49,7 +50,8 @@
             <div class="row justify-content-start">
                 {% for u in filter.qs %}
                     <div class="col-auto mb-3">
-                        <div class="card" style="width:15rem !important; overflow-y: auto; max-height:380px; min-height:380px; overflow-x: hidden;">
+                        <div class = "c" style ="display: none;">
+                          <div class="card" style="width:15rem !important; overflow-y: auto; max-height:380px; min-height:380px; overflow-x: hidden;">
                         {% if u.valid_picture_url %}
 {#                            {% if u.picture.isempty or u.picture.name == 'False' %}#}
 {#                                <img class="card-img-top" src="{% static 'images/Portrait_Placeholder_Square.png' %}">#}
@@ -74,6 +76,7 @@
                                     <p class="text-muted">Undeclared</p>
                                 {% endif %}
                             </div>
+                        </div>
                         </div>
                     </div>
 
