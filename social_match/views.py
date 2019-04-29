@@ -422,25 +422,54 @@ def follow(request):
     #    Follow.objects.add_follower(self, other)
     #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'follow': True})
 
+    check_block_str = request.POST.get('block')
+    if check_block_str == 'True':
+        check_block = True
+    else:
+        check_block = False
+
     self = request.user
     other = get_object_or_404(User, id=request.POST.get('user'))
     if other not in Follow.objects.following(self):
         Follow.objects.add_follower(self,other)
+        context = {'check_follow': True, 'check_block': check_block, 'viewing_user': other}
+    else:
+        context = {'check_follow': False, 'check_block': check_block, 'viewing_user': other}
 
     template_name = './social_match/follow_block.html'
-    context = {'follow':True}
 
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})
 
-def unfollow(request, user_id):
+#def unfollow(request, user_id):
+def unfollow(request):
+    #self = request.user
+    #other = User.objects.get(id=user_id)
+    #if other in Follow.objects.following(self):
+    #    Follow.objects.remove_follower(self, other)
+
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unfollow': True})
+
+    check_block_str = request.POST.get('block')
+    if check_block_str == 'True':
+        check_block = True
+    else:
+        check_block = False
+
     self = request.user
-    other = User.objects.get(id=user_id)
+    other = get_object_or_404(User, id=request.POST.get('user'))
     if other in Follow.objects.following(self):
         Follow.objects.remove_follower(self, other)
+        context = {'check_follow': False, 'check_block': check_block, 'viewing_user': other}
+    else:
+        context = {'check_follow': True, 'check_block': check_block, 'viewing_user': other}
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unfollow': True})
+    template_name = './social_match/follow_block.html'
+
+    if request.is_ajax():
+        html = render_to_string(template_name, context, request=request)
+        return JsonResponse({'form': html})
 
 def following(request):
     return render(request, './social_match/following.html')
@@ -458,24 +487,53 @@ def block(request):
 
     #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'block': True})
 
+    check_follow_str = request.POST.get('follow')
+    if check_follow_str == 'True':
+        check_follow = True
+    else:
+        check_follow = False
+
     self = request.user
     other = get_object_or_404(User, id=request.POST.get('user'))
     if other not in Block.objects.blocking(self):
         Block.objects.add_block(self, other)
+        context = {'check_block': True, 'check_follow':check_follow, 'viewing_user': other}
+    else:
+        context = {'check_block': False, 'check_follow':check_follow, 'viewing_user': other}
 
     template_name = './social_match/follow_block.html'
-    context = {'block': True}
 
     if request.is_ajax():
         html = render_to_string(template_name, context, request=request)
         return JsonResponse({'form': html})
 
-def unblock(request, user_id):
+#def unblock(request, user_id):
+def unblock(request):
+    #self = request.user
+    #other = User.objects.get(id=user_id)
+    #if other in Block.objects.blocking(self):
+    #    Block.objects.remove_block(self, other)
+    #return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unblock': True})
+
+    check_follow_str = request.POST.get('follow')
+    if check_follow_str == 'True':
+        check_follow = True
+    else:
+        check_follow = False
+
     self = request.user
-    other = User.objects.get(id=user_id)
+    other = get_object_or_404(User, id=request.POST.get('user'))
     if other in Block.objects.blocking(self):
         Block.objects.remove_block(self, other)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'), {'unblock': True})
+        context = {'check_block': False, 'check_follow':check_follow, 'viewing_user': other}
+    else:
+        context = {'check_block': True, 'check_follow':check_follow, 'viewing_user': other}
+
+    template_name = './social_match/follow_block.html'
+
+    if request.is_ajax():
+        html = render_to_string(template_name, context, request=request)
+        return JsonResponse({'form': html})
 
 class MajorAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):

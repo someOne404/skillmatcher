@@ -5,17 +5,23 @@
                 {% comment %}
                 <a href="{% url 'social_match:follow' viewing_user.id %}" method="post" id="follow" name="follow" data-u="{{viewing_user.id}}"><button type="button" class="btn btn-info">Follow</button></a>
                 {% endcomment %}
-                <a href="{% url 'social_match:follow' %}" method="post" id="follow" name="follow" data-u="{{viewing_user.id}}"><button type="button" class="btn btn-info">Follow</button></a>
+                <a href="{% url 'social_match:follow' %}" method="post" id="follow" name="follow" data-u="{{viewing_user.id}}" data-b="{{check_block}}"><button type="button" class="btn btn-info">Follow</button></a>
             {% elif check_follow %}
+                {% comment %}
                 <a href="{% url 'social_match:unfollow' viewing_user.id %}" method="post" id="unfollow" name="unfollow"><button type="button" class="btn btn-info">Unfollow</button></a>
+                {% endcomment %}
+                <a href="{% url 'social_match:unfollow' %}" method="post" id="unfollow" name="unfollow" data-u="{{viewing_user.id}}" data-b="{{check_block}}"><button type="button" class="btn btn-info">Unfollow</button></a>
             {% endif %}
 
             {% if not check_block %}
                 {% comment %}
                 <a href="{% url 'social_match:block' viewing_user.id %}" method="post" id="block" name="block"><button type="button" class="btn btn-info">Block</button></a>
                 {% endcomment %}
-                <a href="{% url 'social_match:block' %}" method="post" id="block" name="block"><button type="button" class="btn btn-info">Block</button></a>
+                <a href="{% url 'social_match:block' %}" method="post" id="block" name="block" data-u="{{viewing_user.id}}" data-f="{{check_follow}}"><button type="button" class="btn btn-info">Block</button></a>
             {% elif check_block %}
+                {% comment %}
                 <a href="{% url 'social_match:unblock' viewing_user.id %}" method="post" id="unblock" name="unblock"><button type="button" class="btn btn-info">Unblock</button></a>
+                {% endcomment %}
+                <a href="{% url 'social_match:unblock' %}" method="post" id="unblock" name="unblock" data-u="{{viewing_user.id}}" data-f="{{check_follow}}"><button type="button" class="btn btn-info">Unblock</button></a>
             {% endif %}
             </div>
