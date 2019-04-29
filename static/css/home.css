@@ -55,3 +55,7 @@ div.card .card-img-top {
   overflow:scroll;
   -webkit-overflow-scrolling: touch;
 }
+
+.select2-container {
+  min-width: 0 !important;
+}

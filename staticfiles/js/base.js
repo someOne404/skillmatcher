@@ -11,4 +11,6 @@ $(document).ready(function(){
     $('input').filter(function(){
         return this.value.length > 0;
     }).siblings('label').addClass('active');
+
+    $.fn.select2.defaults.set("theme", "bootstrap");
 });
