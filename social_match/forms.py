@@ -46,21 +46,45 @@ class EditProfileForm(forms.ModelForm):
         widgets = {
             'majors': autocomplete.ModelSelect2Multiple(
                 url='social_match:major-autocomplete',
+                attrs={
+                    'style': 'width:100%',
+                    'data-theme': 'bootstrap'
+                },
             ),
             'minors': autocomplete.ModelSelect2Multiple(
                 url='social_match:minor-autocomplete',
+                attrs={
+                    'style': 'width:100%',
+                    'data-theme': 'bootstrap'
+                },
             ),
             'courses': autocomplete.ModelSelect2Multiple(
                 url='social_match:course-autocomplete',
+                attrs={
+                    'style': 'width:100%',
+                    'data-theme': 'bootstrap'
+                },
             ),
             'skills': autocomplete.ModelSelect2Multiple(
                 url='social_match:skill-autocomplete',
+                attrs={
+                    'style': 'width:100%',
+                    'data-theme': 'bootstrap'
+                },
             ),
             'activities': autocomplete.ModelSelect2Multiple(
                 url='social_match:activity-autocomplete',
+                attrs={
+                    'style': 'width:100%',
+                    'data-theme': 'bootstrap'
+                },
             ),
             'interests': autocomplete.ModelSelect2Multiple(
                 url='social_match:interest-autocomplete',
+                attrs={
+                    'style': 'width:100%',
+                    'data-theme': 'bootstrap'
+                },
             )
         }
 
